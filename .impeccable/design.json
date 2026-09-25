@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-25T20:00:00Z",
+  "title": "Design System: Genius Lab",
+  "extensions": {
+    "scope": "Governs Version 2 (/v2, src/app/v2/page.tsx, src/components/v2/*, the OrbKit orb in src/components/ui/shdr-01.tsx and orbkit-core.tsx, and src/components/ui/Reveal.tsx). Version 1 at / is a retained comparison page and is not governed by this system. Version 2 shares only the paper token and the survey terrain, redrawn in navy.",
+    "colorMeta": {
+      "navy": { "role": "primary", "displayName": "Genius Navy", "canonical": "#101440", "tonalRamp": ["#04061a", "#070a25", "#0b0e32", "#101440", "#171c52", "#252b6a", "#5a609c", "#a4a8cf"] },
+      "signal-ink": { "role": "primary", "displayName": "Signal Ink", "canonical": "#2f4fe0", "tonalRamp": ["#0d1a66", "#1a2ea3", "#2f4fe0", "#5577ff", "#7d97ff", "#a4b6ff", "#cbd6ff", "#eef2ff"] },
+      "signal": { "role": "primary", "displayName": "Signal Blue", "canonical": "#5577ff", "tonalRamp": ["#0d1a66", "#1a2ea3", "#2f4fe0", "#5577ff", "#7d97ff", "#a4b6ff", "#cbd6ff", "#eef2ff"] },
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "oklch(96.6% 0.004 240)", "tonalRamp": ["oklch(20% 0.004 240)", "oklch(35% 0.004 240)", "oklch(50% 0.005 240)", "oklch(65% 0.006 240)", "oklch(80% 0.007 240)", "oklch(89.5% 0.008 240)", "oklch(93.4% 0.006 240)", "oklch(96.6% 0.004 240)"] },
+      "white": { "role": "neutral", "displayName": "White", "canonical": "#ffffff", "tonalRamp": ["#dfe2ee", "#e6e8f1", "#eceef6", "#f1f2f8", "#f6f7fb", "#f9fafc", "#fcfcfe", "#ffffff"] },
+      "navy-950": { "role": "neutral", "displayName": "Night Navy", "canonical": "#070a25", "tonalRamp": ["#04061a", "#070a25", "#0b0e32", "#101440", "#171c52", "#252b6a", "#5a609c", "#a4a8cf"] },
+      "navy-900": { "role": "neutral", "displayName": "Deep Navy", "canonical": "#0b0e32", "tonalRamp": ["#04061a", "#070a25", "#0b0e32", "#101440", "#171c52", "#252b6a", "#5a609c", "#a4a8cf"] },
+      "navy-800": { "role": "neutral", "displayName": "Raised Navy", "canonical": "#171c52", "tonalRamp": ["#04061a", "#070a25", "#0b0e32", "#101440", "#171c52", "#252b6a", "#5a609c", "#a4a8cf"] },
+      "navy-700": { "role": "neutral", "displayName": "Edge Navy", "canonical": "#252b6a", "tonalRamp": ["#04061a", "#070a25", "#0b0e32", "#101440", "#171c52", "#252b6a", "#5a609c", "#a4a8cf"] },
+      "navy-300": { "role": "neutral", "displayName": "Mist Indigo", "canonical": "#a4a8cf", "tonalRamp": ["#04061a", "#070a25", "#0b0e32", "#101440", "#171c52", "#252b6a", "#5a609c", "#a4a8cf"] },
+      "cloud-3": { "role": "neutral", "displayName": "Cloud 3", "canonical": "#dfe2ee", "tonalRamp": ["#a4a8cf", "#b8bbd9", "#c9cce3", "#d4d7e9", "#dfe2ee", "#eceef6", "#f6f7fb", "#ffffff"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The closing CTA headline only; 'wdth' 118, 16ch." },
+      "hero": { "displayName": "Hero", "purpose": "Hero headline in navy on paper, two sequenced lines, 19ch; 'wdth' 112." },
+      "headline": { "displayName": "Headline", "purpose": "Shared section headline (h2Class), 13 to 18ch; 'wdth' 112. Steps down to clamp(2.5rem, 3.6vw, 3.75rem) inside the pinned problem frame." },
+      "title": { "displayName": "Title", "purpose": "Layer and outcome names with a Signal Ink mono ordinal; film cover title; 'wdth' 108 to 112." },
+      "title-wide": { "displayName": "Title Wide", "purpose": "Names and statements: portal modules, Second Brain topics, managed steps, segment names, the portal strip, the featured quote; 'wdth' 118." },
+      "body": { "displayName": "Body", "purpose": "Paragraphs, 40 to 60ch; navy/0.7 on paper, white/0.7 on navy." },
+      "body-sm": { "displayName": "Body Small", "purpose": "Buttons, navigation, legends, chat text, list items, card copy." },
+      "label-mono": { "displayName": "Label Mono", "purpose": "Metrics, counters, hub names, agent states, reasoning steps, ordinals, timestamps, captions, Illustrative labels. Never headings." }
+    },
+    "shadows": [
+      { "name": "header-hairline-paper", "value": "0 1px 0 rgb(16 20 64 / 0.1)", "purpose": "Solid header edge over paper once scrolled." },
+      { "name": "header-hairline-navy", "value": "0 1px 0 rgb(255 255 255 / 0.08)", "purpose": "Solid header edge over the navy block." },
+      { "name": "ghost-edge-paper", "value": "inset 0 0 0 1px rgb(16 20 64 / 0.2)", "purpose": "Idle state chips (0.18), upcoming stepper cells (0.2), menu toggle (0.25) on paper. Inset so chamfers cannot clip it." },
+      { "name": "ghost-edge-navy", "value": "inset 0 0 0 1px rgb(255 255 255 / 0.28)", "purpose": "Ghost outline on navy; 0.7 on hover; 0.08 on portal dashboard tiles." },
+      { "name": "glass-lift", "value": "0 40px 90px -40px rgb(16 20 64 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.9)", "purpose": "The agent chat window only." },
+      { "name": "bubble-lift-user", "value": "0 8px 20px -12px rgb(16 20 64 / 0.6)", "purpose": "User chat bubble." },
+      { "name": "bubble-lift-agent", "value": "0 8px 24px -16px rgb(16 20 64 / 0.35)", "purpose": "Agent chat bubbles." },
+      { "name": "composer-well", "value": "inset 0 1px 2px rgb(16 20 64 / 0.06)", "purpose": "Pill composer inside the chat window." },
+      { "name": "play-lift", "value": "0 20px 50px -10px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.5)", "purpose": "Glass play button on the film cover." },
+      { "name": "card-hover-lift", "value": "0 28px 50px -36px rgb(16 20 64 / 0.55)", "purpose": "Square white testimonial cards on hover, with a 2px rise." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Reveals, hero intro, menu wipe, layer copy, topic accordion, card hovers, cover zoom." },
+      { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Press feedback, arrow nudge, reveal opacity." },
+      { "name": "press", "value": "transform 160ms ease-out-strong; colors 200ms ease; active scale(0.97)", "purpose": "Shared feedback on every control." },
+      { "name": "reveal-up", "value": "opacity 700ms ease-out-strong, translateY(14px) 900ms ease-out-expo", "purpose": "Section copy entering on scroll; visible by default without JS or with reduced motion." },
+      { "name": "reveal-wipe", "value": "clip-path inset(0 100% 0 0) to inset(0) over 1100ms ease-out-expo", "purpose": "Plain data-reveal elements, observed through their parent." },
+      { "name": "reveal-safety-net", "value": "1200ms interval sweep marks any element on screen or already passed as shown", "purpose": "Guarantees no content stays hidden if an observer event is missed." },
+      { "name": "intro", "value": "from opacity 0, translateY(18px); 1000ms ease-out-expo; 250ms base delay plus per-element --d", "purpose": "Hero headline lines, subcopy and actions on load." },
+      { "name": "scroll-spring", "value": "stiffness 90, damping 24, mass 0.6", "purpose": "Scroll progress for the problem chart (200vh track) and the layer stack (420vh track)." },
+      { "name": "riser-flow", "value": "stroke-dashoffset to 14; 900ms linear infinite", "purpose": "Dashed risers between built layer plates." },
+      { "name": "dash-flow", "value": "stroke-dashoffset to -14; 1.6s linear infinite", "purpose": "Dashed Signal Ink links in segment illustrations." },
+      { "name": "topic-timer", "value": "scaleX 0 to 1 over 5200ms linear", "purpose": "1px Signal Ink line on the open Second Brain topic while topics auto-cycle." },
+      { "name": "sphere-yaw", "value": "constant 0.24 rad/s; drag nudges and settles back", "purpose": "Second Brain sphere rotation; stops under reduced motion; pauses offscreen." },
+      { "name": "managed-spin", "value": "360deg over 9s linear infinite, motion-safe", "purpose": "The Design/Build/Run/Improve sweep around the seal." },
+      { "name": "terrain-agent", "value": "spring-damped travel between metric rises; insight card springs in on arrival; breathing ring", "purpose": "Hero agent cadence; one resolved frame under reduced motion." },
+      { "name": "agent-chat", "value": "typing 32 to 72ms per character; read steps every 850ms; answer 55ms per word; 5.2s hold", "purpose": "Scripted conversation driving orb states idle, thinking, speaking; one resolved exchange under reduced motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ],
+    "chamfers": [
+      { "name": "tile", "value": "8px", "purpose": "Portal module icon tiles." },
+      { "name": "note", "value": "10px", "purpose": "Insight cards." },
+      { "name": "control", "value": "12px", "purpose": "Buttons." },
+      { "name": "card", "value": "18px", "purpose": "Segment cards." },
+      { "name": "object", "value": "22px", "purpose": "Portal preview." },
+      { "name": "feature", "value": "24px", "purpose": "Featured testimonial." },
+      { "name": "cover", "value": "28px", "purpose": "Film cover." },
+      { "name": "block", "value": "48px / 120px at lg", "purpose": "Top edge of the closing CTA, where it cuts into the paper." }
+    ],
+    "glassException": {
+      "scope": ["agent chat window and everything inside it", "film play button", "avatars"],
+      "chatWindow": "28px radius, 1px white border, navy/10 ring, white at 0.35, backdrop-blur 40px, saturate 150%, white/0.9 fallback without backdrop-filter; blooms behind: Signal at 0.45, pale cyan #7fd6ff at 0.45, navy at 0.2, blur 64px.",
+      "bubbles": "20px radius with a 6px tail corner towards the speaker; user navy, agent white at 0.8 with white border.",
+      "composer": "48px pill, white at 0.75, navy/10 border, 36px round send button.",
+      "playButton": "80px (96px at sm) circle, white at 0.15, white/0.5 border, backdrop-blur 12px, pinging ring.",
+      "spectral": "Conic ring in the chat avatar (#5577ff, #7fd6ff, #f0b3ff, #ffcf8a) and the OrbKit orb only."
+    },
+    "terrain": {
+      "source": "src/components/v2/InsightField.tsx; src/lib/terrain.ts for the film cover and CTA",
+      "contours": "13 levels on paper; navy at 0.34 and 0.8px, every fourth an index contour at 0.62 and 1.15px; masked to the intelligence side.",
+      "network": "Triangulated navy edges at 0.1 to 0.28.",
+      "agent": "Signal Ink point, 5.5px, with a breathing ring; visited contour outlined in Signal Ink.",
+      "onNavy": "White contours at rising opacity with one index contour in pale signal at 0.9 and 1.8 to 2px, under a Signal radial bloom (0.45 CTA, 0.5 film cover).",
+      "labels": "Geist Mono 10px metric names, haloed in paper; insight value 22px (18px mobile)."
+    },
+    "atmosphere": [
+      { "name": "cta-bloom", "value": "radial-gradient at 80% 35%, r 0.55: rgb(85 119 255 / 0.45) to navy 0", "purpose": "The single light in the closing CTA behind the terrain." },
+      { "name": "cover-bloom", "value": "radial-gradient at 70% 45%, r 0.6: rgb(85 119 255 / 0.5) to navy 0", "purpose": "Light on the film cover's terrain." },
+      { "name": "sphere-glow", "value": "radial rgba(85,119,255,0.16) to transparent", "purpose": "Soft light behind the Second Brain sphere on paper." },
+      { "name": "seal-light", "value": "radial rgb(85 119 255 / 0.28) to 0, r 150 in a 480 viewBox", "purpose": "Soft light under the managed seal." },
+      { "name": "feature-bloom", "value": "radial-gradient(closest-side, rgb(85 119 255 / 0.45), transparent), 288px, top-right", "purpose": "Corner light on the featured testimonial." },
+      { "name": "orb-halo", "value": "radial-gradient(closest-side, rgb(16 20 64 / 0.95), rgb(16 20 64 / 0.85) 62%, rgb(16 20 64 / 0) 100%) at 118% of the orb", "purpose": "The navy object that holds the agent orb on paper." }
+    ],
+    "hexagons": {
+      "orientation": "flat-top",
+      "verticalSquash": 0.42,
+      "uses": ["four isometric layer plates", "dashed ghost outlines of unbuilt plates", "decision crown at the top of the layer stack", "the 45-degree chamfer as the wordmark echo"],
+      "source": "src/lib/hex.ts"
+    }
+  },
+  "components": [
+    {
+      "name": "Navy Button",
+      "kind": "button",
+      "refersTo": "button-navy",
+      "description": "Chamfered primary call to action on paper.",
+      "html": "<a class=\"ds-btn ds-btn-navy\" href=\"#\"><span>Talk to us</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M2.5 8h11M9 3.5 13.5 8 9 12.5\"/></svg></a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 16px; height: 44px; padding: 0 16px 0 20px; font-family: var(--font-sans); font-size: 0.9375rem; font-weight: 500; text-decoration: none; white-space: nowrap; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%); transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms ease, color 200ms ease; } .ds-btn svg { transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn:hover svg { transform: translateX(4px); } .ds-btn:active { transform: scale(0.97); } .ds-btn:focus-visible { outline: 2px solid var(--color-signal); outline-offset: 3px; } .ds-btn-navy { background: var(--color-navy); color: #ffffff; } .ds-btn-navy:hover { background: var(--color-navy-700); }"
+    },
+    {
+      "name": "White Button",
+      "kind": "button",
+      "refersTo": "button-white",
+      "description": "Chamfered call to action inside the closing navy block, in the header over it, and in the mobile menu.",
+      "html": "<div class=\"ds-navy-ground\"><a class=\"ds-btn-white\" href=\"#\"><span>Talk to us</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M2.5 8h11M9 3.5 13.5 8 9 12.5\"/></svg></a></div>",
+      "css": ".ds-navy-ground { background: var(--color-navy); padding: 24px; } .ds-btn-white { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; height: 56px; padding: 0 24px 0 28px; background: #ffffff; color: var(--color-navy); font-family: var(--font-sans); font-size: 1rem; font-weight: 500; text-decoration: none; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%); transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms ease; } .ds-btn-white svg { transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-white:hover { background: var(--color-cloud-3); } .ds-btn-white:hover svg { transform: translateX(4px); } .ds-btn-white:active { transform: scale(0.97); } .ds-btn-white:focus-visible { outline: 2px solid var(--color-signal); outline-offset: 3px; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Solid header on paper: graded navy links, version switch and navy button.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-nav-logo\">GENIUS LAB</span><nav><a href=\"#\">Capabilities</a><a href=\"#\">Second Brain</a><a href=\"#\">Genius Portal</a><a href=\"#\">Clients</a></nav><span class=\"ds-nav-switch\"><a href=\"#\">V1</a><a href=\"#\" aria-current=\"page\">V2</a></span></header>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 4.25rem; padding: 0 24px; background: color-mix(in oklch, var(--color-paper) 95%, transparent); box-shadow: 0 1px 0 rgb(16 20 64 / 0.1); font-family: var(--font-sans); } .ds-nav-logo { font-weight: 700; letter-spacing: 0.08em; color: var(--color-navy); font-size: 0.875rem; } .ds-nav nav { display: flex; gap: 36px; } .ds-nav nav a { font-size: 0.9375rem; color: rgb(16 20 64 / 0.7); text-decoration: none; transition: color 200ms ease; } .ds-nav nav a:hover { color: var(--color-navy); } .ds-nav nav a:focus-visible { outline: 2px solid var(--color-signal); outline-offset: 3px; } .ds-nav-switch { display: inline-flex; height: 36px; border: 1px solid rgb(16 20 64 / 0.25); } .ds-nav-switch a { display: inline-flex; width: 44px; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.75rem; color: rgb(16 20 64 / 0.65); text-decoration: none; } .ds-nav-switch a[aria-current] { background: var(--color-navy); color: #ffffff; }"
+    },
+    {
+      "name": "Layer Stepper",
+      "kind": "chip",
+      "refersTo": "layer-step-active",
+      "description": "Square mono cells tracking the layer stack: active navy, completed tint, upcoming ghost.",
+      "html": "<div class=\"ds-stepper\"><button class=\"ds-step is-done\">01</button><button class=\"ds-step is-active\">02</button><button class=\"ds-step\">03</button><button class=\"ds-step\">04</button></div>",
+      "css": ".ds-stepper { display: flex; gap: 4px; } .ds-step { height: 36px; width: 48px; border: 0; border-radius: 0; font-family: var(--font-mono); font-size: 0.8125rem; font-variant-numeric: tabular-nums; background: transparent; color: rgb(16 20 64 / 0.5); box-shadow: inset 0 0 0 1px rgb(16 20 64 / 0.2); cursor: pointer; transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms ease, color 200ms ease; } .ds-step:hover { color: var(--color-navy); } .ds-step:active { transform: scale(0.97); } .ds-step:focus-visible { outline: 2px solid var(--color-signal); outline-offset: 3px; } .ds-step.is-done { background: rgb(16 20 64 / 0.1); color: var(--color-navy); box-shadow: none; } .ds-step.is-active { background: var(--color-navy); color: #ffffff; box-shadow: none; }"
+    },
+    {
+      "name": "Glass Chat Window",
+      "kind": "custom",
+      "refersTo": "chat-window",
+      "description": "The glass exception: frosted, rounded agent chat over colour blooms, with rounded bubbles and a pill composer.",
+      "html": "<div class=\"ds-glass-wrap\"><i class=\"ds-bloom ds-bloom-a\"></i><i class=\"ds-bloom ds-bloom-b\"></i><div class=\"ds-glass\"><div class=\"ds-glass-bar\"><span class=\"ds-avatar\"><span></span></span><span class=\"ds-glass-who\"><b>Genius agent</b><small>Answering</small></span><span class=\"ds-glass-pill\">Finance workspace</span></div><div class=\"ds-thread\"><div class=\"ds-bubble-you\">What will our cash position look like over the next 90 days?</div><div class=\"ds-bubble-agent\">Cash stays above the $4M floor, with a low of $4.6M in week 7.</div></div><div class=\"ds-composer-row\"><label class=\"ds-composer\"><input placeholder=\"Message the Genius agent\"/><button aria-label=\"Send\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M8 13.5v-11M3.5 7 8 2.5 12.5 7\"/></svg></button></label></div></div></div>",
+      "css": ".ds-glass-wrap { position: relative; max-width: 46rem; padding: 40px; background: var(--color-paper); font-family: var(--font-sans); overflow: hidden; } .ds-bloom { position: absolute; width: 288px; height: 288px; border-radius: 9999px; filter: blur(64px); } .ds-bloom-a { left: 4%; top: 6%; background: rgb(85 119 255 / 0.45); } .ds-bloom-b { right: 2%; top: 24%; background: rgb(127 214 255 / 0.45); } .ds-glass { position: relative; overflow: hidden; border-radius: 28px; border: 1px solid #ffffff; background: rgb(255 255 255 / 0.35); backdrop-filter: blur(40px) saturate(1.5); box-shadow: 0 40px 90px -40px rgb(16 20 64 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.9), 0 0 0 1px rgb(16 20 64 / 0.1); color: var(--color-navy); } .ds-glass-bar { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid rgb(16 20 64 / 0.08); } .ds-avatar { display: inline-flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 9999px; background: conic-gradient(from 200deg, #5577ff, #7fd6ff, #f0b3ff, #ffcf8a, #5577ff); } .ds-avatar span { width: 20px; height: 20px; border-radius: 9999px; background: rgb(255 255 255 / 0.6); } .ds-glass-who { display: flex; flex-direction: column; line-height: 1.25; } .ds-glass-who b { font-size: 0.9375rem; font-weight: 600; } .ds-glass-who small { font-size: 0.75rem; color: rgb(16 20 64 / 0.55); } .ds-glass-pill { margin-left: auto; padding: 4px 12px; border-radius: 9999px; border: 1px solid rgb(16 20 64 / 0.1); background: rgb(255 255 255 / 0.6); font-family: var(--font-mono); font-size: 0.6875rem; color: rgb(16 20 64 / 0.6); } .ds-thread { display: flex; flex-direction: column; gap: 12px; padding: 20px; } .ds-bubble-you, .ds-bubble-agent { max-width: 85%; padding: 10px 16px; font-size: 0.9375rem; line-height: 1.625; border-radius: 20px; } .ds-bubble-you { align-self: flex-end; background: var(--color-navy); color: #ffffff; border-bottom-right-radius: 6px; box-shadow: 0 8px 20px -12px rgb(16 20 64 / 0.6); } .ds-bubble-agent { background: rgb(255 255 255 / 0.8); border: 1px solid #ffffff; border-bottom-left-radius: 6px; box-shadow: 0 8px 24px -16px rgb(16 20 64 / 0.35); } .ds-composer-row { padding: 12px; border-top: 1px solid rgb(16 20 64 / 0.08); } .ds-composer { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 6px 0 20px; border-radius: 9999px; border: 1px solid rgb(16 20 64 / 0.1); background: rgb(255 255 255 / 0.75); box-shadow: inset 0 1px 2px rgb(16 20 64 / 0.06); } .ds-composer:focus-within { border-color: rgb(16 20 64 / 0.3); } .ds-composer input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 0.9375rem; color: var(--color-navy); } .ds-composer input::placeholder { color: rgb(16 20 64 / 0.4); } .ds-composer button { display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; border: 0; border-radius: 9999px; background: var(--color-navy); color: #ffffff; cursor: pointer; transition: background-color 200ms ease, transform 200ms ease; } .ds-composer button:hover { background: var(--color-navy-700); } .ds-composer button:active { transform: scale(0.9); background: var(--color-signal-ink); } .ds-composer button:focus-visible { outline: 2px solid var(--color-signal); outline-offset: 3px; }"
+    },
+    {
+      "name": "Portal Module Row",
+      "kind": "custom",
+      "refersTo": "portal-module-tile",
+      "description": "Ruled module list: chamfered navy icon tile that turns Signal Ink on hover, mono ordinal, Title Wide name.",
+      "html": "<ol class=\"ds-modules\"><li><span class=\"ds-tile\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M232 208a8 8 0 0 1-8 8H32a8 8 0 0 1-8-8V48a8 8 0 0 1 16 0v108.69l50.34-50.35a8 8 0 0 1 11.32 0L128 132.69 180.69 80H160a8 8 0 0 1 0-16h40a8 8 0 0 1 8 8v40a8 8 0 0 1-16 0V91.31l-58.34 58.35a8 8 0 0 1-11.32 0L96 123.31l-56 56V200h184a8 8 0 0 1 8 8Z\"/></svg></span><span><span class=\"ds-mod-head\"><span class=\"ds-mod-n\">03</span><span class=\"ds-mod-name\">Analytics</span></span><span class=\"ds-mod-body\">Dashboards, drill-downs and forecasts on one shared model.</span></span></li></ol>",
+      "css": ".ds-modules { list-style: none; margin: 0; padding: 0; max-width: 420px; font-family: var(--font-sans); color: var(--color-navy); } .ds-modules li { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid rgb(16 20 64 / 0.1); } .ds-tile { display: inline-flex; width: 40px; height: 40px; flex-shrink: 0; align-items: center; justify-content: center; background: var(--color-navy); color: #ffffff; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); transition: background-color 300ms ease; } .ds-modules li:hover .ds-tile { background: var(--color-signal-ink); } .ds-mod-head { display: flex; align-items: baseline; gap: 10px; } .ds-mod-n { font-family: var(--font-mono); font-size: 0.75rem; color: rgb(16 20 64 / 0.4); } .ds-mod-name { font-size: 1.0625rem; font-weight: 500; font-variation-settings: 'wdth' 118; letter-spacing: -0.02em; } .ds-mod-body { display: block; margin-top: 4px; font-size: 0.9375rem; line-height: 1.625; color: rgb(16 20 64 / 0.65); }"
+    },
+    {
+      "name": "Segment Card",
+      "kind": "card",
+      "refersTo": "segment-card",
+      "description": "Chamfered white audience card with a bespoke line illustration; rises, tints and draws a Signal Ink bar on hover.",
+      "html": "<article class=\"ds-seg\" tabindex=\"0\"><span class=\"ds-seg-n\">04</span><div class=\"ds-seg-art\"><svg viewBox=\"0 0 240 120\" aria-hidden=\"true\"><rect x=\"16\" y=\"44\" width=\"210\" height=\"22\" fill=\"#2f4fe0\" fill-opacity=\"0.08\"/><line x1=\"16\" x2=\"226\" y1=\"55\" y2=\"55\" stroke=\"#2f4fe0\" stroke-opacity=\"0.5\" stroke-dasharray=\"4 4\"/><path d=\"M16,90 L37,84 L58,86 L79,78 L100,80 L121,72 L142,70 L163,64 L184,66 L205,58 L226,54\" fill=\"none\" stroke=\"#101440\" stroke-width=\"2\"/><circle cx=\"226\" cy=\"54\" r=\"5\" fill=\"#2f4fe0\"/></svg></div><h3>Operating Companies</h3><p>Daily operations run on shared numbers, with agents that flag what needs attention.</p><ul><li><i></i>Operational dashboards</li><li><i></i>Forecasting</li></ul><b class=\"ds-seg-bar\"></b></article>",
+      "css": ".ds-seg { position: relative; display: flex; flex-direction: column; max-width: 300px; padding: 24px; background: #ffffff; color: var(--color-navy); font-family: var(--font-sans); clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); box-shadow: inset 0 0 0 1px rgb(16 20 64 / 0.1); transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-seg:hover, .ds-seg:focus-visible { transform: translateY(-4px); } .ds-seg:focus-visible { outline: 2px solid var(--color-signal); outline-offset: -2px; } .ds-seg-n { font-family: var(--font-mono); font-size: 0.75rem; color: rgb(16 20 64 / 0.4); } .ds-seg-art { margin-top: 16px; aspect-ratio: 2 / 1; padding: 8px; background: var(--color-paper); transition: background-color 500ms ease; } .ds-seg:hover .ds-seg-art { background: color-mix(in oklch, var(--color-signal-ink) 6%, var(--color-paper)); } .ds-seg-art svg { width: 100%; height: 100%; } .ds-seg h3 { margin: 24px 0 0; font-size: 1.25rem; font-weight: 500; font-variation-settings: 'wdth' 118; letter-spacing: -0.02em; } .ds-seg p { margin: 8px 0 0; line-height: 1.625; color: rgb(16 20 64 / 0.65); } .ds-seg ul { list-style: none; margin: 20px 0 0; padding: 16px 0 0; border-top: 1px solid rgb(16 20 64 / 0.1); display: flex; flex-direction: column; gap: 8px; font-size: 0.9375rem; } .ds-seg li { display: flex; align-items: center; gap: 10px; } .ds-seg li i { width: 6px; height: 6px; background: var(--color-signal-ink); } .ds-seg-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--color-signal-ink); transform: scaleX(0); transform-origin: left; transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-seg:hover .ds-seg-bar { transform: scaleX(1); }"
+    },
+    {
+      "name": "Featured Testimonial",
+      "kind": "card",
+      "refersTo": "voice-feature",
+      "description": "Chamfered navy quote card with a Signal corner bloom, Signal quote mark, Title Wide quote and round avatar.",
+      "html": "<figure class=\"ds-feature\"><i class=\"ds-feature-bloom\"></i><svg class=\"ds-feature-q\" width=\"40\" height=\"40\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M116 72v88a48.05 48.05 0 0 1-48 48 8 8 0 0 1 0-16 32 32 0 0 0 32-32v-8H40a16 16 0 0 1-16-16V72a16 16 0 0 1 16-16h60a16 16 0 0 1 16 16Zm100-16h-60a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h60v8a32 32 0 0 1-32 32 8 8 0 0 0 0 16 48.05 48.05 0 0 0 48-48V72a16 16 0 0 0-16-16Z\"/></svg><blockquote>For the first time, the board pack and the operating numbers come from the same place.</blockquote><figcaption><span class=\"ds-feature-av\">HM</span><span><b>Helena Marques</b><small>CFO, multi-entity manufacturing group</small></span></figcaption></figure>",
+      "css": ".ds-feature { position: relative; overflow: hidden; max-width: 460px; margin: 0; padding: 40px; background: var(--color-navy); color: #ffffff; font-family: var(--font-sans); clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); } .ds-feature-bloom { position: absolute; right: -96px; top: -96px; width: 288px; height: 288px; background: radial-gradient(closest-side, rgb(85 119 255 / 0.45), transparent); } .ds-feature-q { position: relative; color: var(--color-signal); } .ds-feature blockquote { position: relative; margin: 32px 0 0; font-size: 1.625rem; font-weight: 500; line-height: 1.375; font-variation-settings: 'wdth' 118; letter-spacing: -0.02em; } .ds-feature figcaption { position: relative; display: flex; align-items: center; gap: 16px; margin-top: 40px; } .ds-feature-av { display: inline-flex; width: 48px; height: 48px; align-items: center; justify-content: center; border-radius: 9999px; background: conic-gradient(from 210deg, #5577ff, #9fb4ff, #ffffff, #5577ff); color: var(--color-navy); font-size: 0.875rem; font-weight: 600; } .ds-feature b { display: block; font-weight: 600; } .ds-feature small { display: block; font-size: 0.875rem; color: rgb(255 255 255 / 0.65); }"
+    },
+    {
+      "name": "Glass Play Button",
+      "kind": "button",
+      "refersTo": "play-button",
+      "description": "Round frosted play button on the chamfered navy film cover.",
+      "html": "<div class=\"ds-cover\"><button class=\"ds-play\" aria-label=\"Play video\"><svg width=\"30\" height=\"30\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M240 128a15.74 15.74 0 0 1-7.6 13.51L88.32 229.65a16 16 0 0 1-16.2.3A15.86 15.86 0 0 1 64 216.13V39.87a15.86 15.86 0 0 1 8.12-13.82 16 16 0 0 1 16.2.3l144.08 88.14A15.74 15.74 0 0 1 240 128Z\"/></svg></button></div>",
+      "css": ".ds-cover { position: relative; display: grid; place-items: center; width: 100%; max-width: 560px; aspect-ratio: 16 / 9; background: radial-gradient(circle at 70% 45%, rgb(85 119 255 / 0.5), transparent 60%), var(--color-navy); clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%); } .ds-play { display: inline-flex; width: 80px; height: 80px; align-items: center; justify-content: center; padding-left: 2px; border-radius: 9999px; border: 1px solid rgb(255 255 255 / 0.5); background: rgb(255 255 255 / 0.15); color: #ffffff; backdrop-filter: blur(12px); box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.5); cursor: pointer; transition: background-color 300ms ease, transform 300ms ease; } .ds-play:hover { background: rgb(255 255 255 / 0.25); transform: scale(1.05); } .ds-play:active { transform: scale(0.97); } .ds-play:focus-visible { outline: 2px solid var(--color-signal); outline-offset: 3px; }"
+    },
+    {
+      "name": "Insight Card",
+      "kind": "custom",
+      "description": "The chamfered card the hero agent opens on a metric rise (drawn on canvas; shown here as HTML).",
+      "html": "<div class=\"ds-insight\"><div class=\"ds-insight-head\"><span class=\"ds-insight-mark\"></span><span>AI AGENT</span><span class=\"ds-insight-metric\">GROSS MARGIN %</span></div><div class=\"ds-insight-value\">38.4%</div><div class=\"ds-insight-note\">+1.2 pts vs last quarter</div></div>",
+      "css": ".ds-insight { width: 214px; height: 84px; padding: 12px 14px; background: rgb(255 255 255 / 0.97); color: var(--color-navy); font-family: var(--font-mono); clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); box-shadow: inset 0 0 0 1px rgb(16 20 64 / 0.16); display: flex; flex-direction: column; justify-content: space-between; } .ds-insight-head { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 600; color: var(--color-signal-ink); } .ds-insight-mark { width: 6px; height: 6px; background: var(--color-signal-ink); transform: rotate(45deg); } .ds-insight-metric { margin-left: auto; color: rgb(104 110 155); } .ds-insight-value { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-insight-note { font-size: 11px; font-weight: 500; color: var(--color-signal-ink); }"
+    },
+    {
+      "name": "Isometric Layer Plate",
+      "kind": "custom",
+      "description": "Flat-top hexagon plate squashed to 0.42: navy top face and side faces, active edge light and Signal glow, Analytics scatter with a dashed Signal trend.",
+      "html": "<svg class=\"ds-plate\" viewBox=\"0 0 400 200\" aria-hidden=\"true\"><defs><linearGradient id=\"ds-top\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#2a3180\"/><stop offset=\"1\" stop-color=\"#12164a\"/></linearGradient><linearGradient id=\"ds-edge\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0\" stop-color=\"#8fa4ff\"/><stop offset=\"0.5\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#5577ff\"/></linearGradient><radialGradient id=\"ds-glow\"><stop offset=\"0\" stop-color=\"#5577ff\" stop-opacity=\"0.55\"/><stop offset=\"1\" stop-color=\"#5577ff\" stop-opacity=\"0\"/></radialGradient></defs><ellipse cx=\"200\" cy=\"130\" rx=\"190\" ry=\"50\" fill=\"url(#ds-glow)\"/><polygon points=\"360,90 280,123.6 280,145.6 360,112\" fill=\"#1f2566\"/><polygon points=\"280,123.6 120,123.6 120,145.6 280,145.6\" fill=\"#171c52\"/><polygon points=\"120,123.6 40,90 40,112 120,145.6\" fill=\"#0f1340\"/><path d=\"M360,90 L280,123.6 L120,123.6 L40,90 L120,56.4 L280,56.4 Z\" fill=\"url(#ds-top)\"/><g stroke=\"rgb(255 255 255 / 0.75)\" stroke-width=\"2\"><line x1=\"140\" x2=\"140\" y1=\"100\" y2=\"74\"/><line x1=\"180\" x2=\"180\" y1=\"96\" y2=\"60\"/><line x1=\"220\" x2=\"220\" y1=\"92\" y2=\"52\"/><line x1=\"260\" x2=\"260\" y1=\"88\" y2=\"36\"/></g><circle cx=\"140\" cy=\"74\" r=\"5\" fill=\"#ffffff\"/><circle cx=\"180\" cy=\"60\" r=\"5\" fill=\"#ffffff\"/><circle cx=\"220\" cy=\"52\" r=\"5\" fill=\"#ffffff\"/><circle cx=\"260\" cy=\"36\" r=\"7\" fill=\"#5577ff\"/><path d=\"M140,76 L180,62 L220,50 L260,38\" fill=\"none\" stroke=\"#5577ff\" stroke-width=\"2.2\" stroke-dasharray=\"5 4\"/><path d=\"M360,90 L280,123.6 L120,123.6 L40,90 L120,56.4 L280,56.4 Z\" fill=\"none\" stroke=\"url(#ds-edge)\" stroke-width=\"1.8\"/></svg>",
+      "css": ".ds-plate { display: block; width: 100%; max-width: 400px; height: auto; background: var(--color-paper); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrumented Page",
+    "overview": "The page is one continuous sheet of cool white survey paper. Business complexity is measured on it, and the reader watches an agent read it. The hero is Version 1's survey terrain, now drawn in brand navy: loose points on the text side become a triangulated network, and the network resolves into contour lines rising to metric summits, where a signal-blue agent opens chamfered insight cards. From the hero to the last testimonial there are no bands, no alternating grounds and no rules between sections. The problem chart, the layer stack, the Second Brain sphere, the agent, the Genius Portal, the managed-service ring, the audience cards, the film and the testimonials all sit directly on the same paper, separated by space alone.\n\nBlue is a detail, not a surface. Signal Ink marks what is live on paper: the agent point, the complexity curve, ordinals of the active item, lit hubs, sweeps and selected markers. Navy appears on paper only as objects the reader uses or watches: layer plates and the crown, the orb halo, the managed seal, icon tiles, the user's chat bubble, active chips, buttons, the product preview, the film cover and the featured testimonial. The terrain returns twice, drawn in light on navy: on the film cover and in the closing block. The story ends in a single navy block, the CTA and footer, entered through a 45-degree chamfer cut into its top-right corner.\n\nOne material exception is deliberate. The agent is the only thing on the page that talks, so it alone gets a soft, rounded, frosted glass window over colour blooms, with rounded bubbles and a pill composer. The same glass reappears only on the film's play button, and circles hold people only in avatars. Everything else stays square or chamfered. Type is Archivo, driven by its width axis, with Geist Mono for anything the machine prints. The page is calm, premium and executive: one instrument per idea, and motion that shows reading and resolution rather than decoration.",
+    "keyCharacteristics": [
+      "One continuous paper surface from hero to testimonials, separated by section spacing, with no bands or section rules.",
+      "Hero: contour terrain in navy, read by a Signal Ink agent that opens chamfered insight cards on metric rises.",
+      "Blue as detail: Signal Ink for live marks on paper, Signal for live marks on navy, never as a surface.",
+      "Navy as object: plates, crown, halo, seal, icon tiles, bubble, chips, buttons, preview, film cover, featured quote.",
+      "Square or top-right chamfered corners everywhere except the agent's glass window, the play button and avatars.",
+      "Spectral colour lives only inside the orb and the chat avatar.",
+      "Hexagons only as layer plates, their ghost outlines, the decision crown and the chamfer.",
+      "One closing navy block (CTA and footer) with a 45-degree chamfered top edge and terrain drawn in light.",
+      "Archivo on its width axis, and Geist Mono for machine-voice text only.",
+      "Every canvas, loop, scroll stage and scripted conversation has a resolved, still state under reduced motion."
+    ],
+    "rules": [
+      { "name": "The One Paper Rule", "body": "Everything before the closing block sits on the same paper. Do not add section bands, alternate grounds, horizontal rules between sections, or wave-line fields. Sections are separated by space alone (section-sm, section-md, section-lg). Rules inside a section (ruled lists, the portal strip, chapter lines) are allowed.", "section": "colors" },
+      { "name": "The Blue Detail Rule", "body": "Signal blue appears as strokes, points, pulses, sweeps, small squares, glows on live points, short labels, and the hover fill of an icon tile or avatar. Use Signal Ink on paper and Signal on navy. It never fills a card, panel or band, and never sets running text.", "section": "colors" },
+      { "name": "The Navy Object Rule", "body": "On paper, a solid navy area is always an object the reader uses or watches: a plate, the crown, the orb halo, the seal, an icon tile, a chat bubble, an active chip, a button, the product preview, the film cover or the featured testimonial. It is never a decorative band.", "section": "colors" },
+      { "name": "The Graded Ink Rule", "body": "Hierarchy uses one ink at fixed opacities. On paper, navy is 1.0 for headings, 0.7 for body and navigation, 0.55 to 0.65 for secondary copy, 0.4 to 0.5 for ordinals, labels and idle items, 0.3 to 0.35 for axes and baselines, and 0.07 to 0.12 for rules and gridlines. On navy, white follows the same steps: 0.7 for body and links, 0.55 to 0.65 for secondary text, 0.08 to 0.15 for rules.", "section": "colors" },
+      { "name": "The Spectrum Stays Home Rule", "body": "Spectral colour appears only inside the OrbKit orb and the chat avatar's conic ring. The soft blooms behind the chat glass (Signal, a pale cyan and navy, heavily blurred) exist only to make the glass read as glass.", "section": "colors" },
+      { "name": "The One Block Rule", "body": "The CTA and footer are one continuous navy ground, both marked `data-ground=\"dark\"` so the header switches to the white logo. It is entered once, through the chamfered edge, and never interrupted.", "section": "colors" },
+      { "name": "The Width Axis Rule", "body": "Set hierarchy on the width axis first. Headlines use 'wdth' 108 to 118, names and statements 118, and reading text 100. No other display face is used.", "section": "typography" },
+      { "name": "The Machine Voice Rule", "body": "Use Geist Mono only for text a system would print: metrics, figures, ordinals, timestamps, table names, states and sources. Never use it for headings, sentences addressed to the reader, or labels placed above headings.", "section": "typography" },
+      { "name": "The Drawn Depth Rule", "body": "When something needs to feel stacked or raised as structure, draw it with contours, isometric faces or depth-weighted points. Shadows belong only to floating things: the glass, its bubbles, the play button and hovering square cards.", "section": "elevation" },
+      { "name": "The Glass Rule", "body": "Backdrop blur appears only on the agent chat window (white at 0.35, blur 40px, saturate 150%, with a white fallback at 0.9 where backdrop-filter is unsupported), the play button (white at 0.15, blur 12px) and the film's placeholder dialog scrim. Glass always sits over colour or imagery so it reads as glass.", "section": "elevation" },
+      { "name": "The Chamfer Rule", "body": "Cut only the top-right corner, at 45 degrees. Never add a border radius to a container or control outside the glass exception.", "section": "shapes" },
+      { "name": "The Glass Exception Rule", "body": "Rounded corners are confined to the agent chat window and everything inside it, the play button, and avatars. They do not spread to cards, buttons, chips, panels or inputs elsewhere.", "section": "shapes" },
+      { "name": "The Three Hexagons Rule", "body": "A hexagon means a layer, the decision it produces, or the chamfer that echoes the wordmark. It is never a tile, cell, honeycomb or background pattern.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do keep the page one continuous paper surface until the closing block, separated only by section spacing.",
+      "Do draw the hero as contour terrain in navy, read by a Signal Ink agent that opens chamfered insight cards on metric rises, and bring the terrain back in light on navy for the film cover and CTA.",
+      "Do use Signal Ink for live marks on paper and Signal for live marks on navy, as strokes, points, sweeps, small squares, short labels and glows.",
+      "Do make every solid navy area on paper an object: plate, crown, halo, seal, icon tile, bubble, chip, button, preview, film cover or featured quote.",
+      "Do close with one uninterrupted navy block (CTA and footer) marked `data-ground=\"dark\"`, entered through a 48px (120px at `lg`) chamfer.",
+      "Do take the layer plates and the decision crown from `src/lib/hex.ts`: flat-top, with a 0.42 vertical squash.",
+      "Do chamfer only the top-right corner at 45 degrees (8px to 28px on objects) and keep every other corner square.",
+      "Do keep rounded corners and glass inside the agent chat window, the play button and avatars.",
+      "Do set hierarchy with graded navy on paper and graded white on navy.",
+      "Do use an inset ghost edge, not an outer ring or shadow, on chamfered elements.",
+      "Do give each audience card a bespoke line illustration in navy and Signal Ink on paper.",
+      "Do label every demo figure, question, conversation, testimonial or interface preview as illustrative.",
+      "Do use the official logo files: `logo_dark_blue.png` on paper, `logo_white.png` on navy.",
+      "Do give every canvas, loop, scroll stage and scripted conversation a resolved, still state under `prefers-reduced-motion`, and pause canvases offscreen."
+    ],
+    "donts": [
+      "Don't divide the paper with bands, alternating grounds, horizontal section rules or wave-line fields.",
+      "Don't fill cards, panels or large areas with solid signal blue, and don't set running text in it.",
+      "Don't use hexagons as tiles, cells, honeycombs or decoration.",
+      "Don't use border radius on containers or controls outside the glass exception.",
+      "Don't let spectral or rainbow colour leave the orb and the chat avatar, and don't use purple or violet gradients anywhere else.",
+      "Don't put an outer box-shadow or ring on a chamfered element; the clip-path removes it.",
+      "Don't turn the terrain into a map: no coastlines, place names, compass roses or grid references. Contours carry metrics.",
+      "Don't build structure with drop shadows; shadows belong only to the glass, its bubbles, the play button and hovering square cards.",
+      "Don't use the Version 1 ink, rule or survey tokens on Version 2 surfaces. Paper is the only shared token.",
+      "Don't set headings, or labels above headings, in Geist Mono.",
+      "Don't use generic icon-heading-text feature cards or a dashboard screenshot as the hero."
+    ]
+  }
+}

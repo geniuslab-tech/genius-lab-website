@@ -1,0 +1,33 @@
+{
+  "name": "genius_website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
+    "d3-contour": "^4.0.2",
+    "d3-delaunay": "^6.0.4",
+    "motion": "^13.4.4",
+    "next": "16.3.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "simplex-noise": "^4.0.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/d3-contour": "^3.0.6",
+    "@types/d3-delaunay": "^6.0.4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/*
+  Genius Lab survey atlas.
+  Cool survey paper, cool ink, one ultramarine survey ink.
+  Square corners everywhere. Mono only for measurements.
+*/
+
+@theme {
+  --color-paper: oklch(96.6% 0.004 240);
+  --color-paper-2: oklch(93.4% 0.006 240);
+  --color-paper-3: oklch(89.5% 0.008 240);
+  --color-ink: oklch(17.5% 0.014 258);
+  --color-ink-2: oklch(38% 0.014 258);
+  --color-ink-3: oklch(50% 0.012 258);
+  --color-rule: oklch(17.5% 0.014 258 / 0.14);
+  --color-rule-strong: oklch(17.5% 0.014 258 / 0.32);
+  --color-survey: oklch(46% 0.245 266);
+  --color-survey-deep: oklch(38% 0.22 266);
+  --color-survey-soft: oklch(46% 0.245 266 / 0.1);
+  --color-on-survey: oklch(97.5% 0.01 266);
+  --color-on-survey-2: oklch(86% 0.06 266);
+
+  /* Version 2: Genius Lab brand navy and white. */
+  --color-navy-990: #04061a;
+  --color-navy-950: #070a25;
+  --color-navy-900: #0b0e32;
+  --color-navy: #101440;
+  --color-navy-800: #171c52;
+  --color-navy-700: #252b6a;
+  --color-navy-500: #5a609c;
+  --color-navy-300: #a4a8cf;
+  --color-cloud: #f6f7fb;
+  --color-cloud-2: #eceef6;
+  --color-cloud-3: #dfe2ee;
+  --color-signal: #5577ff;
+  --color-signal-ink: #2f4fe0;
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --radius-none: 0;
+}
+
+:root {
+  color-scheme: light;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --nav-h: 4.25rem;
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--color-ink-3) var(--color-paper-2);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 100;
+  background: var(--color-paper);
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-survey);
+  color: var(--color-on-survey);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-survey);
+  outline-offset: 3px;
+}
+
+@layer components {
+  /* Display voice: Archivo on its expanded width axis. */
+  .type-display {
+    font-variation-settings: "wdth" 125;
+    font-weight: 560;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+  
+  .type-wide {
+    font-variation-settings: "wdth" 118;
+    letter-spacing: -0.02em;
+  }
+  
+  .type-condensed {
+    font-variation-settings: "wdth" 80;
+  }
+  
+  .type-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+  }
+  
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  
+  .shell {
+    width: 100%;
+    max-width: 1480px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+}
+
+/* Plotter-pass reveal: content is visible by default; motion only enhances. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1100ms var(--ease-out-expo);
+  }
+  .js [data-reveal="up"] {
+    clip-path: none;
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms var(--ease-out-strong),
+      transform 900ms var(--ease-out-expo);
+  }
+  .js [data-reveal][data-shown="true"] {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intro {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro {
+    animation: intro 1000ms var(--ease-out-expo) both;
+    animation-delay: calc(var(--d, 0ms) + 250ms);
+  }
+}
+
+@keyframes wave-drift {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wave-drift {
+    animation: wave-drift 90s linear infinite;
+  }
+}
+
+@keyframes riser-flow {
+  to {
+    stroke-dashoffset: 14;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .riser-flow {
+    animation: riser-flow 900ms linear infinite;
+  }
+}
+
+@keyframes topic-timer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+@keyframes layerIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@layer components {
+  /* Pressable feedback shared by every control. */
+  .press {
+    transition:
+      transform 160ms var(--ease-out-strong),
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease;
+  }
+  .press:active {
+    transform: scale(0.97);
+  }
+}
