@@ -62,6 +62,8 @@ export type SphereState = { visited: number[]; step: number };
 const TONES = {
   light: { ink: "16,20,64", lit: "47,79,224", halo: "241,244,246" },
   dark: { ink: "190,200,255", lit: "110,231,255", halo: "5,6,14" },
+  night: { ink: "210,210,220", lit: "41,151,255", halo: "0,0,0" },
+  abyss: { ink: "185,200,230", lit: "242,154,31", halo: "10,22,40" },
 } as const;
 
 /**
@@ -76,7 +78,7 @@ export function BrainSphere({
 }: {
   state: SphereState;
   className?: string;
-  tone?: "light" | "dark";
+  tone?: keyof typeof TONES;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const live = useRef(state);

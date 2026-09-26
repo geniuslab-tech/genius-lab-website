@@ -45,6 +45,31 @@
   --color-line-strong: rgb(255 255 255 / 0.16);
   --color-cyan: #6ee7ff;
 
+  /* Version 5: premium, Apple-like neutrals with the brand blue as the only accent. */
+  --color-mist: #f5f5f7;
+  --color-snow: #fbfbfd;
+  --color-graphite: #1d1d1f;
+  --color-graphite-2: #6e6e73;
+  --color-graphite-3: #86868b;
+  --color-hairline: #d2d2d7;
+  --color-azure: #0071e3;
+  --color-azure-link: #0066cc;
+
+  /* Version 6: enterprise console. Deep navy grounds, cool light sections, ember + sky accents. */
+  --color-abyss: #050b18;
+  --color-abyss-2: #0a1628;
+  --color-abyss-3: #0f1f38;
+  --color-abyss-4: #16294a;
+  --color-ember: #f29a1f;
+  --color-ember-ink: #c26d00;
+  --color-sky: #4d8dff;
+  --color-sky-ink: #2563eb;
+  --color-steel: #0b1324;
+  --color-steel-2: #4b5567;
+  --color-steel-3: #7b8597;
+  --color-frost: #f5f7fb;
+  --color-rule6: #e3e8ef;
+
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
@@ -142,6 +167,10 @@ body {
     clip-path: inset(0 0 0 0);
     opacity: 1;
     transform: none;
+  }
+  /* Fade-up reveals never clip: their shadows and edge marks stay visible once shown. */
+  .js [data-reveal="up"][data-shown="true"] {
+    clip-path: none;
   }
 }
 
@@ -305,5 +334,70 @@ body {
   }
   .v4-rise {
     animation: v4-rise 2.4s linear infinite;
+  }
+}
+
+/* ---- Version 5 ---- */
+@layer components {
+  .v5 {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+    font-variation-settings: normal;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Display: tight tracking and leading as the size grows. */
+  .v5-display {
+    font-weight: 600;
+    letter-spacing: -0.028em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .v5-eyebrow {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .v5-body {
+    letter-spacing: -0.012em;
+    line-height: 1.47;
+  }
+  /* Horizontal gallery that hides its scrollbar. */
+  .v5-rail {
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+  .v5-rail::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ---- Version 6 ---- */
+@layer components {
+  .v6 {
+    font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: normal;
+  }
+  .v6-display {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+  .v6-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+}
+
+@keyframes v6-logos {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .v6-logos {
+    animation: v6-logos 40s linear infinite;
   }
 }
