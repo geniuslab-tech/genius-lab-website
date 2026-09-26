@@ -55,7 +55,7 @@ const spark = (s: number[], w: number, h: number) => {
     .join("");
 };
 
-function Dashboard() {
+export function Dashboard({ captionClassName = "text-navy/55" }: { captionClassName?: string }) {
   const W = 560;
   const H = 190;
   const P = 26;
@@ -225,7 +225,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <figcaption className="mt-4 text-[0.8125rem] text-navy/55">Genius Portal executive dashboard. Illustrative data; placeholder for product screens.</figcaption>
+      <figcaption className={`mt-4 text-[0.8125rem] ${captionClassName}`}>Genius Portal executive dashboard. Illustrative data; placeholder for product screens.</figcaption>
     </figure>
   );
 }

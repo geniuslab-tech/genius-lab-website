@@ -4,7 +4,7 @@ export function VersionSwitch({
   tone = "light",
   className = "",
 }: {
-  current: 1 | 2 | 3;
+  current: 1 | 2 | 3 | 4;
   tone?: "light" | "dark";
   className?: string;
 }) {
@@ -13,7 +13,7 @@ export function VersionSwitch({
   const on = tone === "dark" ? "bg-white text-navy" : "bg-ink text-paper";
   return (
     <nav aria-label="Homepage version" className={`inline-flex h-9 border ${frame} ${className}`}>
-      {([1, 2, 3] as const).map((v) => (
+      {([1, 2, 3, 4] as const).map((v) => (
         <a
           key={v}
           href={v === 1 ? "/" : `/v${v}`}

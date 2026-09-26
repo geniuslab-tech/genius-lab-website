@@ -58,12 +58,26 @@ function build(count: number) {
 
 export type SphereState = { visited: number[]; step: number };
 
+/** Inks per ground: base nodes and links, the lit signal, and the halo behind labels. */
+const TONES = {
+  light: { ink: "16,20,64", lit: "47,79,224", halo: "241,244,246" },
+  dark: { ink: "190,200,255", lit: "110,231,255", halo: "5,6,14" },
+} as const;
+
 /**
  * The Second Brain as a knowledge graph in the shape of a sphere: notes cluster around
  * eight hubs of business context, linked like an Obsidian vault. It rotates in 3D, can
  * be dragged, fires synapses along its links, and turns to face the region an agent reads.
  */
-export function BrainSphere({ state, className = "" }: { state: SphereState; className?: string }) {
+export function BrainSphere({
+  state,
+  className = "",
+  tone = "light",
+}: {
+  state: SphereState;
+  className?: string;
+  tone?: "light" | "dark";
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
   const live = useRef(state);
   useEffect(() => {
@@ -75,6 +89,7 @@ export function BrainSphere({ state, className = "" }: { state: SphereState; cla
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const { ink, lit: sig, halo } = TONES[tone];
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const rand = mulberry32(3);
     const mono = getComputedStyle(document.body).getPropertyValue("--font-geist-mono") || "monospace";
@@ -158,7 +173,7 @@ export function BrainSphere({ state, className = "" }: { state: SphereState; cla
           c.moveTo(P[a].x, P[a].y);
           c.lineTo(P[b].x, P[b].y);
         }
-        c.strokeStyle = pass ? "rgba(16,20,64,0.3)" : "rgba(16,20,64,0.12)";
+        c.strokeStyle = pass ? `rgba(${ink},0.3)` : `rgba(${ink},0.12)`;
         c.stroke();
       }
       // Links inside a region the agent has read carry the signal.
@@ -170,7 +185,7 @@ export function BrainSphere({ state, className = "" }: { state: SphereState; cla
           c.moveTo(P[a].x, P[a].y);
           c.lineTo(P[b].x, P[b].y);
         }
-        c.strokeStyle = `rgba(47,79,224,${0.55 * lit[k]})`;
+        c.strokeStyle = `rgba(${sig},${0.55 * lit[k]})`;
         c.lineWidth = 1;
         c.stroke();
       }
@@ -212,11 +227,11 @@ export function BrainSphere({ state, className = "" }: { state: SphereState; cla
         const on = lit[n.hub];
         const r = n.size * pr.s * (n.isHub ? 1.2 : 1) * (small ? 0.85 : 1);
         if (n.isHub) {
-          c.fillStyle = on > 0.5 ? "rgb(47,79,224)" : `rgba(16,20,64,${0.35 + depth * 0.65})`;
+          c.fillStyle = on > 0.5 ? `rgb(${sig})` : `rgba(${ink},${0.35 + depth * 0.65})`;
           c.beginPath();
           c.arc(pr.x, pr.y, r, 0, Math.PI * 2);
           c.fill();
-          c.strokeStyle = on > 0.5 ? "rgba(47,79,224,0.35)" : "rgba(16,20,64,0.15)";
+          c.strokeStyle = on > 0.5 ? `rgba(${sig},0.35)` : `rgba(${ink},0.15)`;
           c.lineWidth = 1;
           c.beginPath();
           c.arc(pr.x, pr.y, r + 5 + (on > 0.5 ? Math.sin(t * 4) * 2 : 0), 0, Math.PI * 2);
@@ -224,8 +239,8 @@ export function BrainSphere({ state, className = "" }: { state: SphereState; cla
         } else {
           c.fillStyle =
             on > 0.1
-              ? `rgba(47,79,224,${(0.3 + depth * 0.7) * (0.5 + on * 0.5)})`
-              : `rgba(16,20,64,${0.25 + depth * 0.7})`;
+              ? `rgba(${sig},${(0.3 + depth * 0.7) * (0.5 + on * 0.5)})`
+              : `rgba(${ink},${0.25 + depth * 0.7})`;
           c.beginPath();
           c.arc(pr.x, pr.y, r, 0, Math.PI * 2);
           c.fill();
@@ -239,8 +254,8 @@ export function BrainSphere({ state, className = "" }: { state: SphereState; cla
         if (a < 0.05) return;
         const on = lit[k] > 0.5;
         c.font = `${on ? 600 : 500} ${small ? 11 : 13}px ${on ? sans : mono}`;
-        c.fillStyle = on ? `rgba(47,79,224,${a})` : `rgba(16,20,64,${0.75 * a})`;
-        c.strokeStyle = `rgba(241,244,246,${0.9 * a})`;
+        c.fillStyle = on ? `rgba(${sig},${a})` : `rgba(${ink},${0.75 * a})`;
+        c.strokeStyle = `rgba(${halo},${0.9 * a})`;
         c.lineWidth = 4;
         c.lineJoin = "round";
         const flip = pr.x + 14 + c.measureText(name).width > w - 6;
@@ -311,7 +326,7 @@ export function BrainSphere({ state, className = "" }: { state: SphereState; cla
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
     };
-  }, []);
+  }, [tone]);
 
   return <canvas ref={ref} aria-hidden="true" className={`block aspect-square w-full cursor-grab touch-pan-y active:cursor-grabbing ${className}`} />;
 }

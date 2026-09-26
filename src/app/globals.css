@@ -36,6 +36,15 @@
   --color-signal: #5577ff;
   --color-signal-ink: #2f4fe0;
 
+  /* Version 4: dark console. Void grounds, hairline grid, signal blue and one cyan. */
+  --color-void: #05060e;
+  --color-void-2: #090b17;
+  --color-void-3: #0e1122;
+  --color-void-4: #151a33;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
+  --color-cyan: #6ee7ff;
+
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
@@ -219,5 +228,82 @@ body {
   }
   .press:active {
     transform: scale(0.97);
+  }
+}
+
+/* ---- Version 4 ---- */
+@keyframes v4-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes v4-marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes v4-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+/* A packet climbing its parent: from below the bottom edge to above the top. */
+@keyframes v4-rise {
+  from {
+    top: 100%;
+  }
+  to {
+    top: -35%;
+  }
+}
+
+/* A packet crossing its parent, left to right. */
+@keyframes v4-flow {
+  from {
+    left: -50%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@layer components {
+  /* Hairline survey grid behind the whole page. */
+  .v4-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+  .v4-dots {
+    background-image: radial-gradient(rgb(255 255 255 / 0.12) 1px, transparent 1.2px);
+    background-size: 18px 18px;
+  }
+  .v4-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .v4-caret {
+    animation: v4-blink 1.05s steps(1) infinite;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .v4-marquee {
+    animation: v4-marquee 60s linear infinite;
+  }
+  .v4-marquee:hover {
+    animation-play-state: paused;
+  }
+  .v4-rise {
+    animation: v4-rise 2.4s linear infinite;
   }
 }
