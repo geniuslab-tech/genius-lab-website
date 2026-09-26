@@ -6,6 +6,7 @@ import { LayersV2 } from "@/components/v2/LayersV2";
 import { BrainV2 } from "@/components/v2/BrainV2";
 import { AgentsV2 } from "@/components/v2/AgentsV2";
 import { PortalV2 } from "@/components/v2/PortalV2";
+import { OntologyV2 } from "@/components/v2/OntologyV2";
 import { ManagedV2 } from "@/components/v2/ManagedV2";
 import { SegmentsV2 } from "@/components/v2/SegmentsV2";
 import { ActionV2 } from "@/components/v2/ActionV2";
@@ -36,6 +37,7 @@ export default function HomeV2() {
         <BrainV2 />
         <AgentsV2 />
         <PortalV2 />
+        <OntologyV2 />
         <ManagedV2 />
         <SegmentsV2 />
         <ActionV2 />
