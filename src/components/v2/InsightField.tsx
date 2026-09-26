@@ -15,9 +15,14 @@ import {
 import { RGB, rgba } from "@/lib/palette";
 
 const NAVY = "16,20,64";
-const NAVY2 = "62,68,120";
 const NAVY3 = "104,110,155";
 const ACCENT = "47,79,224";
+
+/** Field inks per ground. The insight card stays white in both, so its text keeps the navy inks. */
+const TONES = {
+  light: { ink: NAVY, label: "62,68,120", muted: NAVY3, halo: RGB.paper, accent: ACCENT },
+  dark: { ink: "255,255,255", label: "200,208,245", muted: "164,168,207", halo: "16,20,64", accent: "143,164,255" },
+} as const;
 
 /** Illustrative insights the agent surfaces, one per rise in the terrain. */
 const INSIGHTS = [
@@ -36,10 +41,11 @@ const THRESHOLD_COUNT = 13;
  * raw survey points (data) -> a triangulated network (connection) -> contour lines
  * resolving to a summit (intelligence). The pointer raises a spring-damped hill.
  */
-export function InsightField({ className }: { className?: string }) {
+export function InsightField({ className, tone = "light" }: { className?: string; tone?: "light" | "dark" }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    const T = TONES[tone];
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -216,7 +222,7 @@ export function InsightField({ className }: { className?: string }) {
         const index = k % 4 === 3;
         c.beginPath();
         traceContour(c, contour, cell, cell);
-        c.strokeStyle = rgba(NAVY, index ? 0.62 : 0.34);
+        c.strokeStyle = rgba(T.ink, index ? 0.62 : 0.34);
         c.lineWidth = index ? 1.15 : 0.8;
         c.stroke();
       });
@@ -271,14 +277,14 @@ export function InsightField({ className }: { className?: string }) {
           c.moveTo(seg[i], seg[i + 1]);
           c.lineTo(seg[i + 2], seg[i + 3]);
         }
-        c.strokeStyle = rgba(NAVY, 0.1 + bi * 0.09);
+        c.strokeStyle = rgba(T.ink, 0.1 + bi * 0.09);
         c.lineWidth = 0.75;
         c.stroke();
       });
 
       // 4. Points, fading as the field resolves into contours.
       const pointIntro = smoothstep(0, 0.35, intro);
-      c.fillStyle = rgba(NAVY, 1);
+      c.fillStyle = rgba(T.ink, 1);
       for (const p of points) {
         const sv = s(p.x, p.y);
         const a = (1 - smoothstep(0.52, 0.78, sv)) * 0.85 * pointIntro;
@@ -323,7 +329,7 @@ export function InsightField({ className }: { className?: string }) {
       const lv = values[clamp(Math.round(cur.y / cell) + 1, 0, rows - 1) * cols + clamp(Math.round(cur.x / cell) + 1, 0, cols - 1)] - 0.12;
       c.beginPath();
       traceContour(c, contourAt(gen, values, lv), cell, cell);
-      c.strokeStyle = rgba(ACCENT, 0.9 * agent.card.x);
+      c.strokeStyle = rgba(T.accent, 0.9 * agent.card.x);
       c.lineWidth = 1.8;
       c.stroke();
       c.restore();
@@ -332,16 +338,16 @@ export function InsightField({ className }: { className?: string }) {
       c.font = `500 10px ${mono}`;
       visible.forEach((r) => {
         const on = r === cur;
-        c.fillStyle = rgba(on ? ACCENT : NAVY, on ? 1 : 0.7);
+        c.fillStyle = rgba(on ? T.accent : T.ink, on ? 1 : 0.7);
         c.beginPath();
         c.arc(r.x, r.y, on ? 4 : 3, 0, Math.PI * 2);
         c.fill();
         if (!on || agent.card.x < 0.5) {
-          c.strokeStyle = rgba(RGB.paper, 1);
+          c.strokeStyle = rgba(T.halo, 1);
           c.lineWidth = 4;
           c.lineJoin = "round";
           c.strokeText(INSIGHTS[r.k].metric.toUpperCase(), r.x + 9, r.y + 3.5);
-          c.fillStyle = rgba(NAVY2, 0.9);
+          c.fillStyle = rgba(T.label, 0.9);
           c.fillText(INSIGHTS[r.k].metric.toUpperCase(), r.x + 9, r.y + 3.5);
         }
       });
@@ -350,12 +356,12 @@ export function InsightField({ className }: { className?: string }) {
       const ax = agent.x.x;
       const ay = agent.y.x;
       const breathe = 10 + Math.sin(t * 3) * 2.5;
-      c.strokeStyle = rgba(ACCENT, 0.45);
+      c.strokeStyle = rgba(T.accent, 0.45);
       c.lineWidth = 1.2;
       c.beginPath();
       c.arc(ax, ay, breathe, 0, Math.PI * 2);
       c.stroke();
-      c.fillStyle = rgba(ACCENT, 1);
+      c.fillStyle = rgba(T.accent, 1);
       c.beginPath();
       c.arc(ax, ay, 5.5, 0, Math.PI * 2);
       c.fill();
@@ -405,14 +411,14 @@ export function InsightField({ className }: { className?: string }) {
         c.font = `500 ${mobile ? 10 : 11}px ${mono}`;
         c.fillText(ins.note, cx + 14, cy + ch - 12);
         // Leader from the rise to the card.
-        c.strokeStyle = rgba(NAVY, 0.3);
+        c.strokeStyle = rgba(T.ink, 0.3);
         c.beginPath();
         c.moveTo(cur.x, cur.y);
         c.lineTo(cx + (cx > cur.x ? 0 : cw), cy + (cy < cur.y ? ch : 0));
         c.stroke();
       }
       c.globalAlpha = ready * 0.8;
-      c.fillStyle = rgba(NAVY3, 1);
+      c.fillStyle = rgba(T.muted, 1);
       c.font = `500 10px ${mono}`;
       c.textAlign = "right";
       c.fillText("Illustrative insights", w - 16, h - 16);
@@ -482,7 +488,7 @@ export function InsightField({ className }: { className?: string }) {
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
-  }, []);
+  }, [tone]);
 
   return <canvas ref={canvasRef} aria-hidden="true" className={className} />;
 }

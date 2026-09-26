@@ -16,7 +16,7 @@ const LINKS = [
  * Header for Version 2. It reads the ground beneath it: sections marked
  * data-ground="dark" switch it to the white logo on navy.
  */
-export function NavV2() {
+export function NavV2({ version = 2 }: { version?: 2 | 3 }) {
   const [dark, setDark] = useState(false);
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
@@ -58,7 +58,9 @@ export function NavV2() {
   const ground = open
     ? "bg-navy-950"
     : !onLight
-      ? "bg-navy-950/95 shadow-[0_1px_0_rgb(255_255_255/0.08)]"
+      ? solid
+        ? "bg-navy-950/95 shadow-[0_1px_0_rgb(255_255_255/0.08)]"
+        : "bg-transparent"
       : solid
         ? "bg-paper/95 shadow-[0_1px_0_rgb(16_20_64/0.1)]"
         : "bg-transparent";
@@ -95,7 +97,7 @@ export function NavV2() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <VersionSwitch current={2} tone={onLight ? "light" : "dark"} />
+            <VersionSwitch current={version} tone={onLight ? "light" : "dark"} />
             <span className="hidden sm:block">
               <CutButton href="#contact" tone={onLight ? "navy" : "white"}>
                 Talk to us
