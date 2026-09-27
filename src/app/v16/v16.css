@@ -1,0 +1,396 @@
+/* Version 16: Spatial 3D. Every selector is scoped under .v16. */
+
+.v16 {
+  --g0: #04050f;
+  --g1: #060818;
+  --g2: #0a0e26;
+  --g3: #0f1434;
+  --navy: #101440;
+  --navy-2: #171c52;
+  --navy-3: #252b6a;
+  --line: rgb(168 196 255 / 0.1);
+  --line-2: rgb(168 196 255 / 0.2);
+  --ice: #8fdcff;
+  --ice-2: #d4f3ff;
+  --ice-deep: #3aa8e0;
+  --warm: #ffb26b;
+  --tx: #eef2ff;
+  --tx-2: rgb(214 222 255 / 0.7);
+  --tx-3: rgb(214 222 255 / 0.46);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  background: var(--g1);
+  color: var(--tx);
+  font-family: var(--font-v16-body), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: clip;
+  min-height: 100vh;
+}
+
+.v16 ::selection {
+  background: rgb(143 220 255 / 0.3);
+}
+
+.v16 :focus-visible {
+  outline: 2px solid var(--ice);
+  outline-offset: 3px;
+}
+
+.v16 .v16-display {
+  font-family: var(--font-v16-display), ui-sans-serif, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.v16 .v16-h2 {
+  font-family: var(--font-v16-display), ui-sans-serif, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.032em;
+  line-height: 1.06;
+  font-size: clamp(2rem, 4.2vw, 3.5rem);
+  text-wrap: balance;
+}
+
+.v16 .v16-label {
+  font-family: var(--font-v16-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.v16 .v16-mono {
+  font-family: var(--font-v16-mono), ui-monospace, monospace;
+}
+
+.v16 .v16-lead {
+  color: var(--tx-2);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.v16 .v16-wrap {
+  margin-inline: auto;
+  max-width: 1280px;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .v16 .v16-wrap {
+    padding-inline: 2rem;
+  }
+}
+
+/* Buttons: the wordmark's chamfer on the top-right corner. */
+.v16 .v16-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 3rem;
+  padding: 0 1.4rem 0 1.25rem;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 0 100%);
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    box-shadow 220ms ease,
+    transform 160ms var(--ease);
+}
+.v16 .v16-btn:active {
+  transform: scale(0.97);
+}
+.v16 .v16-btn svg {
+  transition: transform 300ms var(--ease);
+}
+.v16 .v16-btn:hover svg {
+  transform: translateX(3px);
+}
+.v16 .v16-btn-primary {
+  background: var(--ice-2);
+  color: var(--g1);
+}
+.v16 .v16-btn-primary:hover {
+  background: #fff;
+}
+.v16 .v16-btn-ghost {
+  color: var(--tx);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.v16 .v16-btn-ghost:hover {
+  box-shadow: inset 0 0 0 1px rgb(143 220 255 / 0.6);
+}
+.v16 .v16-btn-sm {
+  height: 2.5rem;
+  font-size: 0.875rem;
+  padding: 0 1rem;
+}
+
+/* A panel with a lit top edge. Solid, no blur. */
+.v16 .v16-panel {
+  position: relative;
+  background: linear-gradient(180deg, rgb(23 28 82 / 0.5), rgb(10 14 38 / 0.85));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.v16 .v16-panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px -1px auto;
+  height: 1px;
+  border-radius: 14px 14px 0 0;
+  background: linear-gradient(90deg, transparent, rgb(143 220 255 / 0.45), transparent);
+  pointer-events: none;
+}
+
+/* Tilt cards: rotate toward the cursor with a specular highlight that follows it. */
+.v16 .v16-tilt {
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  --my: 0%;
+  --glow: 0;
+  transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 600ms var(--ease);
+  will-change: transform;
+}
+.v16 .v16-tilt[data-live] {
+  transition: transform 90ms linear;
+}
+.v16 .v16-tilt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--glow);
+  transition: opacity 400ms ease;
+  background:
+    radial-gradient(380px circle at var(--mx) var(--my), rgb(190 235 255 / 0.13), transparent 50%),
+    radial-gradient(160px circle at var(--mx) var(--my), rgb(255 255 255 / 0.08), transparent 60%);
+  mix-blend-mode: screen;
+}
+
+/* Hero entrance. */
+@media (prefers-reduced-motion: no-preference) {
+  .v16 .v16-rise {
+    animation: v16-rise 1100ms var(--ease) both;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes v16-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.v16 .v16-marquee {
+  animation: v16-marquee 38s linear infinite;
+}
+@keyframes v16-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Layers: four slabs, exploded isometric to flat stack, driven by --t (0..1). */
+.v16 .v16-stage-3d {
+  perspective: 1500px;
+  perspective-origin: 50% 40%;
+}
+.v16 .v16-rig {
+  --t: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(8deg + 50deg * (1 - var(--t)))) rotateZ(calc(-40deg * (1 - var(--t))));
+}
+.v16 .v16-slab {
+  --sw: 272px;
+  --sh: clamp(66px, 9.5svh, 120px);
+  --gap: 96px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--sw);
+  height: var(--sh);
+  margin: calc(var(--sh) / -2) 0 0 calc(var(--sw) / -2);
+  transform-style: preserve-3d;
+  transform: translate3d(
+    0,
+    calc((2 - var(--i)) * (var(--sh) + 12px) * var(--t)),
+    calc((var(--i) - 1.5) * var(--gap) * (1 - var(--t)))
+  );
+}
+@media (min-width: 640px) {
+  .v16 .v16-slab {
+    --sw: 400px;
+    --sh: clamp(80px, 11.5svh, 136px);
+    --gap: 130px;
+  }
+}
+@media (min-width: 1024px) {
+  .v16 .v16-slab {
+    --sw: 460px;
+    --sh: clamp(84px, 12.5svh, 140px);
+    --gap: 150px;
+  }
+}
+.v16 .v16-slab-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background:
+    linear-gradient(135deg, rgb(143 220 255 / 0.1), transparent 45%),
+    linear-gradient(180deg, #151b52, #0b0f30);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.8);
+  transition:
+    border-color 400ms ease,
+    box-shadow 400ms ease;
+}
+.v16 .v16-slab[data-on] .v16-slab-face {
+  border-color: rgb(143 220 255 / 0.7);
+  box-shadow:
+    0 0 0 1px rgb(143 220 255 / 0.25),
+    0 0 50px -8px rgb(143 220 255 / 0.45),
+    0 30px 60px -30px rgb(0 0 0 / 0.8);
+}
+.v16 .v16-slab[data-outcome] .v16-slab-face {
+  border-color: rgb(255 178 107 / 0.55);
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgb(255 178 107 / 0.2), transparent 55%),
+    linear-gradient(180deg, #1a1f5a, #0b0f30);
+  box-shadow:
+    0 0 60px -12px rgb(255 178 107 / 0.45),
+    0 30px 60px -30px rgb(0 0 0 / 0.8);
+}
+.v16 .v16-slab-edge {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: calc(100% - 1px);
+  height: 14px;
+  transform-origin: top;
+  transform: rotateX(-90deg);
+  background: linear-gradient(180deg, #1c2468, #070a22);
+  border-radius: 0 0 6px 6px;
+}
+.v16 .v16-slab-shadow {
+  position: absolute;
+  inset: 8%;
+  border-radius: 12px;
+  background: rgb(143 220 255 / 0.08);
+  filter: blur(24px);
+  transform: translateZ(-40px);
+}
+
+/* Fly-through and ring: transforms are written by script each frame. */
+.v16 .v16-fly-stage {
+  perspective: 700px;
+  perspective-origin: 50% 50%;
+}
+.v16 .v16-fly-world {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.v16 .v16-fly-plane {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(88vw, 900px);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.v16 .v16-ring-stage {
+  perspective: 1300px;
+  perspective-origin: 50% 30%;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.v16 .v16-ring-stage[data-drag] {
+  cursor: grabbing;
+}
+.v16 .v16-ring {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.v16 .v16-ring-card {
+  position: absolute;
+  top: 0;
+  left: calc(var(--cw) / -2);
+  width: var(--cw);
+  backface-visibility: hidden;
+}
+
+/* The Genius Portal window, floating in perspective. */
+.v16 .v16-portal-stage {
+  perspective: 1800px;
+  perspective-origin: 50% 20%;
+}
+.v16 .v16-portal {
+  --prx: 16deg;
+  --pry: -14deg;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--prx)) rotateY(var(--pry));
+  transition: transform 900ms var(--ease);
+}
+.v16 .v16-portal[data-live] {
+  transition: transform 160ms linear;
+}
+.v16 .v16-pop-1 {
+  transform: translateZ(28px);
+}
+.v16 .v16-pop-2 {
+  transform: translateZ(56px);
+}
+
+.v16 .v16-hex {
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%);
+}
+
+.v16 .v16-grid-floor {
+  background-image:
+    linear-gradient(rgb(143 220 255 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(143 220 255 / 0.08) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 30%, #000, transparent 75%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v16 .v16-tilt,
+  .v16 .v16-portal {
+    transform: none !important;
+    transition: none;
+  }
+  .v16 .v16-tilt::after {
+    display: none;
+  }
+  .v16 .v16-marquee {
+    animation: none;
+  }
+  .v16 .v16-rig {
+    --t: 1 !important;
+    transform: none;
+  }
+}

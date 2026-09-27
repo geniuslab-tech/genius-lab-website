@@ -1,0 +1,198 @@
+/*
+  Version 9: Cinematic.
+  Near-black stage, deep navy light, one cold highlight (ice).
+  Every selector is scoped under .v9.
+*/
+
+.v9 {
+  --v9-ink: #020309;
+  --v9-ink-2: #06081a;
+  --v9-navy: #101440;
+  --v9-navy-2: #0a0d2e;
+  --v9-navy-3: #1a1f5c;
+  --v9-ice: #a9e4ff;
+  --v9-fog: #c3c8dd;
+  --v9-dim: #7c829e;
+  --v9-rule: rgb(255 255 255 / 0.09);
+  --v9-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-v9-text), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: normal;
+  background: var(--v9-ink);
+  color: #eef0f7;
+  overflow-x: clip;
+}
+
+.v9 ::selection {
+  background: var(--v9-ice);
+  color: var(--v9-ink);
+}
+
+.v9 :focus-visible {
+  outline: 2px solid var(--v9-ice);
+  outline-offset: 3px;
+}
+
+/* Display: Big Shoulders, condensed, set tight and uppercase. */
+.v9 .v9-display {
+  font-family: var(--font-v9-display), "Arial Narrow", sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.005em;
+  font-optical-sizing: auto;
+}
+
+/* Timecode and slate labels. */
+.v9 .v9-tc {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+/* Outlined display type for the one ice word per scene. */
+.v9 .v9-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--v9-ice);
+}
+
+/* Film grain: one static SVG noise tile, jittered in steps. */
+.v9 .v9-grain {
+  position: fixed;
+  inset: -120px;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+}
+
+/* Vignette: darkens the frame edges like a lens. */
+.v9 .v9-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  background: radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgb(0 0 0 / 0.55) 100%);
+}
+
+/* Film-strip sprockets for the horizontal agents track. */
+.v9 .v9-sprockets {
+  height: 14px;
+  background-image: repeating-linear-gradient(90deg, transparent 0 10px, rgb(255 255 255 / 0.12) 10px 22px, transparent 22px 34px);
+  background-size: 34px 8px;
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+}
+
+/* Frame corners, like a viewfinder. */
+.v9 .v9-corners {
+  background:
+    linear-gradient(var(--v9-ice), var(--v9-ice)) top left / 14px 1px no-repeat,
+    linear-gradient(var(--v9-ice), var(--v9-ice)) top left / 1px 14px no-repeat,
+    linear-gradient(var(--v9-ice), var(--v9-ice)) top right / 14px 1px no-repeat,
+    linear-gradient(var(--v9-ice), var(--v9-ice)) top right / 1px 14px no-repeat,
+    linear-gradient(var(--v9-ice), var(--v9-ice)) bottom left / 14px 1px no-repeat,
+    linear-gradient(var(--v9-ice), var(--v9-ice)) bottom left / 1px 14px no-repeat,
+    linear-gradient(var(--v9-ice), var(--v9-ice)) bottom right / 14px 1px no-repeat,
+    linear-gradient(var(--v9-ice), var(--v9-ice)) bottom right / 1px 14px no-repeat;
+}
+
+.v9 .v9-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  height: 3.25rem;
+  padding: 0 1.4rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  transition:
+    background-color 200ms,
+    color 200ms,
+    transform 160ms var(--v9-ease);
+}
+.v9 .v9-btn:active {
+  transform: scale(0.97);
+}
+.v9 .v9-btn-ice {
+  background: var(--v9-ice);
+  color: var(--v9-ink);
+}
+.v9 .v9-btn-ice:hover {
+  background: #d4f1ff;
+}
+.v9 .v9-btn-line {
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3);
+}
+.v9 .v9-btn-line:hover {
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.8);
+}
+
+/* Crossfade used when a scene swaps its active copy. */
+.v9 .v9-swap {
+  animation: v9-swap 600ms var(--v9-ease) both;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .v9 .v9-grain {
+    animation: v9-grain 0.9s steps(6) infinite;
+  }
+  .v9 .v9-unmask {
+    animation: v9-unmask 1300ms var(--v9-ease) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .v9 .v9-fadein {
+    animation: v9-fadein 1100ms var(--v9-ease) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .v9 .v9-blink {
+    animation: v9-blink 1.2s steps(2) infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v9 .v9-swap {
+    animation: none;
+  }
+}
+
+@keyframes v9-grain {
+  0% { transform: translate(0, 0); }
+  17% { transform: translate(-38px, 22px); }
+  33% { transform: translate(24px, -46px); }
+  50% { transform: translate(-60px, -18px); }
+  67% { transform: translate(44px, 36px); }
+  83% { transform: translate(-16px, 58px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes v9-unmask {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(0.35em);
+  }
+  to {
+    clip-path: inset(0 0 -0.2em 0);
+    transform: none;
+  }
+}
+
+@keyframes v9-fadein {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes v9-swap {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes v9-blink {
+  0% { opacity: 1; }
+  100% { opacity: 0.2; }
+}

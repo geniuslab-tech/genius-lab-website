@@ -1,0 +1,367 @@
+/*
+  Version 20: clarity split.
+  Calm, bright premium surfaces with black and deep navy chapters, one brand blue.
+  Every selector is scoped under .v20.
+*/
+
+.v20 {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --blue: #2548f0;
+  --blue-hover: #1b39cf;
+  font-family: var(--font-v20-text), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  letter-spacing: -0.003em;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Tones: any element can set one; children inherit the tokens ---------- */
+
+.v20 [data-tone="white"],
+.v20 [data-tone="mist"] {
+  --fg: #0c0e24;
+  --fg2: #4a4d62;
+  --fg3: #5f6277;
+  --rule: rgb(12 14 36 / 0.1);
+  --rule-strong: rgb(12 14 36 / 0.22);
+  --acc: #2548f0;
+  --acc-soft: rgb(37 72 240 / 0.08);
+  --dim: rgb(12 14 36 / 0.2);
+  color-scheme: light;
+}
+.v20 [data-tone="white"] { --bg: #ffffff; --card: #f5f5f7; --card2: #ffffff; }
+.v20 [data-tone="mist"] { --bg: #f5f5f7; --card: #ffffff; --card2: #fbfbfd; }
+
+.v20 [data-tone="black"],
+.v20 [data-tone="navy"] {
+  --fg: #f5f5f7;
+  --fg2: rgb(245 245 247 / 0.74);
+  --fg3: rgb(245 245 247 / 0.58);
+  --rule: rgb(245 245 247 / 0.12);
+  --rule-strong: rgb(245 245 247 / 0.28);
+  --acc: #8fa6ff;
+  --acc-soft: rgb(143 166 255 / 0.12);
+  --dim: rgb(245 245 247 / 0.2);
+  color-scheme: dark;
+}
+.v20 [data-tone="black"] { --bg: #000000; --card: #111114; --card2: #1a1a1f; }
+.v20 [data-tone="navy"] { --bg: #080a26; --card: #10133a; --card2: #171b4a; }
+
+.v20 .v20-sec {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+.v20 ::selection { background: rgb(37 72 240 / 0.22); }
+.v20 :focus-visible { outline: 2px solid var(--acc, #2548f0); outline-offset: 3px; border-radius: 6px; }
+
+/* ---------- Type ---------- */
+
+.v20 .v20-display {
+  font-family: var(--font-v20-display), var(--font-v20-text), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.036em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.v20 .v20-h1 { font-size: clamp(2.625rem, 7.4vw, 6.25rem); letter-spacing: -0.048em; line-height: 0.98; }
+.v20 .v20-h2 { font-size: clamp(2.375rem, 5.4vw, 4.75rem); letter-spacing: -0.042em; line-height: 1.02; }
+.v20 .v20-h3 { font-size: clamp(1.875rem, 3.2vw, 2.875rem); letter-spacing: -0.034em; line-height: 1.06; }
+.v20 .v20-h4 { font-size: 1.375rem; letter-spacing: -0.022em; line-height: 1.2; }
+
+.v20 .v20-eyebrow {
+  font-family: var(--font-v20-display), sans-serif;
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--acc);
+}
+.v20 .v20-lead {
+  font-size: clamp(1.1875rem, 1.7vw, 1.4375rem);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+  color: var(--fg2);
+  text-wrap: pretty;
+}
+.v20 .v20-body { color: var(--fg2); line-height: 1.65; text-wrap: pretty; }
+.v20 .v20-fg { color: var(--fg); }
+.v20 .v20-fg2 { color: var(--fg2); }
+.v20 .v20-fg3 { color: var(--fg3); }
+.v20 .v20-acc { color: var(--acc); }
+.v20 .v20-rule { border-color: var(--rule); }
+.v20 .v20-num { font-variant-numeric: tabular-nums; }
+
+/* Footnote-style disclaimers, like a spec page. */
+.v20 .v20-note {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--fg3);
+}
+.v20 .v20-note sup { font-size: 0.625rem; margin-right: 0.15em; }
+
+/* ---------- Controls ---------- */
+
+.v20 .v20-pill {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 3rem;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  background: var(--blue);
+  color: #fff;
+  transition: background-color 240ms var(--ease-soft), transform 220ms var(--ease), box-shadow 240ms var(--ease-soft);
+}
+.v20 .v20-pill:active { transform: scale(0.97); }
+.v20 .v20-pill-sm { height: 2.125rem; padding: 0 1rem; font-size: 0.875rem; }
+.v20 .v20-pill-ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--rule-strong); }
+.v20 .v20-pill-invert { background: var(--fg); color: var(--bg); }
+
+.v20 .v20-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--acc);
+}
+.v20 .v20-more svg { transition: transform 260ms var(--ease); }
+
+@media (hover: hover) {
+  .v20 .v20-pill:hover { background: var(--blue-hover); }
+  .v20 .v20-pill-ghost:hover { background: var(--acc-soft); }
+  .v20 .v20-pill-invert:hover { background: var(--fg2); }
+  .v20 .v20-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .v20 .v20-more:hover svg { transform: translateX(3px); }
+  .v20 .v20-navlink:hover { color: var(--fg); }
+  .v20 .v20-seg-btn:hover { color: var(--fg); }
+  .v20 .v20-round:hover:not(:disabled) { background: var(--rule-strong); }
+}
+
+.v20 .v20-navlink { font-size: 0.8125rem; letter-spacing: -0.005em; color: var(--fg2); transition: color 200ms; }
+
+/* Round icon control (gallery arrows, film play). */
+.v20 .v20-round {
+  display: inline-grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--rule);
+  color: var(--fg);
+  transition: background-color 200ms, opacity 200ms, transform 220ms var(--ease);
+}
+.v20 .v20-round:active:not(:disabled) { transform: scale(0.94); }
+.v20 .v20-round:disabled { opacity: 0.35; cursor: default; }
+
+/* Segmented control. */
+.v20 .v20-seg {
+  display: inline-flex;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--rule);
+  scrollbar-width: none;
+}
+.v20 .v20-seg::-webkit-scrollbar { display: none; }
+.v20 .v20-seg-btn {
+  position: relative;
+  flex: none;
+  height: 2.25rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--fg2);
+  white-space: nowrap;
+  transition: color 300ms var(--ease-soft);
+}
+.v20 .v20-seg-btn[aria-pressed="true"] { color: var(--fg); }
+.v20 .v20-seg-thumb {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--card2);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 2px 8px rgb(0 0 0 / 0.06);
+}
+
+/* ---------- Surfaces ---------- */
+
+.v20 .v20-card {
+  border-radius: 28px;
+  background: var(--card);
+}
+.v20 .v20-card-2 { border-radius: 20px; background: var(--card2); }
+.v20 .v20-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 1.75rem;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg2);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.v20 .v20-dot { width: 6px; height: 6px; flex: none; border-radius: 999px; background: var(--acc); }
+
+/* ---------- Header ---------- */
+
+.v20 .v20-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  transition: background-color 600ms var(--ease-soft), box-shadow 600ms var(--ease-soft);
+  background-color: rgb(255 255 255 / 0.78);
+  box-shadow: 0 1px 0 rgb(12 14 36 / 0.06);
+  -webkit-backdrop-filter: saturate(1.8) blur(20px);
+  backdrop-filter: saturate(1.8) blur(20px);
+}
+.v20 .v20-header[data-tone="black"],
+.v20 .v20-header[data-tone="navy"] {
+  background-color: rgb(8 10 30 / 0.72);
+  box-shadow: 0 1px 0 rgb(245 245 247 / 0.08);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .v20 .v20-header { background-color: #fff; }
+  .v20 .v20-header[data-tone="black"],
+  .v20 .v20-header[data-tone="navy"] { background-color: #080a26; }
+}
+.v20 .v20-logo-navy { display: block; }
+.v20 .v20-logo-white { display: none; }
+.v20 [data-tone="black"] .v20-logo-navy,
+.v20 [data-tone="navy"] .v20-logo-navy,
+.v20 [data-tone="black"].v20-header .v20-logo-navy,
+.v20 [data-tone="navy"].v20-header .v20-logo-navy { display: none; }
+.v20 [data-tone="black"] .v20-logo-white,
+.v20 [data-tone="navy"] .v20-logo-white,
+.v20 [data-tone="black"].v20-header .v20-logo-white,
+.v20 [data-tone="navy"].v20-header .v20-logo-white { display: block; }
+
+.v20 .v20-menu {
+  transition: opacity 360ms var(--ease-soft), transform 520ms var(--ease);
+}
+.v20 .v20-menu[data-open="false"] { opacity: 0; transform: translateY(-8px); pointer-events: none; visibility: hidden; }
+
+/* ---------- Hero device ---------- */
+
+.v20 .v20-device {
+  border-radius: 30px;
+  padding: 10px;
+  background: #16161a;
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.85),
+    inset 0 0 0 1px rgb(255 255 255 / 0.1),
+    0 70px 120px -50px rgb(8 10 38 / 0.5),
+    0 30px 60px -40px rgb(8 10 38 / 0.35);
+}
+@media (min-width: 640px) { .v20 .v20-device { padding: 12px; border-radius: 36px; } }
+.v20 .v20-screen { border-radius: 20px; overflow: hidden; background: #fbfbfd; }
+@media (min-width: 640px) { .v20 .v20-screen { border-radius: 25px; } }
+
+/* ---------- Story ---------- */
+
+.v20 .v20-story {
+  transition: background-color 1400ms var(--ease-soft), color 1400ms var(--ease-soft);
+}
+.v20 .v20-story .v20-step-inner { transition: opacity 900ms var(--ease-soft); }
+@media (min-width: 1024px) {
+  .v20.v20-armed .v20-story [data-step][data-on="false"] .v20-step-inner { opacity: 0.28; }
+}
+
+/* Morph SVG colours come from the tone, so they cross-fade with the section. */
+.v20 .m-node { fill: var(--fg); transition: fill 1400ms var(--ease-soft); }
+.v20 .m-hot { fill: var(--acc); transition: fill 1400ms var(--ease-soft); }
+.v20 .m-sat { fill: var(--acc); }
+.v20 .m-edge { stroke: var(--fg); stroke-opacity: 0.26; stroke-width: 1.2; transition: stroke 1400ms var(--ease-soft); }
+.v20 .m-edge-core { stroke: var(--acc); stroke-opacity: 0.55; }
+.v20 .m-ring { fill: none; stroke: var(--fg); stroke-opacity: 0.2; stroke-dasharray: 3 7; }
+.v20 .m-plate { fill: var(--fg); fill-opacity: 0.04; stroke: var(--fg); stroke-opacity: 0.26; }
+.v20 .m-plate-top { fill: var(--acc); fill-opacity: 0.1; stroke: var(--acc); stroke-opacity: 0.6; }
+.v20 .m-label {
+  fill: var(--fg2);
+  font-family: var(--font-v20-text), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+.v20 .m-label-strong { fill: var(--acc); font-weight: 600; }
+.v20 .m-spin {
+  transform-box: view-box;
+  transform-origin: 300px 300px;
+  animation: v20-spin 60s linear infinite;
+}
+.v20 .m-spin-rev { animation-direction: reverse; }
+@keyframes v20-spin { to { transform: rotate(360deg); } }
+
+/* ---------- Manifesto: words light up as you read ---------- */
+
+.v20 .v20-word { transition: color 500ms var(--ease-soft); }
+.v20.v20-armed .v20-word:not([data-lit]) { color: var(--dim); }
+
+/* ---------- Gallery ---------- */
+
+.v20 .v20-rail {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-block: 0.5rem 1.5rem;
+  padding-inline: max(1.25rem, calc((100% - 1120px) / 2));
+  scroll-padding-inline: max(1.25rem, calc((100% - 1120px) / 2));
+}
+.v20 .v20-rail::-webkit-scrollbar { display: none; }
+.v20 .v20-slide {
+  flex: none;
+  width: min(86vw, 820px);
+  scroll-snap-align: start;
+  transition: opacity 700ms var(--ease-soft);
+}
+.v20.v20-armed .v20-slide[data-on="false"] { opacity: 0.55; }
+@media (max-width: 639px) {
+  .v20.v20-armed .v20-slide[data-on="false"] { opacity: 1; }
+}
+
+/* ---------- Reveal: only hidden once the page has armed it ---------- */
+
+.v20 [data-v20-r] {
+  transition:
+    opacity 1000ms var(--ease-soft) var(--d, 0ms),
+    transform 1300ms var(--ease) var(--d, 0ms);
+}
+.v20.v20-armed [data-v20-r]:not([data-in]) {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+
+/* Page intro for above-the-fold copy. CSS time-based, so it completes even without JS. */
+@keyframes v20-intro {
+  from { opacity: 0; transform: translate3d(0, 20px, 0); }
+}
+.v20 .v20-intro { animation: v20-intro 1200ms var(--ease) both; animation-delay: var(--d, 0ms); }
+
+@media (prefers-reduced-motion: reduce) {
+  .v20 .v20-intro { animation: none; }
+  .v20 [data-v20-r] { transition: none; }
+  .v20 .m-spin { animation: none; }
+  .v20 .v20-story,
+  .v20 .m-node,
+  .v20 .m-hot,
+  .v20 .m-edge { transition-duration: 1ms; }
+}

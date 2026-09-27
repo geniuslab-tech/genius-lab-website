@@ -1,0 +1,669 @@
+/* Version 19: Midnight product. Every selector is scoped under .v19. */
+
+@property --v19-ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.v19 {
+  --g0: #030409;
+  --g1: #05070f;
+  --g2: #080b18;
+  --g3: #0c1022;
+  --g4: #121733;
+  --navy: #101440;
+  --navy-2: #1a2062;
+  --line: rgb(150 170 255 / 0.08);
+  --line-2: rgb(150 170 255 / 0.15);
+  --line-3: rgb(150 170 255 / 0.26);
+  --acc: #5b8cff;
+  --acc-2: #a9c3ff;
+  --acc-3: #dbe6ff;
+  --acc-rgb: 91 140 255;
+  --warm: #ffb454;
+  --warm-rgb: 255 180 84;
+  --ok: #57d9a3;
+  --tx: #eef1fa;
+  --tx-2: rgb(222 228 247 / 0.7);
+  --tx-3: rgb(222 228 247 / 0.54);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+
+  background: var(--g1);
+  color: var(--tx);
+  font-family: var(--font-v19-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.v19 ::selection {
+  background: rgb(var(--acc-rgb) / 0.35);
+  color: #fff;
+}
+.v19 :focus-visible {
+  outline: 2px solid var(--acc-2);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Type. */
+.v19 .v19-h1 {
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-wrap: balance;
+}
+.v19 .v19-h2 {
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  text-wrap: balance;
+}
+.v19 .v19-h3 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.v19 .v19-label {
+  font-family: var(--font-v19-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.v19 .v19-mono {
+  font-family: var(--font-v19-mono), ui-monospace, monospace;
+}
+.v19 .v19-lead {
+  color: var(--tx-2);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.v19 .v19-lit {
+  color: var(--acc-2);
+}
+
+.v19 .v19-wrap {
+  margin-inline: auto;
+  max-width: 1200px;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .v19 .v19-wrap {
+    padding-inline: 2rem;
+  }
+}
+
+/* Hairline grid ground, and a bright copy of it swept by a moving band of light. */
+.v19 .v19-grid,
+.v19 .v19-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: 72px 72px;
+  background-position: center top;
+}
+.v19 .v19-grid {
+  background-image:
+    linear-gradient(rgb(150 170 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(150 170 255 / 0.05) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 80%);
+}
+.v19 .v19-sweep {
+  background-image:
+    linear-gradient(rgb(var(--acc-rgb) / 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--acc-rgb) / 0.4) 1px, transparent 1px);
+  mask-image:
+    linear-gradient(105deg, transparent 42%, #000 50%, transparent 58%),
+    radial-gradient(ellipse 80% 70% at 50% 0%, #000 20%, transparent 75%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+  mask-size:
+    300% 100%,
+    100% 100%;
+  mask-repeat: no-repeat;
+  mask-position:
+    120% 0,
+    0 0;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-sweep {
+    animation: v19-sweep 11s var(--ease-io) infinite;
+  }
+}
+@keyframes v19-sweep {
+  0% {
+    mask-position:
+      120% 0,
+      0 0;
+  }
+  55%,
+  100% {
+    mask-position:
+      -20% 0,
+      0 0;
+  }
+}
+
+/* Buttons. */
+.v19 .v19-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 2.875rem;
+  padding: 0 1.15rem 0 1.25rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition:
+    background-color 220ms ease,
+    box-shadow 300ms ease,
+    color 220ms ease,
+    transform 160ms var(--ease);
+}
+.v19 .v19-btn:active {
+  transform: scale(0.97);
+}
+.v19 .v19-btn svg {
+  transition: transform 320ms var(--ease);
+}
+.v19 .v19-btn:hover svg {
+  transform: translateX(3px);
+}
+.v19 .v19-btn-primary {
+  background: var(--acc-3);
+  color: #060a1c;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 0 0 1px rgb(var(--acc-rgb) / 0.4),
+    0 10px 30px -10px rgb(var(--acc-rgb) / 0.6);
+}
+.v19 .v19-btn-primary:hover {
+  background: #fff;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 0 0 1px rgb(var(--acc-rgb) / 0.6),
+    0 12px 40px -8px rgb(var(--acc-rgb) / 0.8);
+}
+.v19 .v19-btn-ghost {
+  color: var(--tx);
+  background: rgb(255 255 255 / 0.02);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.v19 .v19-btn-ghost:hover {
+  background: rgb(255 255 255 / 0.05);
+}
+.v19 .v19-btn-sm {
+  height: 2.25rem;
+  font-size: 0.8125rem;
+  padding: 0 0.9rem 0 1rem;
+}
+
+/* Border beam: a short arc of light that travels around the border while hovered. */
+.v19 .v19-beam {
+  isolation: isolate;
+}
+.v19 .v19-beam::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(from var(--v19-ang), transparent 0 72%, rgb(var(--acc-rgb) / 0.9) 86%, #fff 90%, transparent 94%);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.v19 .v19-beam:hover::before,
+.v19 .v19-beam:focus-visible::before,
+.v19 .v19-beam[data-on]::before {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-beam:hover::before,
+  .v19 .v19-beam:focus-visible::before,
+  .v19 .v19-beam[data-on]::before {
+    animation: v19-spin 2.8s linear infinite;
+  }
+}
+.v19 .v19-beam-warm::before {
+  background: conic-gradient(from var(--v19-ang), transparent 0 72%, rgb(var(--warm-rgb) / 0.9) 86%, #fff5e6 90%, transparent 94%);
+}
+
+/* Slowly rotating gradient border, always on. */
+.v19 .v19-conic {
+  position: relative;
+  isolation: isolate;
+}
+.v19 .v19-conic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--v19-ang),
+    rgb(var(--acc-rgb) / 0.08),
+    rgb(var(--acc-rgb) / 0.7),
+    rgb(var(--acc-rgb) / 0.08) 30%,
+    rgb(var(--acc-rgb) / 0.08) 55%,
+    rgb(var(--warm-rgb) / 0.5) 70%,
+    rgb(var(--acc-rgb) / 0.08) 85%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-conic::after {
+    animation: v19-spin 14s linear infinite;
+  }
+}
+@keyframes v19-spin {
+  to {
+    --v19-ang: 360deg;
+  }
+}
+
+/* Surfaces. Solid, never frosted. */
+.v19 .v19-panel {
+  position: relative;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--g3), var(--g2));
+}
+.v19 .v19-panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px 12% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--acc-rgb) / 0.45), transparent);
+  pointer-events: none;
+}
+
+/* Cursor spotlight on a surface: set --sx/--sy on pointer move. */
+.v19 .v19-spot {
+  --sx: 50%;
+  --sy: 50%;
+  --so: 0;
+}
+.v19 .v19-spot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--so);
+  transition: opacity 400ms ease;
+  background: radial-gradient(420px circle at var(--sx) var(--sy), rgb(var(--acc-rgb) / 0.1), transparent 60%);
+}
+
+.v19 .v19-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.v19 .v19-dot-acc {
+  background: var(--acc);
+  box-shadow: 0 0 10px rgb(var(--acc-rgb) / 0.8);
+}
+.v19 .v19-dot-warm {
+  background: var(--warm);
+  box-shadow: 0 0 10px rgb(var(--warm-rgb) / 0.8);
+}
+.v19 .v19-dot-ok {
+  background: var(--ok);
+}
+.v19 .v19-dot-dim {
+  background: rgb(222 228 247 / 0.25);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-dot-live {
+    animation: v19-pulse 1.8s ease-in-out infinite;
+  }
+}
+@keyframes v19-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Reveals: hidden only once the controller has armed the page. */
+.v19 .v19-rv {
+  transition:
+    opacity 900ms var(--ease),
+    transform 900ms var(--ease),
+    filter 900ms var(--ease);
+  transition-delay: var(--rd, 0ms);
+}
+.v19[data-rv] .v19-rv:not([data-in]) {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  filter: blur(6px);
+}
+
+/* Hero: blur-in, word by word. */
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-in {
+    animation: v19-in 1200ms var(--ease) both;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes v19-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.3em, 0);
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.v19 .v19-marquee {
+  animation: v19-marquee 44s linear infinite;
+}
+@keyframes v19-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* The hero product window. The scaler fits a 1120px design into any width. */
+.v19 .v19-hstage {
+  --s: 0.3;
+  position: relative;
+  height: calc(720px * var(--s));
+}
+@media (min-width: 480px) {
+  .v19 .v19-hstage {
+    --s: 0.4;
+  }
+}
+@media (min-width: 768px) {
+  .v19 .v19-hstage {
+    --s: 0.64;
+  }
+}
+@media (min-width: 1200px) {
+  .v19 .v19-hstage {
+    --s: 1;
+  }
+}
+.v19 .v19-hscale {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1120px;
+  transform: translateX(-50%) scale(var(--s));
+  transform-origin: top center;
+  perspective: 2200px;
+  perspective-origin: 50% 0%;
+}
+.v19 .v19-hwin {
+  --rx: 22deg;
+  --ry: 0deg;
+  --lx: 50%;
+  --ly: 20%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 1100ms var(--ease);
+}
+.v19 .v19-hwin[data-live] {
+  transition: transform 180ms linear;
+}
+.v19 .v19-z {
+  transform-style: preserve-3d;
+}
+.v19 .v19-z1 {
+  transform: translateZ(24px);
+}
+.v19 .v19-z2 {
+  transform: translateZ(56px);
+}
+.v19 .v19-z3 {
+  transform: translateZ(110px);
+}
+.v19 .v19-z4 {
+  transform: translateZ(160px);
+}
+.v19 .v19-hlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(520px circle at var(--lx) var(--ly), rgb(var(--acc-rgb) / 0.16), transparent 60%),
+    radial-gradient(180px circle at var(--lx) var(--ly), rgb(255 255 255 / 0.06), transparent 70%);
+  mix-blend-mode: screen;
+}
+.v19 .v19-hrim {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--lx) var(--ly), rgb(var(--acc-rgb) / 0.9), transparent 70%);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+/* Problem: the system map. */
+.v19 .v19-map line,
+.v19 .v19-map path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Layers: the exploded stack. Transforms are written by script per scroll frame. */
+.v19 .v19-lstage {
+  --ls: 0.56;
+  position: relative;
+  perspective: 1800px;
+  perspective-origin: 50% 30%;
+}
+@media (min-width: 480px) {
+  .v19 .v19-lstage {
+    --ls: 0.7;
+  }
+}
+@media (min-width: 1024px) {
+  .v19 .v19-lstage {
+    --ls: 0.86;
+  }
+}
+@media (min-width: 1280px) {
+  .v19 .v19-lstage {
+    --ls: 1;
+  }
+}
+.v19 .v19-lrig {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: scale(var(--ls)) rotateX(56deg) rotateZ(-36deg);
+}
+.v19 .v19-slab {
+  position: absolute;
+  left: -230px;
+  top: -150px;
+  width: 460px;
+  height: 300px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.v19 .v19-slab-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid var(--line-2);
+  background:
+    linear-gradient(135deg, rgb(var(--acc-rgb) / 0.08), transparent 50%),
+    linear-gradient(180deg, #10153a, #0a0d22);
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.9);
+  transition:
+    border-color 500ms ease,
+    box-shadow 500ms ease,
+    filter 500ms ease;
+  filter: saturate(0.6) brightness(0.72);
+}
+.v19 .v19-slab[data-on] .v19-slab-face {
+  filter: none;
+  border-color: rgb(var(--acc-rgb) / 0.75);
+  box-shadow:
+    0 0 0 1px rgb(var(--acc-rgb) / 0.25),
+    0 0 70px -10px rgb(var(--acc-rgb) / 0.55),
+    0 40px 80px -30px rgb(0 0 0 / 0.9);
+}
+.v19 .v19-slab[data-warm] .v19-slab-face {
+  filter: none;
+  border-color: rgb(var(--warm-rgb) / 0.6);
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgb(var(--warm-rgb) / 0.18), transparent 55%),
+    linear-gradient(180deg, #15193f, #0a0d22);
+  box-shadow:
+    0 0 70px -14px rgb(var(--warm-rgb) / 0.5),
+    0 40px 80px -30px rgb(0 0 0 / 0.9);
+}
+.v19 .v19-slab-edge {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: calc(100% - 1px);
+  height: 12px;
+  transform-origin: top;
+  transform: rotateX(-90deg);
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, #1b2266, #06081a);
+}
+
+/* Knowledge graph. */
+.v19 .v19-kg-edge {
+  transition:
+    stroke 300ms ease,
+    stroke-opacity 300ms ease;
+}
+.v19 .v19-kg-node {
+  transition:
+    fill 300ms ease,
+    opacity 300ms ease,
+    r 300ms var(--ease);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-kg-flow {
+    animation: v19-flow 2.4s linear infinite;
+  }
+}
+@keyframes v19-flow {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+/* Agent logs. */
+.v19 .v19-log-line {
+  animation: v19-logline 500ms var(--ease) both;
+}
+@keyframes v19-logline {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v19 .v19-log-line {
+    animation: none;
+  }
+}
+
+/* Tour: screen swap. */
+.v19 .v19-screen {
+  animation: v19-screen 700ms var(--ease) both;
+}
+@keyframes v19-screen {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+    filter: blur(8px);
+  }
+}
+.v19 .v19-tab-bar {
+  transform-origin: left;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-tab-bar[data-run] {
+    animation: v19-bar var(--dur, 6000ms) linear both;
+  }
+}
+@keyframes v19-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Ontology ring. */
+@media (prefers-reduced-motion: no-preference) {
+  .v19 .v19-orbit {
+    animation: v19-orbit 40s linear infinite;
+    transform-origin: 240px 240px;
+  }
+}
+@keyframes v19-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.v19 .v19-hex {
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v19 .v19-hwin {
+    transform: rotateX(8deg) !important;
+    transition: none;
+  }
+  .v19 .v19-marquee,
+  .v19 .v19-screen {
+    animation: none;
+  }
+  .v19 .v19-rv,
+  .v19 .v19-slab-face {
+    transition: none;
+  }
+}

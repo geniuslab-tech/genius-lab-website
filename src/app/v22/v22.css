@@ -1,0 +1,348 @@
+/* Version 22, "Chamfer": a design system cut from the wordmark. Every selector is scoped under .v22. */
+
+.v22 {
+  --navy: #101440;
+  --navy-95: #070a25;
+  --navy-9: #0b0e32;
+  --navy-8: #171c52;
+  --navy-7: #252b6a;
+  --navy-5: #5a609c;
+  --navy-3: #a4a8cf;
+  --paper: #f1f3f8;
+  --paper-2: #e6e9f1;
+  --ink: #101440;
+  --ink-2: #41466f;
+  --ink-3: #5f6488;
+  --rule: #dce0ea;
+  --rule-2: #c3c9d9;
+  --signal: #5577ff;
+  --signal-ink: #2f4fe0;
+  --signal-soft: #e8ecff;
+  --signal-lt: #9aaeff;
+  --trace: #2fd4b8;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.77, 0, 0.175, 1);
+  --nav: 4.5rem;
+  --c: 14px;
+
+  font-family: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: normal;
+  background: #fff;
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.v22 ::selection {
+  background: var(--signal);
+  color: #fff;
+}
+
+.v22 :focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+/* ---------- Type ---------- */
+
+.v22 .v22-display {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: "wdth" 125;
+  font-weight: 600;
+  letter-spacing: -0.038em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.v22 .v22-wide {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: "wdth" 118;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.v22 .v22-num {
+  font-family: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.v22 .v22-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.v22 .v22-label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.v22 .v22-shell {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 3.5rem);
+}
+
+/* ---------- The chamfer ----------
+   Top-left and bottom-right cut at 45 degrees, as on the wordmark's letterforms. */
+
+.v22 .ch {
+  clip-path: polygon(var(--c) 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%, 0 var(--c));
+}
+
+.v22 .ch-tr {
+  clip-path: polygon(0 0, calc(100% - var(--c)) 0, 100% var(--c), 100% 100%, 0 100%);
+}
+
+/* A chamfered panel with a 1px keyline: the outer layer is the line, the inner the surface. */
+.v22 .chb {
+  background: var(--bd, var(--rule));
+  padding: 1px;
+  clip-path: polygon(var(--c) 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%, 0 var(--c));
+}
+.v22 .chb > .chi {
+  height: 100%;
+  clip-path: polygon(
+    calc(var(--c) - 0.4px) 0,
+    100% 0,
+    100% calc(100% - var(--c) + 0.4px),
+    calc(100% - var(--c) + 0.4px) 100%,
+    0 100%,
+    0 calc(var(--c) - 0.4px)
+  );
+}
+
+/* Section band: navy with deep cuts on two corners. */
+.v22 .v22-band {
+  --cb: clamp(36px, 7vw, 120px);
+  clip-path: polygon(var(--cb) 0, 100% 0, 100% calc(100% - var(--cb)), calc(100% - var(--cb)) 100%, 0 100%, 0 var(--cb));
+}
+
+/* Hero ground: one large cut into the white page below. */
+.v22 .v22-ground {
+  --hc: clamp(72px, 24vw, 460px);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--hc)), calc(100% - var(--hc)) 100%, 0 100%);
+}
+
+/* Controls */
+.v22 .v22-btn {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    transform 160ms var(--ease);
+}
+.v22 .v22-btn:active {
+  transform: scale(0.97);
+}
+.v22 .v22-btn .v22-arrow {
+  transition: transform 300ms var(--ease);
+}
+.v22 .v22-btn:hover .v22-arrow {
+  transform: translateX(3px);
+}
+
+/* Hex lattice ground texture (dark bands). */
+.v22 .v22-hexfield {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48.5' height='84' viewBox='0 0 48.5 84'%3E%3Cpath d='M24.25 0 48.5 14v28L24.25 56 0 42V14zM24.25 56v28' fill='none' stroke='%23ffffff' stroke-opacity='0.07'/%3E%3C/svg%3E");
+  background-size: 48.5px 84px;
+}
+
+.v22 .v22-seq {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Tab timer bar */
+@keyframes v22-timer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes v22-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.v22 .v22-swap {
+  animation: v22-fade 600ms var(--ease) both;
+}
+
+@keyframes v22-flow {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes v22-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* ---------- Motion (only when the reader allows it) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero: gated on .js so a page without scripts renders complete. */
+  @keyframes v22-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+  @keyframes v22-cut {
+    from {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+    }
+  }
+  @keyframes v22-open {
+    from {
+      clip-path: polygon(100% 0, 100% 0, 100% 0, 0 100%, 0 100%, 0 100%);
+    }
+  }
+  @keyframes v22-assemble {
+    from {
+      opacity: 0;
+      transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(var(--rot, 0deg));
+    }
+  }
+  @keyframes v22-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes v22-pulse {
+    0%,
+    100% {
+      fill-opacity: var(--base, 0.2);
+    }
+    6% {
+      fill-opacity: 0.95;
+    }
+    18% {
+      fill-opacity: var(--base, 0.2);
+    }
+  }
+  @keyframes v22-grow {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  .js .v22 .v22-in {
+    animation: v22-rise 1000ms var(--ease) both;
+    animation-delay: calc(var(--d, 0ms) + 150ms);
+  }
+  .js .v22 .v22-ground {
+    animation: v22-cut 1400ms var(--ease-io) both 100ms;
+  }
+  .js .v22 .v22-open {
+    animation: v22-open 1300ms var(--ease-io) both;
+    animation-delay: calc(var(--d, 0ms) + 200ms);
+  }
+  .js .v22 .v22-asm {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: v22-assemble 1300ms var(--ease) both;
+    animation-delay: calc(var(--i, 0) * 45ms + 350ms);
+  }
+  .js .v22 .v22-drawin {
+    stroke-dasharray: 1;
+    animation: v22-draw 1200ms var(--ease-io) both;
+    animation-delay: calc(var(--d, 0ms) + 1200ms);
+  }
+  .js .v22 .v22-growin {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: v22-grow 900ms var(--ease) both;
+    animation-delay: calc(var(--i, 0) * 50ms + 900ms);
+  }
+  .v22 .v22-pulse {
+    animation: v22-pulse 7s linear infinite;
+    animation-delay: calc(var(--p, 0) * 1s + 2.4s);
+  }
+  .v22 .v22-flow {
+    stroke-dasharray: 0.06 0.94;
+    animation: v22-flow 2.8s linear infinite;
+    animation-delay: calc(var(--d, 0ms) + 2400ms);
+  }
+  .v22 .v22-blink {
+    animation: v22-blink 1.6s ease-in-out infinite;
+  }
+  .v22 .v22-timer {
+    transform-origin: left;
+    animation: v22-timer var(--t, 5000ms) linear forwards;
+  }
+
+  /* Scroll reveals. Hidden states apply only once RevealV22 has armed the page, and only until
+     an element is marked in. Without scripts, observers or motion, everything renders complete. */
+  .js .v22[data-armed] [data-v22r] {
+    transition:
+      opacity 800ms var(--ease),
+      transform 1000ms var(--ease),
+      clip-path 1200ms var(--ease-io);
+    transition-delay: var(--rd, 0ms);
+  }
+  .js .v22[data-armed] [data-v22r="up"]:not([data-in]) {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  .js .v22[data-armed] [data-v22r="wipe"]:not([data-in]) {
+    clip-path: polygon(100% 0, 100% 0, 100% 0, 0 100%, 0 100%, 0 100%);
+  }
+  .js .v22[data-armed] [data-v22r="band"]:not([data-in]) {
+    clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 100%, 0 100%, 0 50%);
+  }
+  .js .v22[data-armed] [data-v22r="band"] {
+    transition: clip-path 1500ms var(--ease-io);
+  }
+
+  /* Line drawing and hex sequences inside a revealed element. */
+  .js .v22[data-armed] [data-v22r] .v22-draw {
+    stroke-dasharray: 1;
+    transition: stroke-dashoffset 1400ms var(--ease-io);
+    transition-delay: calc(var(--d, 0ms) + 300ms);
+  }
+  .js .v22[data-armed] [data-v22r]:not([data-in]) .v22-draw {
+    stroke-dashoffset: 1;
+  }
+  .js .v22[data-armed] [data-v22r] .v22-seq {
+    transition:
+      opacity 500ms var(--ease),
+      transform 700ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 70ms + 250ms);
+  }
+  .js .v22[data-armed] [data-v22r]:not([data-in]) .v22-seq {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  .js .v22[data-armed] [data-v22r] .v22-rail {
+    transform-origin: left;
+    transition: transform 1400ms var(--ease-io) 250ms;
+  }
+  .js .v22[data-armed] [data-v22r]:not([data-in]) .v22-rail {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v22 .v22-swap {
+    animation: none;
+  }
+}

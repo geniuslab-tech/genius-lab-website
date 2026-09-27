@@ -1,0 +1,123 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+
+const VERSIONS = [
+  { v: 1, name: "Survey atlas", tone: "Light" },
+  { v: 2, name: "Navy brand", tone: "Mixed" },
+  { v: 3, name: "Navy hero", tone: "Mixed" },
+  { v: 4, name: "Dark console", tone: "Dark" },
+  { v: 5, name: "Apple premium", tone: "Light" },
+  { v: 6, name: "Enterprise console", tone: "Mixed" },
+  { v: 7, name: "Layer studies", tone: "Dark" },
+  { v: 8, name: "Editorial", tone: "Light" },
+  { v: 9, name: "Cinematic", tone: "Dark" },
+  { v: 10, name: "Boardroom", tone: "Light" },
+  { v: 11, name: "Terminal", tone: "Dark" },
+  { v: 12, name: "Product bento", tone: "Light" },
+  { v: 13, name: "Split inversion", tone: "Mixed" },
+  { v: 14, name: "Brutalist", tone: "Light" },
+  { v: 15, name: "Luxe", tone: "Dark" },
+  { v: 16, name: "Spatial 3D", tone: "Dark" },
+  { v: 17, name: "Organic", tone: "Light" },
+  { v: 18, name: "Navy platform", tone: "Mixed" },
+  { v: 19, name: "Midnight product", tone: "Dark" },
+  { v: 20, name: "Clarity split", tone: "Mixed" },
+  { v: 21, name: "Warm enterprise", tone: "Light" },
+  { v: 22, name: "Chamfer", tone: "Mixed" },
+  { v: 23, name: "Aurora console", tone: "Mixed" },
+];
+
+const href = (v: number) => (v === 1 ? "/" : `/v${v}`);
+
+/** A retractable tab on the right edge that holds every homepage version, on every page. */
+export function VersionDock() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const current = pathname === "/" ? 1 : Number(pathname.match(/^\/v(\d+)/)?.[1] ?? 0);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onDown = (e: PointerEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onDown);
+    };
+  }, [open]);
+
+  const idx = VERSIONS.findIndex((x) => x.v === current);
+  const prev = idx > 0 ? VERSIONS[idx - 1] : null;
+  const next = idx >= 0 && idx < VERSIONS.length - 1 ? VERSIONS[idx + 1] : null;
+
+  return (
+    <div
+      ref={panelRef}
+      className={`fixed right-0 top-1/2 z-[9999] flex -translate-y-1/2 items-center font-[system-ui,sans-serif] transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+        open ? "translate-x-0" : "translate-x-[272px]"
+      }`}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls="version-dock"
+        aria-label={open ? "Close version list" : "Open version list"}
+        className="flex h-28 w-9 flex-col items-center justify-center gap-2 rounded-l-[10px] border border-r-0 border-white/15 bg-[#0c0e14]/90 text-white shadow-[0_8px_30px_-8px_rgb(0_0_0/0.5)] backdrop-blur-md transition-colors hover:bg-[#161a24]"
+      >
+        <span className="text-[10px] font-semibold tabular-nums tracking-[0.08em] text-white/60">V{current || "–"}</span>
+        <svg viewBox="0 0 16 16" className={`h-3.5 w-3.5 transition-transform duration-500 ${open ? "rotate-180" : ""}`} aria-hidden="true">
+          <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-white/45 [writing-mode:vertical-rl]">Versions</span>
+      </button>
+
+      <nav
+        id="version-dock"
+        aria-label="Homepage versions"
+        inert={!open}
+        className="flex max-h-[86vh] w-[272px] flex-col border border-r-0 border-white/15 bg-[#0c0e14]/95 text-white shadow-[0_20px_60px_-20px_rgb(0_0_0/0.7)] backdrop-blur-xl"
+      >
+        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">Homepage versions</p>
+          <span className="text-[11px] tabular-nums text-white/35">{VERSIONS.length}</span>
+        </div>
+        <ul className="overflow-y-auto overscroll-contain p-1.5">
+          {VERSIONS.map((x) => {
+            const on = x.v === current;
+            return (
+              <li key={x.v}>
+                <a
+                  href={href(x.v)}
+                  aria-current={on ? "page" : undefined}
+                  className={`flex items-center gap-3 rounded-[6px] px-2.5 py-2 transition-colors ${on ? "bg-white text-[#0c0e14]" : "text-white/80 hover:bg-white/[0.07] hover:text-white"}`}
+                >
+                  <span className={`w-8 text-[12px] font-semibold tabular-nums ${on ? "" : "text-white/45"}`}>V{x.v}</span>
+                  <span className="flex-1 text-[13px] font-medium">{x.name}</span>
+                  <span className={`text-[10px] uppercase tracking-[0.1em] ${on ? "text-black/45" : "text-white/30"}`}>{x.tone}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="grid grid-cols-2 gap-px border-t border-white/10 bg-white/10">
+          {[prev, next].map((x, k) =>
+            x ? (
+              <a key={k} href={href(x.v)} className={`bg-[#0c0e14] px-4 py-2.5 text-[12px] text-white/60 hover:text-white ${k ? "text-right" : ""}`}>
+                {k ? `V${x.v} →` : `← V${x.v}`}
+              </a>
+            ) : (
+              <span key={k} className="bg-[#0c0e14]" />
+            ),
+          )}
+        </div>
+      </nav>
+    </div>
+  );
+}

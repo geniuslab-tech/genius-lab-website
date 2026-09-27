@@ -401,3 +401,72 @@ body {
     animation: v6-logos 40s linear infinite;
   }
 }
+
+/* ---- Version 7: layer studies ---- */
+@layer components {
+  .v7-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.028) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.028) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse at 40% 30%, #000 30%, transparent 85%);
+  }
+  .v7-spin {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+  }
+}
+
+@keyframes v7-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes v7-run-x {
+  from {
+    left: 0%;
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  to {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes v7-run-y {
+  from {
+    top: 100%;
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  to {
+    top: 0%;
+    opacity: 0;
+  }
+}
+@keyframes v7-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .v7-spin {
+    animation: v7-spin var(--dur, 40s) linear infinite;
+  }
+  .v7-run-x {
+    animation: v7-run-x 4.8s var(--ease-in-out-strong) infinite;
+  }
+  .v7-run-y {
+    animation: v7-run-y 4.2s var(--ease-in-out-strong) infinite;
+  }
+  .v7-breathe {
+    animation: v7-breathe 2.4s ease-in-out infinite;
+  }
+}

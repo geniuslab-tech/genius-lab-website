@@ -1,0 +1,240 @@
+/* Version 10, "Boardroom". Every selector is scoped under .v10. */
+
+.v10 {
+  --paper: #f6f3ea;
+  --paper-2: #eee9dc;
+  --card: #fbfaf6;
+  --ink: #101440;
+  --ink-2: #2a2f5c;
+  --slate: #555b73;
+  --slate-2: #7b8097;
+  --rule: #d6cfbe;
+  --rule-2: #e4dfd2;
+  --brass: #7a5d32;
+  --brass-2: #c4a26a;
+  --navy-2: #1a1f55;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  font-family: var(--font-v10-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--ink-2);
+  background: var(--paper);
+  overflow-x: clip;
+}
+
+.v10 .serif {
+  font-family: var(--font-v10-serif), "Georgia", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+}
+
+.v10 .tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.v10 .caps {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.v10 .wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+@media (min-width: 640px) {
+  .v10 .wrap {
+    padding-inline: 32px;
+  }
+}
+@media (min-width: 1280px) {
+  .v10 .wrap {
+    padding-inline: 40px;
+  }
+}
+
+.v10 :focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+.v10 .on-navy :focus-visible {
+  outline-color: var(--brass-2);
+}
+
+.v10 ::selection {
+  background: #d9ccb0;
+  color: var(--ink);
+}
+
+/* Links in running text. */
+.v10 .ulink {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--rule);
+  transition: text-decoration-color 200ms;
+}
+.v10 .ulink:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Leader dots in the contents list. */
+.v10 .leader {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 1px dotted var(--slate-2);
+  transform: translateY(-4px);
+}
+
+/* Tables: a ruled ledger on wide screens, stacked records on phones. */
+.v10 .ledger {
+  width: 100%;
+  border-collapse: collapse;
+}
+.v10 .ledger th,
+.v10 .ledger td {
+  text-align: left;
+  vertical-align: top;
+  padding: 16px 20px 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.v10 .ledger thead th {
+  padding-top: 0;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--ink);
+}
+.v10 .on-navy .ledger th,
+.v10 .on-navy .ledger td {
+  border-bottom-color: rgb(255 255 255 / 0.14);
+}
+@media (max-width: 767px) {
+  .v10 .ledger thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .v10 .ledger,
+  .v10 .ledger tbody,
+  .v10 .ledger tr,
+  .v10 .ledger th,
+  .v10 .ledger td {
+    display: block;
+    width: 100%;
+  }
+  .v10 .ledger tr {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .v10 .ledger tbody tr:first-child {
+    border-top: 1.5px solid var(--ink);
+  }
+  .v10 .ledger th,
+  .v10 .ledger td {
+    border: 0;
+    padding: 4px 0;
+  }
+  .v10 .ledger td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin: 8px 0 2px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+}
+
+/* The "with" column carries a quiet paper tint. */
+.v10 .ledger .col-with {
+  background: linear-gradient(var(--card), var(--card));
+}
+@media (min-width: 768px) {
+  .v10 .ledger .col-with {
+    padding-left: 20px;
+  }
+}
+@media (max-width: 767px) {
+  .v10 .ledger .col-with {
+    background: none;
+    border-left: 2px solid var(--ink);
+    padding-left: 12px;
+    margin-top: 6px;
+  }
+}
+
+/* Decision flow diagram. */
+.v10 .flow text {
+  font-family: var(--font-v10-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Motion: restrained, precise, and only when the reader allows it. */
+@keyframes v10-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .v10 .enter {
+    animation: v10-rise 900ms var(--ease) both;
+    animation-delay: calc(var(--d, 0ms) + 120ms);
+  }
+
+  .js .v10 [data-inview] .draw-x {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1100ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 90ms + 150ms);
+  }
+  .js .v10 [data-inview] .draw-y {
+    transform: scaleY(0);
+    transform-origin: center top;
+    transition: transform 1000ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 90ms + 150ms);
+  }
+  .js .v10 [data-inview] .draw-up {
+    transform: scaleY(0);
+    transform-origin: center bottom;
+    transition: transform 1000ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 120ms + 150ms);
+  }
+  .js .v10 [data-inview="true"] :is(.draw-x, .draw-y, .draw-up) {
+    transform: none;
+  }
+
+  .js .v10 [data-inview] .draw-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1300ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 140ms + 200ms);
+  }
+  .js .v10 [data-inview="true"] .draw-path {
+    stroke-dashoffset: 0;
+  }
+
+  .js .v10 [data-inview] .row-in {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 500ms ease-out,
+      transform 700ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 110ms + 120ms);
+  }
+  .js .v10 [data-inview] .fade-in {
+    opacity: 0;
+    transition: opacity 600ms ease-out;
+    transition-delay: calc(var(--i, 0) * 140ms + 300ms);
+  }
+  .js .v10 [data-inview="true"] :is(.row-in, .fade-in) {
+    opacity: 1;
+    transform: none;
+  }
+}

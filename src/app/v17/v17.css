@@ -1,0 +1,238 @@
+/* Version 17, "Organic". Every rule is scoped under .v17. */
+
+.v17 {
+  --cream: #f6f0e6;
+  --cream-2: #eee4d2;
+  --paper: #fbf8f1;
+  --ink: #101440;
+  --ink-2: #33365a;
+  --ink-3: #585a73;
+  --rule: #ddd0b9;
+
+  /* Earthy fills: flat, never gradients. Mid tones hold ink text at AA. */
+  --terra: #c4623f;
+  --terra-mid: #dd9272;
+  --terra-tint: #f3dccf;
+  --terra-ink: #933d20;
+  --sage: #7f9c79;
+  --sage-mid: #a3b99a;
+  --sage-tint: #dde6d4;
+  --sage-ink: #3b5637;
+  --ochre: #d59b33;
+  --ochre-mid: #e3b862;
+  --ochre-tint: #f3e3bb;
+  --ochre-ink: #74520c;
+  --sky: #8fb3cb;
+  --sky-mid: #adc9dc;
+  --sky-tint: #dae7ef;
+  --sky-ink: #2b536e;
+
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-v17-sans), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: normal;
+  overflow-x: clip;
+}
+
+@layer components {
+.v17 ::selection {
+  background: var(--ochre-tint);
+  color: var(--ink);
+}
+
+.v17 :focus-visible {
+  outline: 2px solid var(--terra-ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.v17 main > section,
+.v17 main > div[data-section] {
+  position: relative;
+  z-index: 1;
+}
+
+/* Type */
+.v17 .v17-display {
+  font-family: var(--font-v17-serif), Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-weight: 380;
+  letter-spacing: -0.024em;
+  line-height: 1.02;
+}
+
+.v17 .v17-display em,
+.v17 .v17-hand {
+  font-family: var(--font-v17-serif), Georgia, serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+.v17 .v17-hand {
+  font-weight: 420;
+  letter-spacing: -0.005em;
+}
+
+.v17 .v17-serif {
+  font-family: var(--font-v17-serif), Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+}
+
+.v17 .v17-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  border-radius: 999px;
+  padding: 0.4rem 0.95rem 0.4rem 0.6rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+}
+
+.v17 .v17-knot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  flex: none;
+}
+
+.v17 .v17-fill-terra { background: var(--terra); }
+.v17 .v17-fill-sage { background: var(--sage); }
+.v17 .v17-fill-ochre { background: var(--ochre); }
+.v17 .v17-fill-sky { background: var(--sky); }
+
+.v17 .v17-tint-terra { background: var(--terra-tint); }
+.v17 .v17-tint-sage { background: var(--sage-tint); }
+.v17 .v17-tint-ochre { background: var(--ochre-tint); }
+.v17 .v17-tint-sky { background: var(--sky-tint); }
+.v17 .v17-tint-paper { background: var(--paper); }
+.v17 .v17-tint-ink { background: var(--ink); color: var(--cream); }
+
+/* Sticker: a tinted pill with a paper edge, like a label pressed onto the page. */
+.v17 .v17-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.42rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 10px 18px -12px rgb(16 20 64 / 0.45);
+  white-space: nowrap;
+}
+
+.v17 .v17-sticker.v17-tint-ink {
+  color: var(--cream);
+}
+
+/* Buttons */
+.v17 .v17-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  font-size: 0.975rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  transition: background-color 200ms, color 200ms, box-shadow 200ms;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.v17 .v17-btn-ink {
+  background: var(--ink);
+  color: var(--cream);
+  box-shadow: 0 12px 22px -14px rgb(16 20 64 / 0.7);
+}
+
+.v17 .v17-btn-ink:hover {
+  background: #1b2160;
+}
+
+.v17 .v17-btn-outline {
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.v17 .v17-btn-outline:hover {
+  background: var(--paper);
+}
+
+.v17 .v17-btn-cream {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.v17 .v17-btn-cream:hover {
+  background: #fff;
+}
+
+/* Gentle floating for stickers and nodes. */
+@keyframes v17-float {
+  0%,
+  100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, var(--v17-lift, -6px), 0); }
+}
+
+.v17 .v17-float {
+  animation: v17-float var(--v17-dur, 6s) ease-in-out var(--v17-delay, 0s) infinite;
+}
+
+/* Marquee of pill tags. */
+@keyframes v17-marquee {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.v17 .v17-marquee {
+  display: flex;
+  width: max-content;
+  animation: v17-marquee var(--v17-marquee, 42s) linear infinite;
+}
+
+.v17 .v17-marquee-mask {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.v17 .v17-marquee-mask:hover .v17-marquee {
+  animation-play-state: paused;
+}
+
+/* Panel surfaces */
+.v17 .v17-panel {
+  border-radius: 2rem;
+}
+
+@media (min-width: 640px) {
+  .v17 .v17-panel {
+    border-radius: 2.75rem;
+  }
+}
+
+/* A faint paper grain on the ground, done with a tiny repeating dot. */
+.v17 .v17-grain {
+  background-image: radial-gradient(rgb(16 20 64 / 0.05) 0.7px, transparent 0.9px);
+  background-size: 7px 7px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v17 .v17-float,
+  .v17 .v17-marquee {
+    animation: none;
+  }
+  .v17 .v17-marquee-mask {
+    overflow-x: auto;
+  }
+}
+}

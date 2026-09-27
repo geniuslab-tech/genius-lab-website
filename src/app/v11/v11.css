@@ -1,0 +1,401 @@
+/*
+  Version 11: Terminal.
+  A warm phosphor-amber signal on a near-black ground, one cool ice tone for states.
+  Every selector is scoped under .v11.
+*/
+
+.v11 {
+  --bg: #0b0a08;
+  --bg-2: #100f0c;
+  --bg-3: #17150f;
+  --bg-4: #1f1c15;
+  --fg: #ece5d7;
+  --fg-2: #aaa293;
+  --fg-3: #7a7366;
+  --rule: rgb(236 229 215 / 0.1);
+  --rule-2: rgb(236 229 215 / 0.18);
+  --amber: #ffad42;
+  --amber-2: #d08a30;
+  --amber-soft: rgb(255 173 66 / 0.12);
+  --ice: #8ecbff;
+  --ice-soft: rgb(142 203 255 / 0.12);
+  --warn: #ff8466;
+
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-v11-mono), ui-monospace, monospace;
+  font-variation-settings: normal;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  padding-top: 48px;
+  padding-bottom: 36px;
+  overflow-x: clip;
+}
+
+.v11 ::selection {
+  background: rgb(255 173 66 / 0.32);
+  color: #fff;
+}
+
+.v11 :focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.v11 section:focus,
+.v11 section:focus-visible {
+  outline: none;
+}
+
+.v11 section[id] {
+  scroll-margin-top: 56px;
+}
+
+/* ---------- Type ---------- */
+
+.v11 .v11-display {
+  font-family: var(--font-v11-display), var(--font-v11-mono), monospace;
+  font-variation-settings: "wdth" 87.5;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.v11 .v11-term {
+  font-family: var(--font-v11-term), var(--font-v11-mono), monospace;
+  font-variant-ligatures: none;
+  font-feature-settings: "calt" 0, "liga" 0;
+}
+
+.v11 .v11-label {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.v11 .v11-glow {
+  text-shadow: 0 0 18px rgb(255 173 66 / 0.35);
+}
+
+/* ---------- Panes ---------- */
+
+.v11 .v11-pane {
+  position: relative;
+  background: var(--bg-2);
+  border: 1px solid var(--rule-2);
+}
+
+.v11 .v11-pane-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-3);
+  color: var(--fg-2);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.v11 .v11-pane-title::before {
+  content: "\2524\00a0";
+  color: var(--fg-3);
+}
+.v11 .v11-pane-title::after {
+  content: "\00a0\251c";
+  color: var(--fg-3);
+}
+
+/* Line-numbered code view. */
+.v11 .v11-code {
+  counter-reset: ln;
+}
+.v11 .v11-code > li {
+  counter-increment: ln;
+  display: grid;
+  grid-template-columns: 2.75rem 1fr;
+  min-height: 1.7em;
+}
+.v11 .v11-code > li::before {
+  content: counter(ln);
+  color: var(--fg-3);
+  text-align: right;
+  padding-right: 1rem;
+  user-select: none;
+  opacity: 0.8;
+}
+
+/* ---------- ASCII diagrams, scaled to their container ---------- */
+
+.v11 .v11-cq {
+  container-type: inline-size;
+}
+
+.v11 .v11-ascii {
+  font-family: var(--font-v11-term), monospace;
+  font-variant-ligatures: none;
+  white-space: pre;
+  line-height: 1.22;
+  font-size: min(var(--max, 14px), calc(100cqi / (var(--cols) * 0.61)));
+}
+
+/* ---------- Buttons ---------- */
+
+.v11 .v11-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--amber);
+  background: var(--amber);
+  color: #1a1206;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+.v11 .v11-btn:hover {
+  background: #ffc06b;
+}
+.v11 .v11-btn:active {
+  transform: translateY(1px);
+}
+.v11 .v11-btn-ghost {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--rule-2);
+}
+.v11 .v11-btn-ghost:hover {
+  background: var(--bg-3);
+  border-color: var(--fg-3);
+}
+
+.v11 kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  height: 1.5em;
+  padding: 0 0.35em;
+  border: 1px solid var(--rule-2);
+  border-bottom-width: 2px;
+  background: var(--bg-3);
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 0.85em;
+  line-height: 1;
+}
+
+/* ---------- Cursor ---------- */
+
+.v11 .v11-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 1px;
+  vertical-align: -0.18em;
+  background: var(--amber);
+  animation: v11-blink 1.05s steps(1, end) infinite;
+}
+
+@keyframes v11-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Boot: panes render in like a CRT drawing its lines ---------- */
+
+html.js .v11 [data-boot] {
+  opacity: 0;
+}
+
+html.js .v11 [data-boot].is-on {
+  opacity: 1;
+  animation: v11-boot 760ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes v11-boot {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+  8% {
+    opacity: 0.85;
+  }
+  13% {
+    opacity: 0.3;
+  }
+  20% {
+    opacity: 1;
+  }
+  26% {
+    opacity: 0.75;
+  }
+  34% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Hero panes boot on load, without waiting for script. */
+.v11 .v11-intro {
+  animation: v11-boot 760ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* A single scan band sweeps a pane once as it boots. */
+.v11 .v11-pane[data-boot].is-on::after,
+.v11 .v11-pane.v11-intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 0%, rgb(255 173 66 / 0.09) 48%, rgb(255 173 66 / 0.16) 50%, transparent 52%);
+  background-size: 100% 220%;
+  background-repeat: no-repeat;
+  animation: v11-sweep 900ms ease-out both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes v11-sweep {
+  from {
+    background-position: 0 100%;
+    opacity: 1;
+  }
+  to {
+    background-position: 0 -120%;
+    opacity: 0;
+  }
+}
+
+/* Hero boot ticker: each step lights in turn. */
+.v11 .v11-tick > span {
+  opacity: 0.25;
+  animation: v11-tick 300ms steps(1, end) forwards;
+  animation-delay: calc(var(--i) * 220ms + 200ms);
+}
+@keyframes v11-tick {
+  to {
+    opacity: 1;
+  }
+}
+
+/* A flowing connector in the layer pipeline. */
+.v11 .v11-flow {
+  animation: v11-flow 1.2s steps(4, end) infinite;
+}
+@keyframes v11-flow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ---------- Page-wide CRT texture (toggle from the palette) ---------- */
+
+.v11 .v11-crt {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0) 0, rgb(0 0 0 / 0) 2px, rgb(0 0 0 / 0.16) 3px);
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+.v11.no-crt .v11-crt {
+  display: none;
+}
+
+/* ---------- Command palette ---------- */
+
+.v11 .v11-palette {
+  margin: 12vh auto auto;
+  padding: 0;
+  width: min(640px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(560px, 76vh);
+  border: 1px solid var(--rule-2);
+  background: var(--bg-2);
+  color: var(--fg);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.6),
+    0 40px 120px -20px rgb(0 0 0 / 0.9),
+    0 0 60px -20px rgb(255 173 66 / 0.25);
+}
+.v11 .v11-palette::backdrop {
+  background: rgb(6 5 3 / 0.72);
+  backdrop-filter: blur(2px);
+}
+.v11 .v11-palette[open] {
+  animation: v11-pal 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes v11-pal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.99);
+  }
+}
+
+/* Hide scrollbars on inner scrolling logs but keep them scrollable. */
+.v11 .v11-noscroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-2) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .v11 [data-boot],
+  html.js .v11 [data-boot].is-on,
+  .v11 .v11-intro {
+    opacity: 1;
+    animation: none;
+  }
+  .v11 .v11-pane[data-boot].is-on::after,
+  .v11 .v11-pane.v11-intro::after {
+    display: none;
+  }
+  .v11 .v11-cursor {
+    animation: none;
+  }
+  .v11 .v11-tick > span {
+    animation: none;
+    opacity: 1;
+  }
+  .v11 .v11-flow {
+    animation: none;
+  }
+  .v11 .v11-palette[open] {
+    animation: none;
+  }
+}
+
+@keyframes v11-timer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

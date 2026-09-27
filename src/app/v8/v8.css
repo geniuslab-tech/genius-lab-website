@@ -1,0 +1,397 @@
+/* Version 8 — Editorial. Every selector is scoped under .v8. */
+
+.v8 {
+  --paper: #f3efe6;
+  --paper-2: #ebe5d7;
+  --paper-3: #e2dbca;
+  --ink: #17150f;
+  --ink-2: #45413a;
+  --ink-3: #6b6558;
+  --rule: #cdc5b3;
+  --rule-strong: #17150f;
+  --red: #b3261e;
+  --red-ink: #9c1f18;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-turn: cubic-bezier(0.65, 0, 0.35, 1);
+  --head-h: 3.25rem;
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--v8-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "kern", "liga";
+  overflow-x: clip;
+}
+
+.v8 ::selection {
+  background: var(--red);
+  color: var(--paper);
+}
+
+.v8 :focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* ---------- Type ---------- */
+
+.v8 .f-display {
+  font-family: var(--v8-display), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 0.94;
+}
+.v8 .f-text {
+  font-family: var(--v8-text), Georgia, serif;
+  font-optical-sizing: auto;
+}
+.v8 .label {
+  font-family: var(--v8-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.v8 .smallcaps {
+  font-family: var(--v8-sans), ui-sans-serif, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.v8 .body-copy {
+  font-family: var(--v8-text), Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: 1.125rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  hyphens: auto;
+  text-wrap: pretty;
+}
+.v8 .body-copy p + p {
+  text-indent: 1.5em;
+}
+.v8 .cols-2,
+.v8 .cols-3 {
+  column-gap: 2.25rem;
+  column-rule: 1px solid var(--rule);
+}
+@media (min-width: 768px) {
+  .v8 .cols-2 {
+    column-count: 2;
+  }
+  .v8 .cols-3 {
+    column-count: 2;
+  }
+}
+@media (min-width: 1100px) {
+  .v8 .cols-3 {
+    column-count: 3;
+  }
+}
+.v8 .cols-2 p,
+.v8 .cols-3 p {
+  break-inside: avoid-column;
+}
+.v8 .no-break {
+  break-inside: avoid;
+}
+
+/* Drop cap: a three-line initial in the display serif, in the accent. */
+.v8 .dropcap::first-letter {
+  float: left;
+  font-family: var(--v8-display), Georgia, serif;
+  font-size: 4.9em;
+  line-height: 0.8;
+  padding: 0.07em 0.1em 0 0;
+  margin-top: 0.02em;
+  color: var(--red);
+}
+
+.v8 .hair {
+  height: 1px;
+  background: var(--rule);
+}
+.v8 .hair-ink {
+  height: 1px;
+  background: var(--ink);
+}
+.v8 .double-rule {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+
+.v8 .link-ink {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 500ms var(--ease);
+}
+.v8 .link-ink:hover {
+  background-size: 100% 1px;
+}
+
+/* Ink button: a rectangular printed tab. */
+.v8 .btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 3rem;
+  padding: 0 1.25rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: background-color 250ms, transform 160ms var(--ease);
+}
+.v8 .btn-ink:hover {
+  background: var(--red);
+}
+.v8 .btn-ink:active,
+.v8 .btn-line:active {
+  transform: scale(0.97);
+}
+.v8 .btn-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 3rem;
+  padding: 0 1.25rem;
+  box-shadow: inset 0 0 0 1px var(--ink);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: box-shadow 250ms, color 250ms, transform 160ms var(--ease);
+}
+.v8 .btn-line:hover {
+  box-shadow: inset 0 0 0 1px var(--red);
+  color: var(--red);
+}
+.v8 .btn-ink .arr,
+.v8 .btn-line .arr {
+  transition: transform 300ms var(--ease);
+}
+.v8 .btn-ink:hover .arr,
+.v8 .btn-line:hover .arr {
+  transform: translateX(3px);
+}
+
+/* Paper grain: a faint printed tooth, not a gradient. */
+.v8 .grain {
+  background-image: radial-gradient(rgb(23 21 15 / 0.045) 0.6px, transparent 0.9px);
+  background-size: 5px 5px;
+}
+
+/* ---------- Masthead ---------- */
+
+.v8 .toc-strip {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.v8 .toc-strip::-webkit-scrollbar {
+  display: none;
+}
+.v8 .toc-link {
+  position: relative;
+  color: var(--ink-3);
+  transition: color 250ms;
+}
+.v8 .toc-link:hover {
+  color: var(--ink);
+}
+.v8 .toc-link[aria-current="true"] {
+  color: var(--ink);
+}
+.v8 .toc-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 450ms var(--ease);
+}
+.v8 .toc-link[aria-current="true"]::after {
+  transform: scaleX(1);
+}
+.v8 .toc-link[aria-current="true"] .toc-n {
+  color: var(--red);
+}
+.v8 .progress {
+  transform: scaleX(var(--v8-p, 0));
+  transform-origin: left;
+}
+
+/* ---------- Figures ---------- */
+
+.v8 .terrain path {
+  fill: none;
+  stroke: var(--ink);
+}
+.v8 .plate text {
+  font-family: var(--v8-sans), ui-sans-serif, sans-serif;
+}
+.v8 .plate .serif {
+  font-family: var(--v8-display), Georgia, serif;
+}
+
+/* Knowledge graph and ontology nodes. */
+.v8 .g-node circle,
+.v8 .g-node rect {
+  transition: fill 400ms, stroke 400ms;
+}
+.v8 .g-edge {
+  transition: stroke 400ms, stroke-width 400ms, opacity 400ms;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes v8-sweep {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+@keyframes v8-ink-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Line-by-line mask: every word on a line rises together, lines stagger. */
+  .js .v8 [data-v8="lines"] .w {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding: 0 0.04em 0.14em;
+    margin: 0 -0.04em -0.14em;
+  }
+  .js .v8 [data-v8="lines"] .wi {
+    display: inline-block;
+    transform: translateY(108%);
+    transition: transform 1100ms var(--ease);
+    transition-delay: calc(var(--l, 0) * 95ms + var(--d, 0ms));
+  }
+  .js .v8 [data-v8="lines"][data-in] .wi {
+    transform: none;
+  }
+
+  /* Fade up for body copy and small blocks. */
+  .js .v8 [data-v8="up"] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 800ms var(--ease),
+      transform 1000ms var(--ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v8 [data-v8="up"][data-in] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Hairline rules draw in from the left margin. */
+  .js .v8 [data-v8="rule"] {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1400ms var(--ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v8 [data-v8="rule"][data-in] {
+    transform: none;
+  }
+  .js .v8 [data-v8="vrule"] {
+    transform: scaleY(0);
+    transform-origin: center top;
+    transition: transform 1400ms var(--ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v8 [data-v8="vrule"][data-in] {
+    transform: none;
+  }
+
+  /* Page turn: a chapter opener is uncovered right to left, a soft fold shadow leading the edge. */
+  .js .v8 [data-v8="turn"] {
+    position: relative;
+    clip-path: inset(0 0 0 100%);
+    transition: clip-path 1300ms var(--ease-turn);
+  }
+  .js .v8 [data-v8="turn"]::after {
+    content: "";
+    position: absolute;
+    /* Full-width layer with the fold shadow at its right edge; translating it by its own width
+       carries the shadow from the right edge to the left, in step with the clip. */
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to right, transparent, rgb(23 21 15 / 0.03) 55%, rgb(23 21 15 / 0.12) 92%, transparent)
+      right center / min(12rem, 40%) 100% no-repeat;
+    opacity: 0;
+    will-change: transform;
+  }
+  .js .v8 [data-v8="turn"][data-in] {
+    clip-path: inset(0 0 0 0);
+  }
+  .js .v8 [data-v8="turn"][data-in]::after {
+    animation: v8-sweep 1300ms var(--ease-turn) forwards;
+  }
+
+  /* Drawn figures: strokes plot themselves once the plate is on screen. */
+  .js .v8 [data-v8="draw"] .d {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 2200ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 45ms + var(--d, 0ms));
+  }
+  .js .v8 [data-v8="draw"][data-in] .d {
+    stroke-dashoffset: 0;
+  }
+  .js .v8 [data-v8="draw"] .f {
+    opacity: 0;
+    transition: opacity 900ms var(--ease);
+    transition-delay: calc(var(--i, 0) * 60ms + 600ms);
+  }
+  .js .v8 [data-v8="draw"][data-in] .f {
+    opacity: 1;
+  }
+
+  /* Answer text types in word by word on the transcript. */
+  .v8 .ink-in {
+    animation: v8-ink-in 500ms var(--ease) both;
+  }
+}
+
+@keyframes v8-timer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes v8-breathe {
+  50% {
+    transform: scale(1.06);
+    opacity: 0.55;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v8 .ring-think circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: v8-breathe 1600ms ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 120ms);
+  }
+}

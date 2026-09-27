@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { VersionDock } from "@/components/ui/VersionDock";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -34,7 +35,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <VersionDock />
+      </body>
     </html>
   );
 }

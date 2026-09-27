@@ -1,0 +1,370 @@
+/*
+  Version 15: Luxe.
+  Warm black and midnight navy, one precious accent (champagne) used for hairlines,
+  numerals and small caps. Every selector is scoped under .v15.
+*/
+
+.v15 {
+  --lx-ink: #0c0b0a;
+  --lx-ink-2: #11100e;
+  --lx-ink-3: #181613;
+  --lx-night: #0a0e1f;
+  --lx-night-2: #0d1328;
+  --lx-gold: #d8c29d;
+  --lx-gold-2: #b8a47f;
+  --lx-hair: rgb(216 194 157 / 0.24);
+  --lx-hair-soft: rgb(216 194 157 / 0.12);
+  --lx-ivory: #ede7dc;
+  --lx-mute: #a9a296;
+  --lx-ease: cubic-bezier(0.19, 1, 0.22, 1);
+  --lx-curtain: cubic-bezier(0.77, 0, 0.18, 1);
+
+  position: relative;
+  overflow-x: clip;
+  background: var(--lx-ink);
+  color: var(--lx-ivory);
+  font-family: var(--font-lx-sans), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+.v15 ::selection {
+  background: rgb(216 194 157 / 0.3);
+  color: #fff;
+}
+
+.v15 :focus-visible {
+  outline: 1px solid var(--lx-gold);
+  outline-offset: 5px;
+}
+
+.v15 .lx-skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 60;
+  padding: 0.75rem 1rem;
+  background: var(--lx-ivory);
+  color: var(--lx-ink);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.v15 .lx-skip:focus {
+  top: 1rem;
+}
+
+/* Type */
+.v15 .lx-serif {
+  font-family: var(--font-lx-serif), "Times New Roman", serif;
+}
+.v15 .lx-display {
+  font-family: var(--font-lx-serif), "Times New Roman", serif;
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: var(--lx-track, -0.012em);
+  text-wrap: balance;
+}
+.v15 .lx-display em,
+.v15 .lx-serif em {
+  font-style: italic;
+  font-weight: 300;
+}
+.v15 .lx-caps {
+  font-family: var(--font-lx-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.34em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+.v15 .lx-num {
+  font-family: var(--font-lx-serif), "Times New Roman", serif;
+  font-variant-numeric: lining-nums;
+  color: var(--lx-gold);
+}
+.v15 .lx-body {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--lx-mute);
+  text-wrap: pretty;
+}
+.v15 .lx-gold {
+  color: var(--lx-gold);
+}
+.v15 .lx-mute {
+  color: var(--lx-mute);
+}
+.v15 .lx-hair {
+  display: block;
+  height: 1px;
+  background: var(--lx-hair);
+}
+.v15 .lx-hair-v {
+  display: block;
+  width: 1px;
+  background: var(--lx-hair);
+}
+
+/* Controls */
+.v15 .lx-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  height: 3.5rem;
+  padding: 0 2rem;
+  overflow: hidden;
+  border: 1px solid rgb(216 194 157 / 0.55);
+  color: var(--lx-ivory);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 700ms var(--lx-ease), border-color 700ms var(--lx-ease);
+}
+.v15 .lx-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--lx-ivory);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 900ms var(--lx-curtain);
+}
+.v15 .lx-btn:hover {
+  color: var(--lx-ink);
+  border-color: var(--lx-ivory);
+}
+.v15 .lx-btn:hover::before {
+  transform: scaleY(1);
+}
+.v15 .lx-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.5rem 0;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--lx-ivory);
+}
+.v15 .lx-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--lx-gold);
+  transform: scaleX(0.28);
+  transform-origin: left;
+  transition: transform 1100ms var(--lx-ease);
+}
+.v15 .lx-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Reveals: opacity with blur-to-sharp, settling letter-spacing, vertical curtains. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .v15 [data-lx] {
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v15 [data-lx="fade"] {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translate3d(0, 18px, 0);
+    transition-property: opacity, filter, transform;
+    transition-duration: 1700ms, 1700ms, 2000ms;
+    transition-timing-function: var(--lx-ease);
+  }
+  .js .v15 [data-lx="settle"] {
+    opacity: 0;
+    filter: blur(14px);
+    letter-spacing: 0.12em;
+    transition-property: opacity, filter, letter-spacing;
+    transition-duration: 1900ms, 2100ms, 2600ms;
+    transition-timing-function: var(--lx-ease);
+  }
+  .js .v15 [data-lx="curtain"] {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1900ms var(--lx-curtain);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v15 [data-lx="curtain"] > .lx-curtain-inner {
+    transform: scale(1.12);
+    transition: transform 2600ms var(--lx-ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v15 [data-lx="line"] {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 2200ms var(--lx-ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v15 [data-lx="line-y"] {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 2200ms var(--lx-ease);
+    transition-delay: var(--d, 0ms);
+  }
+  .js .v15 [data-lx][data-in] {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+  }
+  .js .v15 [data-lx="settle"][data-in] {
+    letter-spacing: var(--lx-track, -0.012em);
+  }
+  .js .v15 [data-lx="curtain"][data-in] > .lx-curtain-inner {
+    transform: none;
+  }
+}
+
+/* Slow ornament motion. */
+@keyframes lx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes lx-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes lx-scan {
+  0% {
+    transform: translateX(-30%);
+  }
+  100% {
+    transform: translateX(130%);
+  }
+}
+@keyframes lx-drop {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+@keyframes lx-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .v15 .lx-spin {
+    animation: lx-spin 240s linear infinite;
+  }
+  .v15 .lx-spin-rev {
+    animation: lx-spin-rev 320s linear infinite;
+  }
+  .v15 .lx-spin-slow {
+    animation: lx-spin 420s linear infinite;
+  }
+  .v15 .lx-scan {
+    animation: lx-scan 16s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  }
+  .v15 .lx-drop {
+    animation: lx-drop 3.6s var(--lx-curtain) infinite;
+  }
+  .v15 .lx-breathe {
+    animation: lx-breathe 5s ease-in-out infinite;
+  }
+}
+
+.v15 .lx-layer {
+  will-change: transform;
+}
+
+/* Terrain plate fades in slowly once drawn on the client. */
+.v15 .lx-plate {
+  opacity: 0;
+  filter: blur(6px);
+  transition: opacity 3200ms var(--lx-ease), filter 3200ms var(--lx-ease);
+}
+.v15 .lx-plate[data-ready] {
+  opacity: 1;
+  filter: none;
+}
+
+/* Gallery (native fallback) */
+.v15 .lx-rail {
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.v15 .lx-rail::-webkit-scrollbar {
+  display: none;
+}
+.v15 .lx-rail > * {
+  scroll-snap-align: start;
+}
+
+/* Custom cursor ring (desktop, fine pointers only). */
+.v15 .lx-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9990;
+  pointer-events: none;
+  display: none;
+}
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .v15 .lx-cursor {
+    display: block;
+  }
+}
+.v15 .lx-cursor-ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1px solid rgb(216 194 157 / 0.6);
+  border-radius: 9999px;
+  transition: transform 700ms var(--lx-ease), border-color 700ms var(--lx-ease), background-color 700ms var(--lx-ease), opacity 500ms;
+}
+.v15 .lx-cursor[data-hover] .lx-cursor-ring {
+  transform: scale(2.1);
+  border-color: rgb(216 194 157 / 0.9);
+  background-color: rgb(216 194 157 / 0.05);
+}
+.v15 .lx-cursor[data-down] .lx-cursor-ring {
+  transform: scale(0.8);
+}
+.v15 .lx-cursor[data-hidden] .lx-cursor-ring {
+  opacity: 0;
+}
+
+@keyframes lx-rise {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}

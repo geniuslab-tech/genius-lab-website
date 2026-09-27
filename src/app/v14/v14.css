@@ -1,0 +1,319 @@
+/*
+  Version 14: Brutalist Swiss.
+  Pure white, pure black, one ultramarine field. 2px rules, zero radius, no gradients.
+  Motion is mechanical: stepped easings and hard cuts. Every selector is scoped to .v14.
+*/
+
+.v14 {
+  --u: #1f3bff;
+  --k: #000;
+  --nav: 3.5rem;
+  font-family: var(--font-v14-body), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: normal;
+  color: var(--k);
+  background: #fff;
+  overflow-x: clip;
+}
+
+.v14 :focus-visible {
+  outline: 3px solid var(--u);
+  outline-offset: 2px;
+}
+.v14 .v14-blue :focus-visible {
+  outline-color: #fff;
+}
+
+/* Type voices */
+.v14 .v14-display {
+  font-family: var(--font-v14-display), "Arial Narrow", sans-serif;
+  font-weight: 800;
+  font-variation-settings: "wdth" 75, "opsz" 96;
+  letter-spacing: -0.045em;
+  line-height: 0.84;
+}
+.v14 .v14-head {
+  font-family: var(--font-v14-display), "Arial Narrow", sans-serif;
+  font-weight: 800;
+  font-variation-settings: "wdth" 78, "opsz" 72;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  text-wrap: balance;
+}
+.v14 .v14-mono {
+  font-family: var(--font-v14-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Buttons: hard offset shadow, pressed by translation, no easing. */
+.v14 .v14-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  min-height: 3.25rem;
+  padding: 0 1.125rem 0 1.25rem;
+  border: 2px solid var(--k);
+  font-family: var(--font-v14-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 6px 6px 0 var(--k);
+  transition:
+    transform 80ms steps(2, end),
+    box-shadow 80ms steps(2, end);
+}
+.v14 .v14-btn:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0 var(--k);
+}
+.v14 .v14-btn:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 var(--k);
+}
+.v14 .v14-btn--u {
+  background: var(--u);
+  color: #fff;
+}
+.v14 .v14-btn--w {
+  background: #fff;
+  color: var(--k);
+}
+.v14 .v14-btn--k {
+  background: var(--k);
+  color: #fff;
+  border-color: #fff;
+  box-shadow: 6px 6px 0 #fff;
+}
+.v14 .v14-btn--k:hover {
+  box-shadow: 3px 3px 0 #fff;
+}
+.v14 .v14-btn--onk {
+  min-height: 5rem;
+  padding: 0 1.5rem;
+  border-color: #fff;
+  box-shadow: 6px 6px 0 #fff;
+}
+.v14 .v14-btn--onk:hover {
+  box-shadow: 3px 3px 0 #fff;
+}
+.v14 .v14-btn--onk:active {
+  box-shadow: 0 0 0 #fff;
+}
+.v14 .v14-btn .v14-arrow {
+  transition: transform 120ms steps(2, end);
+}
+.v14 .v14-btn:hover .v14-arrow {
+  transform: translateX(4px);
+}
+
+/* Cells that invert on hover. Hard cut, no transition. */
+@media (hover: hover) {
+  .v14 .v14-inv:hover {
+    background: var(--k);
+    color: #fff;
+  }
+  .v14 .v14-inv:hover .v14-soft {
+    color: #cfcfcf;
+  }
+  .v14 .v14-inv:hover .v14-hit {
+    color: var(--u);
+    filter: brightness(1.6);
+  }
+  .v14 .v14-inv-u:hover {
+    background: var(--u);
+    color: #fff;
+  }
+  .v14 .v14-inv-u:hover .v14-soft {
+    color: #e6e9ff;
+  }
+}
+
+/* Letters that split and shift. */
+.v14 .v14-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.v14 .v14-ch {
+  display: inline-block;
+  transition: transform 150ms steps(2, end);
+  transition-delay: calc(var(--i, 0) * 16ms);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .v14 .v14-split:hover .v14-ch:nth-child(odd) {
+    transform: translateY(-0.07em);
+  }
+  .v14 .v14-split:hover .v14-ch:nth-child(even) {
+    transform: translateY(0.07em);
+  }
+}
+
+/* Line masks for letters that rise into place. Padding keeps descenders. */
+.v14 .v14-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+/* Stepped reveals, applied only when scripting can undo them. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .v14 [data-r] {
+    transition:
+      transform 420ms steps(6, end) var(--d, 0ms),
+      opacity 1ms linear var(--d, 0ms);
+  }
+  .js .v14 [data-r]:not([data-in]) {
+    opacity: 0;
+    transform: translateX(-56px);
+  }
+  .js .v14 [data-r="up"]:not([data-in]) {
+    transform: translateY(48px);
+  }
+  .js .v14 [data-r="chars"] {
+    transition: none;
+  }
+  .js .v14 [data-r="chars"]:not([data-in]) {
+    opacity: 1;
+    transform: none;
+  }
+  .js .v14 [data-r="chars"] .v14-ch {
+    transition: transform 300ms steps(3, end) calc(var(--d, 0ms) + var(--i, 0) * 26ms);
+  }
+  .js .v14 [data-r="chars"]:not([data-in]) .v14-ch {
+    transform: translateY(110%);
+  }
+  .js .v14 [data-r="group"] {
+    transition: none;
+  }
+  .js .v14 [data-r="group"]:not([data-in]) {
+    opacity: 1;
+    transform: none;
+  }
+  .js .v14 [data-rc] {
+    transition:
+      transform 360ms steps(5, end) var(--d, 0ms),
+      opacity 1ms linear var(--d, 0ms);
+  }
+  .js .v14 [data-r="group"]:not([data-in]) [data-rc] {
+    opacity: 0;
+    transform: translateY(-72px);
+  }
+  .js .v14 [data-r="bar"] {
+    transform-origin: left;
+    transition:
+      transform 480ms steps(8, end) var(--d, 0ms),
+      opacity 1ms linear var(--d, 0ms);
+  }
+  .js .v14 [data-r="bar"]:not([data-in]) {
+    opacity: 1;
+    transform: scaleX(0);
+  }
+}
+
+/* Marquee ticker bands */
+.v14 .v14-marquee {
+  display: flex;
+  width: max-content;
+  animation: v14-marquee var(--dur, 40s) linear infinite;
+}
+.v14 .v14-marquee[data-reverse] {
+  animation-direction: reverse;
+}
+@keyframes v14-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.v14 .v14-blink {
+  animation: v14-blink 1s steps(1, end) infinite;
+}
+@keyframes v14-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* The wall of systems: manual glue gets struck through, cell by cell. */
+.v14 .v14-glue {
+  position: relative;
+}
+.v14 .v14-glue .v14-glue-t {
+  position: relative;
+}
+.v14 .v14-glue .v14-glue-t::after {
+  content: "";
+  position: absolute;
+  left: -0.2em;
+  right: -0.2em;
+  top: 52%;
+  height: 3px;
+  background: var(--u);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms steps(4, end) var(--d, 0ms);
+}
+.v14 [data-struck] .v14-glue .v14-glue-t::after {
+  transform: scaleX(1);
+}
+.v14 .v14-glue {
+  transition: color 1ms linear var(--d, 0ms);
+}
+.v14 [data-struck] .v14-glue {
+  color: #767676;
+}
+.v14 .v14-sys {
+  transition:
+    background-color 1ms linear var(--d, 0ms),
+    color 1ms linear var(--d, 0ms);
+}
+.v14 [data-struck] .v14-sys {
+  background: var(--k);
+  color: #fff;
+}
+
+/* Stepped progress tick for auto-cycling panels. */
+.v14 .v14-timer {
+  transform-origin: left;
+  animation: v14-timer var(--dur, 4200ms) steps(12, end) forwards;
+}
+@keyframes v14-timer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Typing caret */
+.v14 .v14-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  vertical-align: -0.12em;
+  background: currentColor;
+  animation: v14-blink 0.9s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v14 .v14-marquee,
+  .v14 .v14-blink,
+  .v14 .v14-caret,
+  .v14 .v14-timer {
+    animation: none;
+  }
+  .v14 .v14-glue .v14-glue-t::after,
+  .v14 .v14-glue,
+  .v14 .v14-sys,
+  .v14 .v14-btn,
+  .v14 .v14-ch {
+    transition: none;
+  }
+}
