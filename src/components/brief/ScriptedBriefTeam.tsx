@@ -6,6 +6,7 @@ import { Screen } from "@/components/hero-demo/frame";
 import { renderSegments, segText, type Segment } from "@/components/hero-demo/screens";
 import { AskBox, BriefingCard, Chart, DASH_W, Kpis, Sidebar, Topbar, Units, type ApproveState, type AskState, type Cyc } from "./Dashboard";
 import type { Focus, Insight } from "./insights";
+import { BrainSphere } from "@/components/v2/BrainSphere";
 import { GeniusShaderOrb } from "./Orb";
 import { BOARD, IDLE, Outbox, useTyped } from "./ScriptedBrief";
 
@@ -105,23 +106,18 @@ export const TEAM: Exec[] = [
   { id: "chro", role: "CHRO", scope: "People & workforce", tint: "#ffb8d9", color: "oklch(0.78 0.13 350)", angle: 126 },
   { id: "cfo", role: "CFO", scope: "Cash, capital & reporting", tint: "#ffd9a0", color: "oklch(0.8 0.14 75)", angle: 198 },
 ];
-/** who talks to whom: the pentagon plus the CFO's lines to everyone */
-const LINKS: [number, number][] = [
-  [0, 1],
-  [1, 2],
-  [2, 3],
-  [3, 4],
-  [4, 0],
-  [4, 1],
-  [4, 2],
-  [0, 3],
-];
-const CHATTER = [
-  { link: 5, text: "Inventory −$1.4M?", delay: 0 },
-  { link: 6, text: "11 accounts > 60d", delay: 1.4 },
-  { link: 2, text: "Pause 14 backfills", delay: 2.8 },
-  { link: 4, text: "Board wants cash plan", delay: 4.2 },
-];
+/** where each agent sits around the Second Brain (x offset from centre, y) */
+const SEATS: Record<string, { dx: number; y: number }> = {
+  ceo: { dx: 0, y: 40 },
+  cfo: { dx: -345, y: 160 },
+  chro: { dx: -305, y: 300 },
+  coo: { dx: 345, y: 160 },
+  cco: { dx: 305, y: 300 },
+};
+const BRAIN = { y: 250, size: 236 };
+/** Second Brain hubs (Systems, Tables, Metrics, Dashboards, Processes, Customers, Operations, Finance) */
+const HUBS_IDLE = [0, 2, 4];
+const HUBS_CFO = [7, 6, 5];
 
 const REPLY: Segment[] = [
   { t: "I worked this through with the " },
@@ -140,10 +136,7 @@ const MOVES = [
 
 type Scene = ReturnType<typeof useScene<typeof CUES>>["scene"];
 
-const orbPos = (e: Exec, cx: number) => {
-  const a = (e.angle * Math.PI) / 180;
-  return { x: Math.round(cx + Math.cos(a) * 330), y: Math.round(206 + Math.sin(a) * 128) };
-};
+const orbPos = (e: Exec, cx: number) => ({ x: Math.round(cx + SEATS[e.id]!.dx), y: SEATS[e.id]!.y });
 
 function TeamPage({ s, width, ask, replyTyped }: { s: Scene; width: number; ask: AskState; replyTyped: number }) {
   const cx = width / 2;
@@ -155,54 +148,49 @@ function TeamPage({ s, width, ask, replyTyped }: { s: Scene; width: number; ask:
   const sending = s.past("sending");
   const sent = (["e1", "e2", "e3", "e4", "e5", "e6", "e7"] as const).filter((k) => s.past(k)).length;
   const opened = s.past("open2") ? 3 : s.past("open1") ? 1 : 0;
-  const link = (i: number) => {
-    const [a, b] = LINKS[i]!;
-    const p = pos[a]!;
-    const q = pos[b]!;
-    const mx = (p.x + q.x) / 2 + (cx - (p.x + q.x) / 2) * 0.25;
-    const my = (p.y + q.y) / 2 + (206 - (p.y + q.y) / 2) * 0.25;
-    return { d: `M ${p.x} ${p.y} Q ${Math.round(mx)} ${Math.round(my)} ${q.x} ${q.y}`, back: `M ${q.x} ${q.y} Q ${Math.round(mx)} ${Math.round(my)} ${p.x} ${p.y}`, mx, my, a, b };
+  /** a spoke from an agent to the edge of the Second Brain */
+  const spoke = (i: number) => {
+    const a = pos[i]!;
+    const dx = cx - a.x;
+    const dy = BRAIN.y - a.y;
+    const len = Math.hypot(dx, dy);
+    const r = BRAIN.size * 0.42;
+    const ex = Math.round(cx - (dx / len) * r);
+    const ey = Math.round(BRAIN.y - (dy / len) * r);
+    const sx = Math.round(a.x + (dx / len) * 52);
+    const sy = Math.round(a.y + (dy / len) * 52);
+    return { inward: `M ${sx} ${sy} L ${ex} ${ey}`, outward: `M ${ex} ${ey} L ${sx} ${sy}` };
   };
 
   return (
     <div className="relative h-full w-full">
       <div className="pointer-events-none absolute left-1/2 top-[40px] h-[360px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,oklch(0.6_0.17_270/16%),transparent_70%)] blur-2xl" />
 
-      {/* signals between the agents */}
+      {/* the Second Brain, with every agent reading from it */}
+      <div className="absolute" style={{ left: cx - BRAIN.size / 2, top: BRAIN.y - BRAIN.size / 2, width: BRAIN.size, height: BRAIN.size }}>
+        <BrainSphere tone="dark" state={{ visited: focused ? HUBS_CFO : HUBS_IDLE, step: 1 }} />
+      </div>
+      <p className="absolute -translate-x-1/2 font-gl-mono text-[0.5rem] uppercase tracking-[0.2em] text-gl-muted-foreground/80" style={{ left: cx, top: BRAIN.y + BRAIN.size / 2 - 4 }}>
+        Second Brain · 14 entities
+      </p>
       <svg className="pointer-events-none absolute inset-0" width={width} height={H - 58} aria-hidden="true">
-        {LINKS.map((_, i) => {
-          const l = link(i);
-          const cfoLink = l.a === 4 || l.b === 4;
-          const lit = !focused || cfoLink;
-          const ca = TEAM[l.a]!.color;
-          const cb = TEAM[l.b]!.color;
+        {TEAM.map((e, i) => {
+          const sp = spoke(i);
+          const isCfo = e.id === "cfo";
+          const lit = !focused || isCfo;
           return (
-            <g key={i} style={{ opacity: lit ? 1 : 0.25, transition: "opacity .6s" }}>
-              <path d={l.d} fill="none" stroke="oklch(1 0 0 / 12%)" strokeWidth={focused && cfoLink ? 1.6 : 1} strokeDasharray="3 5" />
-              <circle r="3" fill={ca}>
-                <animateMotion dur={`${2.2 + (i % 3) * 0.5}s`} begin={`${i * 0.35}s`} repeatCount="indefinite" path={l.d} />
+            <g key={e.id} style={{ opacity: lit ? 1 : 0.2, transition: "opacity .6s" }}>
+              <path d={sp.inward} fill="none" stroke={e.color} strokeOpacity={focused && isCfo ? 0.55 : 0.22} strokeWidth={focused && isCfo ? 1.6 : 1} strokeDasharray="2 5" />
+              <circle r="2.6" fill={e.color}>
+                <animateMotion dur={`${1.8 + (i % 3) * 0.4}s`} begin={`${i * 0.3}s`} repeatCount="indefinite" path={sp.inward} />
               </circle>
-              <circle r="2.4" fill={cb} opacity="0.85">
-                <animateMotion dur={`${2.6 + (i % 2) * 0.6}s`} begin={`${0.8 + i * 0.3}s`} repeatCount="indefinite" path={l.back} />
+              <circle r="2" fill="var(--cyan)" opacity="0.8">
+                <animateMotion dur={`${2.2 + (i % 2) * 0.5}s`} begin={`${0.9 + i * 0.25}s`} repeatCount="indefinite" path={sp.outward} />
               </circle>
             </g>
           );
         })}
       </svg>
-
-      {/* what they are saying to each other */}
-      {CHATTER.map((c) => {
-        const l = link(c.link);
-        return (
-          <span
-            key={c.text}
-            className="team-chatter absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border border-white/12 bg-[oklch(0.2_0.04_262/92%)] px-2 py-0.5 font-gl-mono text-[0.5rem] text-gl-foreground/80"
-            style={{ left: Math.round(l.mx), top: Math.round(l.my), animationDelay: `${c.delay}s`, opacity: focused ? 0 : undefined }}
-          >
-            {c.text}
-          </span>
-        );
-      })}
 
       {/* the five executive agents */}
       {TEAM.map((e, i) => {
