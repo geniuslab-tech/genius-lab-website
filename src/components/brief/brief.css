@@ -1,0 +1,208 @@
+/* Genius orb + briefing motion for the V39–V43 heroes. */
+
+.gorb {
+  position: relative;
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  --orb-a: oklch(0.7 0.17 252);
+  --orb-b: oklch(0.85 0.11 205);
+  --orb-c: oklch(0.8 0.14 75);
+}
+.gorb-gold {
+  --orb-a: oklch(0.8 0.14 75);
+  --orb-b: oklch(0.86 0.09 60);
+  --orb-c: oklch(0.7 0.17 252);
+}
+.gorb > span {
+  position: absolute;
+  border-radius: 9999px;
+}
+.gorb-halo {
+  inset: -35%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--orb-a) 45%, transparent), transparent 68%);
+  filter: blur(6px);
+  animation: gorb-breathe 3.6s ease-in-out infinite;
+}
+.gorb-aurora {
+  inset: 0;
+  background: conic-gradient(from 0deg, var(--orb-a), var(--orb-b), var(--orb-c), var(--orb-a));
+  animation: gorb-spin 8s linear infinite;
+  filter: saturate(1.15);
+}
+.gorb-glass {
+  inset: 14%;
+  background:
+    radial-gradient(circle at 35% 30%, oklch(1 0 0 / 55%), transparent 38%),
+    radial-gradient(circle at 60% 70%, color-mix(in oklab, var(--orb-a) 50%, transparent), oklch(0.16 0.04 264 / 85%) 70%);
+  box-shadow:
+    inset 0 0 12px oklch(1 0 0 / 18%),
+    0 0 18px color-mix(in oklab, var(--orb-a) 50%, transparent);
+}
+.gorb-spec {
+  inset: 22% 46% 54% 22%;
+  background: oklch(1 0 0 / 70%);
+  filter: blur(2px);
+}
+.gorb-ring {
+  inset: -10%;
+  border: 1.5px solid color-mix(in oklab, var(--orb-b) 70%, transparent);
+  animation: gorb-ripple 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.gorb-ring-2 {
+  animation-delay: 0.8s;
+}
+.gorb-thinking .gorb-aurora {
+  animation-duration: 1.6s;
+}
+.gorb-thinking .gorb-glass {
+  animation: gorb-shimmer 1.2s ease-in-out infinite;
+}
+.gorb-typing .gorb-aurora {
+  animation-duration: 3s;
+}
+.gorb-typing {
+  animation: gorb-talk 0.9s ease-in-out infinite;
+}
+
+@keyframes gorb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes gorb-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+@keyframes gorb-ripple {
+  from {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+@keyframes gorb-shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+@keyframes gorb-talk {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* waveform */
+.gwave {
+  display: inline-flex;
+  height: 22px;
+  align-items: center;
+  gap: 2px;
+}
+.gwave > span {
+  width: 2.5px;
+  border-radius: 2px;
+  background: var(--gold);
+  opacity: 0.35;
+  transform: scaleY(0.25);
+  transition: opacity 0.4s;
+}
+.gwave-on > span {
+  opacity: 0.95;
+  animation: gwave 0.7s ease-in-out infinite alternate;
+}
+@keyframes gwave {
+  from {
+    transform: scaleY(0.2);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* focus highlight on the dashboard element the agent is talking about */
+.gfocus {
+  transition:
+    box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.6s,
+    background-color 0.6s;
+}
+.gfocus-on {
+  border-color: oklch(0.85 0.11 205 / 60%) !important;
+  box-shadow:
+    0 0 0 1px oklch(0.85 0.11 205 / 35%),
+    0 0 36px -8px oklch(0.85 0.11 205 / 55%);
+}
+.gfocus-tag {
+  animation: gfocus-tag 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes gfocus-tag {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.gcaret {
+  display: inline-block;
+  width: 5px;
+  height: 0.95em;
+  margin-left: 2px;
+  vertical-align: -0.12em;
+  border-radius: 1px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: gcaret 0.9s steps(2, start) infinite;
+}
+@keyframes gcaret {
+  to {
+    visibility: hidden;
+  }
+}
+
+.gshimmer {
+  background: linear-gradient(90deg, oklch(1 0 0 / 5%) 0%, oklch(0.7 0.17 252 / 26%) 50%, oklch(1 0 0 / 5%) 100%);
+  background-size: 200% 100%;
+  animation: gshimmer 1.3s ease-in-out infinite;
+}
+@keyframes gshimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gorb *,
+  .gorb,
+  .gwave > span,
+  .gfocus-tag,
+  .gcaret,
+  .gshimmer {
+    animation: none !important;
+  }
+}

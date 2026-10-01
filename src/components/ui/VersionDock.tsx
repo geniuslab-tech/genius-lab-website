@@ -42,6 +42,11 @@ const VERSIONS = [
   { v: 36, name: "How · bento assembly", tone: "Dark" },
   { v: 37, name: "How · morph", tone: "Dark" },
   { v: 38, name: "How · depth fly-through", tone: "Dark" },
+  { v: 39, name: "Briefing refined", tone: "Dark" },
+  { v: 40, name: "Genius rail", tone: "Dark" },
+  { v: 41, name: "Glass guide", tone: "Dark" },
+  { v: 42, name: "Briefing strip", tone: "Dark" },
+  { v: 43, name: "Voice briefing", tone: "Dark" },
 ];
 
 const href = (v: number) => (v === 1 ? "/" : `/v${v}`);
