@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Manrope, Sora } from "next/font/google";
-import "../v24/v24.css";
+import "@/app/(hero-animation)/v24/v24.css";
 import { Nav } from "@/components/v24/Hero";
 import { VariantSection } from "@/components/layers/shared";
 import { V1Refined } from "@/components/layers/V1Refined";

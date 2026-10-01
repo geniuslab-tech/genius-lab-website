@@ -49,6 +49,17 @@ const VERSIONS = [
   { v: 43, name: "Voice briefing", tone: "Dark" },
 ];
 
+/** The versions grouped the way the app folders are: app/(homepages), app/(hero-animation), app/(flow). */
+const range = (a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+const byNumber = new Map(VERSIONS.map((x) => [x.v, x]));
+const GROUPS = [
+  { name: "HOMEPAGES", versions: range(1, 23) },
+  { name: "HERO ANIMATION", versions: [...range(24, 31), ...range(39, 43)] },
+  { name: "FLOW", versions: range(32, 38) },
+].map((g) => ({ ...g, items: g.versions.flatMap((v) => byNumber.get(v) ?? []) }));
+/** Versions in folder order, so previous / next stay inside the same group. */
+const ORDERED = GROUPS.flatMap((g) => g.items);
+
 const href = (v: number) => (v === 1 ? "/" : `/v${v}`);
 
 /** A retractable tab on the right edge that holds every homepage version, on every page. */
@@ -72,9 +83,9 @@ export function VersionDock() {
     };
   }, [open]);
 
-  const idx = VERSIONS.findIndex((x) => x.v === current);
-  const prev = idx > 0 ? VERSIONS[idx - 1] : null;
-  const next = idx >= 0 && idx < VERSIONS.length - 1 ? VERSIONS[idx + 1] : null;
+  const idx = ORDERED.findIndex((x) => x.v === current);
+  const prev = idx > 0 ? ORDERED[idx - 1] : null;
+  const next = idx >= 0 && idx < ORDERED.length - 1 ? ORDERED[idx + 1] : null;
 
   return (
     <div
@@ -105,27 +116,42 @@ export function VersionDock() {
         className="flex max-h-[86vh] w-[272px] flex-col border border-r-0 border-white/15 bg-[#0c0e14]/95 text-white shadow-[0_20px_60px_-20px_rgb(0_0_0/0.7)] backdrop-blur-xl"
       >
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">Homepage versions</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">Versions</p>
           <span className="text-[11px] tabular-nums text-white/35">{VERSIONS.length}</span>
         </div>
-        <ul className="overflow-y-auto overscroll-contain p-1.5">
-          {VERSIONS.map((x) => {
-            const on = x.v === current;
-            return (
-              <li key={x.v}>
-                <a
-                  href={href(x.v)}
-                  aria-current={on ? "page" : undefined}
-                  className={`flex items-center gap-3 rounded-[6px] px-2.5 py-2 transition-colors ${on ? "bg-white text-[#0c0e14]" : "text-white/80 hover:bg-white/[0.07] hover:text-white"}`}
-                >
-                  <span className={`w-8 text-[12px] font-semibold tabular-nums ${on ? "" : "text-white/45"}`}>V{x.v}</span>
-                  <span className="flex-1 text-[13px] font-medium">{x.name}</span>
-                  <span className={`text-[10px] uppercase tracking-[0.1em] ${on ? "text-black/45" : "text-white/30"}`}>{x.tone}</span>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="overflow-y-auto overscroll-contain p-1.5">
+          {GROUPS.map((g) => (
+            <section key={g.name} aria-label={g.name} className="mb-1.5 last:mb-0">
+              <p className="sticky top-0 z-10 flex items-center justify-between bg-[#0c0e14] px-2.5 pb-1.5 pt-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
+                <span className="flex items-center gap-2">
+                  <svg viewBox="0 0 16 16" className="h-3 w-3" aria-hidden="true">
+                    <path d="M1.5 4.5a1 1 0 0 1 1-1h3.6l1.4 1.5h6a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" strokeWidth="1.3" />
+                  </svg>
+                  {g.name}
+                </span>
+                <span className="tabular-nums text-white/30">{g.items.length}</span>
+              </p>
+              <ul>
+                {g.items.map((x) => {
+                  const on = x.v === current;
+                  return (
+                    <li key={x.v}>
+                      <a
+                        href={href(x.v)}
+                        aria-current={on ? "page" : undefined}
+                        className={`flex items-center gap-3 rounded-[6px] px-2.5 py-2 transition-colors ${on ? "bg-white text-[#0c0e14]" : "text-white/80 hover:bg-white/[0.07] hover:text-white"}`}
+                      >
+                        <span className={`w-8 text-[12px] font-semibold tabular-nums ${on ? "" : "text-white/45"}`}>V{x.v}</span>
+                        <span className="flex-1 text-[13px] font-medium">{x.name}</span>
+                        <span className={`text-[10px] uppercase tracking-[0.1em] ${on ? "text-black/45" : "text-white/30"}`}>{x.tone}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
         <div className="grid grid-cols-2 gap-px border-t border-white/10 bg-white/10">
           {[prev, next].map((x, k) =>
             x ? (
