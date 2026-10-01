@@ -270,6 +270,10 @@ export function Outbox({
   top,
   toastBody,
   subject = "Q3 Board Update — $18.4M cash recovered, margin protected",
+  heading = "Sending the Q3 board update",
+  toLabel = "Board of Directors",
+  attachment = "Q3-Board-Update.pdf · 2.4 MB",
+  recipients = BOARD,
 }: {
   sending: boolean;
   sent: number;
@@ -280,7 +284,12 @@ export function Outbox({
   top: number;
   toastBody: string;
   subject?: string;
+  heading?: string;
+  toLabel?: string;
+  attachment?: string;
+  recipients?: readonly (readonly [string, string, string])[];
 }) {
+  const total = recipients.length;
   return (
     <>
       {/* outbox: the report goes out to seven board members */}
@@ -291,17 +300,19 @@ export function Outbox({
           style={{ left: cx - 340, top, width: 680, transform: sending ? "none" : "translateY(24px) scale(0.97)" }}
         >
           <div className="flex items-center gap-3 border-b border-gl-border/70 px-5 py-3.5">
-            <GeniusShaderOrb state={sent < 7 ? "typing" : "holding"} size={30} tone={gold ? "gold" : "blue"} />
+            <GeniusShaderOrb state={sent < total ? "typing" : "holding"} size={30} tone={gold ? "gold" : "blue"} />
             <div className="flex-1">
-              <p className="text-[0.78rem] text-gl-foreground">Sending the Q3 board update</p>
+              <p className="text-[0.78rem] text-gl-foreground">{heading}</p>
               <p className="font-gl-mono text-[0.56rem] text-gl-muted-foreground">From elena.costa@meridian.com · via Genius · encrypted · watermarked</p>
             </div>
-            <span className="font-gl-mono text-[0.62rem] tabular-nums text-gl-foreground">{sent}/7</span>
+            <span className="font-gl-mono text-[0.62rem] tabular-nums text-gl-foreground">{sent}/{total}</span>
           </div>
           <div className="space-y-1 border-b border-gl-border/60 px-5 py-3 text-[0.66rem]">
             <p>
               <span className="text-gl-muted-foreground">To </span>
-              <span className="text-gl-foreground">Board of Directors (7)</span>
+              <span className="text-gl-foreground">
+                {toLabel} ({total})
+              </span>
             </p>
             <p>
               <span className="text-gl-muted-foreground">Subject </span>
@@ -310,13 +321,13 @@ export function Outbox({
             <div className="flex items-center gap-2 pt-1">
               <span key={String(sending)} className="brief-fly flex items-center gap-2 rounded-md border border-gl-border bg-gl-background/50 px-2 py-1">
                 <span className="grid h-5 w-4 place-items-center rounded-sm bg-[oklch(0.97_0.004_250)] font-gl-mono text-[0.38rem] font-medium text-[oklch(0.45_0.15_25)]">PDF</span>
-                <span className="text-[0.6rem] text-gl-foreground/85">Q3-Board-Update.pdf · 2.4 MB</span>
+                <span className="text-[0.6rem] text-gl-foreground/85">{attachment}</span>
               </span>
             </div>
           </div>
           <div className="px-5 py-2">
-            {BOARD.map(([i, n, r], k) => {
-              const st = k < sent ? (k < opened ? "Opened" : "Delivered") : k === sent && sent < 7 ? "Sending" : "Queued";
+            {recipients.map(([i, n, r], k) => {
+              const st = k < sent ? (k < opened ? "Opened" : "Delivered") : k === sent && sent < total ? "Sending" : "Queued";
               return (
                 <div key={i} className="flex items-center gap-3 border-b border-gl-border/40 py-[7px] last:border-0">
                   <span className="grid h-6 w-6 place-items-center rounded-full bg-gl-foreground/10 text-[0.45rem] font-semibold text-gl-foreground">{i}</span>
@@ -326,7 +337,7 @@ export function Outbox({
                   </div>
                   <span className="relative h-3 w-16 overflow-hidden" aria-hidden="true">
                     <span className={`absolute top-1/2 h-px w-full -translate-y-1/2 ${k < sent ? "bg-[var(--success)]/40" : "bg-gl-foreground/10"}`} />
-                    {k === sent && sent < 7 ? <span className="brief-env absolute top-0 text-[0.6rem] leading-3">✉</span> : null}
+                    {k === sent && sent < total ? <span className="brief-env absolute top-0 text-[0.6rem] leading-3">✉</span> : null}
                   </span>
                   <span
                     key={st}

@@ -71,39 +71,43 @@ const CUES = {
   toAlert: 30300,
   pressAlert: 31200,
   picked: 31450,
-  toChat: 31900,
-  pressChat: 32700,
-  type2: 32950,
-  toSend2: 35500,
-  pressSend2: 36300,
-  asked2: 36550,
-  aThink: 36700,
-  reply: 37500,
-  plan: 40900,
-  toSend: 41700,
-  pressSend: 42700,
-  sending: 42950,
-  e1: 43600,
-  e2: 44050,
-  e3: 44500,
-  e4: 44950,
-  e5: 45400,
-  e6: 45850,
-  e7: 46300,
-  open1: 46900,
-  open2: 47500,
-  toast: 47800,
-  exit: 51300,
+  explain: 31700,
+  x1: 32000,
+  x2: 32450,
+  x3: 32900,
+  toChat: 34000,
+  pressChat: 34800,
+  type2: 35050,
+  toSend2: 38300,
+  pressSend2: 39100,
+  asked2: 39350,
+  aThink: 39500,
+  reply: 40300,
+  plan: 43700,
+  toSend: 44500,
+  pressSend: 45500,
+  sending: 45750,
+  e1: 46400,
+  e2: 46850,
+  e3: 47300,
+  e4: 47750,
+  e5: 48200,
+  e6: 48650,
+  e7: 49100,
+  open1: 49700,
+  open2: 50300,
+  toast: 50600,
+  exit: 54100,
 } as const;
-const LOOP = 53300;
+const LOOP = 56100;
 const H = 900;
 
-const Q2 = "How do we close the $4.2M gap before the board meeting?";
+const Q2 = "What measures can I put in place to hit the cash target before month-end close?";
 
 /** three over two, like a marketplace shelf */
 const ORDER = ["ceo", "cfo", "coo", "chro", "cco"] as const;
 const NOTES: Record<string, { text: string; alert?: "high" | "med" }> = {
-  ceo: { text: "Board pack is due Thursday — I need the cash plan in it.", alert: "med" },
+  ceo: { text: "Month-end close is in 9 days — I want the cash plan before then.", alert: "med" },
   cfo: { text: "Free cash flow is $4.2M behind budget. I have a recovery plan ready.", alert: "high" },
   coo: { text: "Southeast inventory is up 18%. A release proposal is drafted." },
   chro: { text: "14 backfills could pause in Q4 without touching critical roles." },
@@ -118,16 +122,34 @@ const CFO_INSIGHTS = [
 ] as const;
 
 const REPLY: Segment[] = [
-  { t: "Three moves close " },
+  { t: "Month-end close is in " },
+  { t: "9 days", tone: "strong" },
+  { t: ". Three moves recover " },
   { t: "$3.4M of the $4.2M", tone: "gold" },
-  { t: " this quarter, and the COO, CCO and CHRO have each signed off their part. The rest closes with " },
-  { t: "Q4 collections", tone: "strong" },
-  { t: ". Approve the plan and I'll send the board update with it." },
+  { t: " before it, and the COO, CCO and CHRO have signed off their part. Approve and I'll send the plan to the executive team with owners and deadlines." },
 ];
+
+/** why the red alert fired, shown when it is opened */
+const EXPLAIN = [
+  { t: "The gap widened $0.8M this week as Southeast stock kept building.", v: "−$4.2M" },
+  { t: "Southeast inventory is 18% over plan — $8.8M sitting across 3 sites.", v: "+18%" },
+  { t: "11 EMEA accounts are over 60 days; DSO has slipped from 41 to 47.", v: "47 days" },
+] as const;
+
+/** who receives the month-end plan */
+const EXECS = [
+  ["MH", "Marcus Hale", "Chief Operating Officer"],
+  ["PR", "Priya Rao", "Chief Commercial Officer"],
+  ["DO", "Daniel Okafor", "Chief People Officer"],
+  ["SL", "Sarah Lin", "Chief Executive Officer"],
+  ["TB", "Tom Becker", "VP Supply Chain"],
+  ["AR", "Ana Ruiz", "Group Controller"],
+  ["JO", "James Ortiz", "Group Treasurer"],
+] as const;
 const PLAN = [
-  { from: "COO", t: "Release $1.4M of Southeast inventory", v: "+$1.4M" },
-  { from: "CCO", t: "Chase 11 EMEA accounts over 60 days", v: "+$1.1M" },
-  { from: "CHRO", t: "Pause 14 non-critical Q4 backfills", v: "+$0.9M" },
+  { from: "COO", t: "Release $1.4M of Southeast inventory", v: "+$1.4M", by: "by day 5" },
+  { from: "CCO", t: "Chase 11 EMEA accounts over 60 days", v: "+$1.1M", by: "by day 7" },
+  { from: "CHRO", t: "Pause 14 non-critical backfills", v: "+$0.9M", by: "by day 9" },
 ] as const;
 
 type Scene = ReturnType<typeof useScene<typeof CUES>>["scene"];
@@ -218,7 +240,7 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
         <div className="absolute inset-0 bg-[oklch(0.1_0.03_264/62%)] backdrop-blur-[3px]" />
         <div
           className="absolute overflow-hidden rounded-[22px] border border-gl-gold/30 bg-[linear-gradient(170deg,oklch(0.2_0.04_262/98%),oklch(0.14_0.03_264/98%))] shadow-[0_50px_120px_-30px_rgb(0_0_0/0.85)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{ left: cx - 450, top: 40, width: 900, height: 740, transform: open ? "none" : "translateY(20px) scale(0.97)" }}
+          style={{ left: cx - 450, top: 16, width: 900, height: 810, transform: open ? "none" : "translateY(20px) scale(0.97)" }}
         >
           <div className="flex items-center gap-3 border-b border-gl-border/60 px-6 py-3.5">
             <GeniusShaderOrb state="holding" size={26} tint={exec("cfo").tint} />
@@ -268,12 +290,36 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
           })}
 
           {/* conversation */}
-          <div className="absolute" style={{ left: 120, top: 330, width: 660 }}>
+          <div className="absolute" style={{ left: 110, top: 312, width: 680 }}>
             <div className={`mb-2 flex items-center gap-2 transition-opacity duration-500 ${picked ? "opacity-100" : "opacity-0"}`}>
               <span className="font-gl-mono text-[0.5rem] uppercase tracking-[0.14em] text-gl-muted-foreground">About</span>
               <span className="flex items-center gap-1.5 rounded-full border border-[oklch(0.65_0.2_25/45%)] bg-[oklch(0.65_0.2_25/10%)] px-2 py-0.5 text-[0.58rem] text-gl-foreground">
                 <AlertIcon level="high" /> FCF $4.2M behind budget
               </span>
+            </div>
+            <div className={`mb-3 rounded-xl border border-[oklch(0.65_0.2_25/40%)] bg-[oklch(0.65_0.2_25/6%)] px-4 py-3 transition-all duration-500 ${s.past("explain") ? "opacity-100" : "opacity-0"}`}>
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-[oklch(0.72_0.18_25)]">What is happening</span>
+                <span className="flex items-center gap-2 font-gl-mono text-[0.52rem] uppercase tracking-[0.12em] text-gl-foreground/80">
+                  Month-end close in 9 days
+                  <span className="relative h-1 w-20 overflow-hidden rounded-full bg-gl-foreground/10">
+                    <span className="absolute inset-y-0 left-0 w-[70%] rounded-full bg-[oklch(0.65_0.2_25)]" />
+                  </span>
+                </span>
+              </div>
+              {EXPLAIN.map((e, i) => (
+                <div
+                  key={e.t}
+                  className="flex items-center justify-between gap-3 py-[3px] text-[0.66rem] transition-all duration-500"
+                  style={{ opacity: s.past((["x1", "x2", "x3"] as const)[i]!) ? 1 : 0, transform: s.past((["x1", "x2", "x3"] as const)[i]!) ? "none" : "translateY(4px)" }}
+                >
+                  <span className="flex items-center gap-2 text-gl-foreground/90">
+                    <span className="h-1 w-1 rounded-full bg-[oklch(0.72_0.18_25)]" />
+                    {e.t}
+                  </span>
+                  <span className="font-gl-mono text-[0.6rem] text-[oklch(0.72_0.18_25)]">{e.v}</span>
+                </div>
+              ))}
             </div>
             <AskBox ask={ask} cid="chat" tone="gold" />
             <div className={`mt-3 flex items-start gap-2.5 transition-opacity duration-500 ${s.past("aThink") ? "opacity-100" : "opacity-0"}`}>
@@ -285,7 +331,7 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
             </div>
             <div className={`mt-3 rounded-xl border border-gl-gold/35 bg-gl-gold/[0.05] p-3.5 transition-all duration-700 ${s.past("plan") ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
               <div className="mb-2 flex items-center justify-between">
-                <span className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-gl-gold">Recovery plan · needs your approval</span>
+                <span className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-gl-gold">Month-end cash plan · needs your approval</span>
                 <span className="font-gl-mono text-[0.6rem] text-[var(--success)]">+$3.4M cash</span>
               </div>
               {PLAN.map((m) => (
@@ -295,17 +341,32 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
                       {m.from}
                     </span>
                     {m.t}
+                    <span className="font-gl-mono text-[0.52rem] text-gl-muted-foreground">· {m.by}</span>
                   </span>
                   <span className="font-gl-mono text-[var(--success)]">{m.v}</span>
                 </div>
               ))}
+              <p className="mb-1.5 mt-2.5 font-gl-mono text-[0.5rem] uppercase tracking-[0.16em] text-gl-muted-foreground">Sending to the executive team</p>
+              <div className="grid grid-cols-4 gap-x-2 gap-y-1.5">
+                {EXECS.map(([i, n, r]) => (
+                  <div key={i} className="flex min-w-0 items-center gap-2">
+                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[oklch(0.45_0.08_260)] to-[oklch(0.3_0.05_262)] text-[0.46rem] font-semibold text-gl-foreground ring-1 ring-white/10">
+                      {i}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[0.6rem] leading-tight text-gl-foreground">{n}</span>
+                      <span className="block truncate text-[0.5rem] leading-tight text-gl-muted-foreground">{r}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
               <div className="mt-2.5 flex items-center justify-between">
-                <span className="text-[0.58rem] text-gl-muted-foreground">Board update drafted · 12 pages · every figure sourced</span>
+                <span className="text-[0.58rem] text-gl-muted-foreground">Owners and deadlines attached · every figure sourced</span>
                 <span
                   data-cursor="send"
                   className={`rounded-md px-3 py-1.5 text-[0.66rem] font-medium transition-all duration-200 ${sending ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${s.between("toSend", "sending") ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${s.between("pressSend", "sending") ? "scale-95" : ""}`}
                 >
-                  {sending ? "✓ Approved & sent" : "Approve plan & send to board"}
+                  {sending ? "✓ Approved & sent" : "Approve plan & send to executives"}
                 </span>
               </div>
             </div>
@@ -321,8 +382,12 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
         gold
         cx={cx}
         top={150}
-        subject="Q3 cash plan — $3.4M of the $4.2M gap closed"
-        toastBody="One flagged insight to a board-approved plan · every figure sourced"
+        subject="Month-end cash plan — $3.4M recovered before close"
+        heading="Sending the month-end cash plan"
+        toLabel="Executive team"
+        attachment="Month-end-cash-plan.pdf · 1.1 MB"
+        recipients={EXECS}
+        toastBody="Plan sent to 7 executives · 9 days before month-end close"
       />
     </div>
   );
@@ -591,10 +656,11 @@ export function ScriptedBriefMarket() {
     target = "agent-cfo";
     pointer = true;
   } else if (s.between("modal", "toAlert")) target = { x: contentX + contentW / 2 + 40, y: 360 };
-  else if (s.between("toAlert", "toChat")) {
+  else if (s.between("toAlert", "explain")) {
     target = "ins-fcf";
     pointer = true;
-  } else if (s.between("toChat", "toSend2")) {
+  } else if (s.between("explain", "toChat")) target = { x: contentX + contentW / 2 + 260, y: 420 };
+  else if (s.between("toChat", "toSend2")) {
     target = "chat-input";
     pointer = true;
   } else if (s.between("toSend2", "aThink")) {
