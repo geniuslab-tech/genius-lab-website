@@ -19,14 +19,14 @@ export const viewport: Viewport = {
   themeColor: "#0b1024",
 };
 
-/** v39.1: the v39 hero; the user picks the Revenue and Free cash flow cards, asks about cash, then talks to the CFO agent in a team of five. */
-export default function HomeV39Point1() {
+/** v39.2: v39.1 with the agents as a marketplace (three over two, each with a note) and a private CFO chat. */
+export default function HomeV39Point2() {
   return (
     <div className={`v24 ${display.variable} ${sans.variable} ${mono.variable}`}>
       <style>{`html,body{background:oklch(0.145 0.032 264)}`}</style>
       <Nav variant="light" />
       <main>
-        <BriefHero variant="refined" tint="blue" team="circle" />
+        <BriefHero variant="refined" tint="blue" team="market" />
       </main>
     </div>
   );

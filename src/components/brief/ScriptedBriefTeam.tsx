@@ -76,10 +76,10 @@ const CUES = {
 const LOOP = 46500;
 const H = 900;
 
-const Q1 = "Revenue is ahead — so why is free cash flow $4.2M behind budget?";
+export const Q1 = "Revenue is ahead — so why is free cash flow $4.2M behind budget?";
 const Q2 = "What did the team work out overnight — and what needs my approval?";
 
-const CASH: Insight = {
+export const CASH: Insight = {
   focus: "cash",
   tag: "Cash · revenue vs FCF",
   segments: [
@@ -97,8 +97,8 @@ const CASH: Insight = {
   action: { title: "Release $1.4M inventory · chase $1.1M receivables", impact: "Cash +$2.5M this quarter", cta: "Approve" },
 };
 
-type Exec = { id: string; role: string; scope: string; tint: string; color: string; angle: number };
-const TEAM: Exec[] = [
+export type Exec = { id: string; role: string; scope: string; tint: string; color: string; angle: number };
+export const TEAM: Exec[] = [
   { id: "ceo", role: "CEO", scope: "Strategy & priorities", tint: "#c9b8ff", color: "oklch(0.75 0.13 295)", angle: -90 },
   { id: "coo", role: "COO", scope: "Operations & supply", tint: "#a0e7ff", color: "oklch(0.85 0.11 205)", angle: -18 },
   { id: "cco", role: "CCO", scope: "Customers & revenue", tint: "#b8ffcf", color: "oklch(0.82 0.14 155)", angle: 54 },
