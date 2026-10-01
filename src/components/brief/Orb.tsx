@@ -1,8 +1,34 @@
 "use client";
 
+import { AgentOrb } from "@/components/v2/AgentOrb";
 import "./brief.css";
 
 export type OrbState = "thinking" | "typing" | "holding";
+
+const SHADER_STATE = { thinking: "thinking", typing: "speaking", holding: "idle" } as const;
+
+/**
+ * The same WebGL agent orb as v3 (OrbKit SHDR-01, cut glass with dispersion),
+ * on the dark disc it sits on there. Thinking, writing and waiting map to the
+ * orb's thinking, speaking and idle states.
+ */
+export function GeniusShaderOrb({ state, size = 56, tone = "blue" }: { state: OrbState; size?: number; tone?: "blue" | "gold" }) {
+  return (
+    <span className="relative inline-grid shrink-0 place-items-center" style={{ width: size, height: size }}>
+      <span
+        className="absolute h-[118%] w-[118%] rounded-full bg-[radial-gradient(closest-side,rgb(16_20_64/0.95),rgb(16_20_64/0.85)_62%,rgb(16_20_64/0)_100%)]"
+        aria-hidden="true"
+      />
+      <AgentOrb
+        state={SHADER_STATE[state]}
+        size={size}
+        className="relative"
+        label="Genius"
+        {...(tone === "gold" ? { colors: { tint: "#ffd9a0" } } : {})}
+      />
+    </span>
+  );
+}
 
 /**
  * The agent's presence. A glass sphere over a slowly turning aurora: it spins

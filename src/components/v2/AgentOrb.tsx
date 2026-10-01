@@ -13,13 +13,16 @@ export function AgentOrb({
   size = 300,
   className = "",
   label = "Genius agent",
+  colors,
 }: {
   state: OrbState;
   size?: number;
   className?: string;
   label?: string;
+  /** Optional tint override, e.g. { tint: "#ffd9a0" }. */
+  colors?: Record<string, string>;
 }) {
-  return <Shdr01 state={state} size={size} className={className} ariaLabel={`${label}, ${state}`} />;
+  return <Shdr01 state={state} size={size} className={className} colors={colors} ariaLabel={`${label}, ${state}`} />;
 }
 
 export type { OrbState };

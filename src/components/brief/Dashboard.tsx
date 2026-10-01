@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { Tween, smoothPath } from "@/components/hero-demo/engine";
 import { renderSegments } from "@/components/hero-demo/screens";
-import { GeniusOrb, Waveform, stageLabel } from "./Orb";
+import { GeniusOrb, GeniusShaderOrb, Waveform, stageLabel } from "./Orb";
 import { INSIGHTS, insightText, useInsightCycle, type CycleStage, type Focus, type Insight } from "./insights";
 
 export const DASH_W = 1250;
@@ -114,7 +114,7 @@ function Sidebar({ narrow = false }: { narrow?: boolean }) {
   );
 }
 
-function Topbar({ stage, orb }: { stage: CycleStage; orb?: boolean }) {
+function Topbar({ stage, orb, shader = false }: { stage: CycleStage; orb?: boolean; shader?: boolean }) {
   return (
     <div className="flex items-center justify-between border-b border-gl-border/60 px-5 py-3.5">
       <div>
@@ -127,7 +127,7 @@ function Topbar({ stage, orb }: { stage: CycleStage; orb?: boolean }) {
         </span>
         <span className="rounded-md border border-gl-border/70 px-2.5 py-1.5 text-[0.64rem] text-gl-muted-foreground">Quarter to date</span>
         <span className="flex items-center gap-1.5 rounded-md bg-gl-gold px-2.5 py-1.5 text-[0.66rem] font-medium text-gl-background">
-          {orb ? <GeniusOrb state={stage} size={14} tone="gold" /> : null}
+          {orb ? shader ? <GeniusShaderOrb state={stage} size={16} /> : <GeniusOrb state={stage} size={14} tone="gold" /> : null}
           Ask Genius
         </span>
       </div>
@@ -348,7 +348,7 @@ function BriefingCard({ c, glass }: { c: Cyc; glass: boolean }) {
       <div className="pointer-events-none absolute -left-16 -top-16 h-44 w-44 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.17_252/22%),transparent_70%)]" />
       <div className="relative mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <GeniusOrb state={c.stage} size={38} />
+          <GeniusShaderOrb state={c.stage} size={58} />
           <div>
             <p className="text-[0.74rem] text-gl-foreground">Executive Briefing</p>
             <p key={c.stage} className="gfocus-tag text-[0.58rem] text-gl-muted-foreground">
@@ -387,7 +387,7 @@ function GeniusRail({ c }: { c: Cyc }) {
     <aside className="relative flex w-[300px] shrink-0 flex-col overflow-hidden border-r border-gl-border/60 bg-[linear-gradient(180deg,oklch(0.19_0.045_258/90%),oklch(0.14_0.03_264/90%))] p-5">
       <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.17_252/30%),transparent_70%)]" />
       <div className="relative flex flex-col items-center text-center">
-        <GeniusOrb state={c.stage} size={86} />
+        <GeniusShaderOrb state={c.stage} size={128} />
         <p className="mt-4 font-gl-display text-[0.95rem] text-gl-foreground">Genius</p>
         <p key={c.stage} className="gfocus-tag text-[0.6rem] text-gl-muted-foreground">
           {stageLabel(c.stage, c.insight.tag)}
@@ -506,7 +506,7 @@ function VoiceBriefing({ c }: { c: Cyc }) {
     <div className="relative overflow-hidden rounded-xl border border-gl-gold/30 bg-[linear-gradient(160deg,oklch(0.24_0.05_70/40%),oklch(0.16_0.03_264/70%))] p-4">
       <div className="pointer-events-none absolute -right-10 -top-14 h-44 w-44 rounded-full bg-[radial-gradient(circle,oklch(0.77_0.155_66/22%),transparent_70%)]" />
       <div className="relative flex items-center gap-3">
-        <GeniusOrb state={c.stage} size={46} tone="gold" />
+        <GeniusShaderOrb state={c.stage} size={64} tone="gold" />
         <div className="flex-1">
           <p className="text-[0.74rem] text-gl-foreground">Executive Briefing · voice</p>
           <div className="mt-1 flex items-center gap-2">
@@ -604,7 +604,7 @@ export function BriefDashboard({ variant }: { variant: Variant }) {
       <div className="flex min-h-[640px]">
         <Sidebar />
         <div className="min-w-0 flex-1">
-          <Topbar stage={c.stage} orb={variant === "voice"} />
+          <Topbar stage={c.stage} orb={variant === "voice"} shader={variant === "voice"} />
           <div className="space-y-3.5 p-5">
             <Chart focus={c.focus} glass={false} />
             <Kpis focus={c.focus} glass={false} />
