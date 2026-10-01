@@ -373,7 +373,44 @@ export type Cyc = Omit<ReturnType<typeof useInsightCycle>, "ref">;
 /** Approval button state, when a script drives the dashboard. */
 export type ApproveState = { hover?: boolean; pressed?: boolean; done?: boolean };
 
-export function BriefingCard({ c, glass, approve }: { c: Cyc; glass: boolean; approve?: ApproveState }) {
+/** The user's question to the agent, when a script types one. */
+export type AskState = { text: string; typed: number; focused: boolean; sent: boolean; hoverSend?: boolean; pressSend?: boolean; placeholder?: string };
+
+/** Chat input that becomes the user's message bubble once sent. */
+export function AskBox({ ask, tone = "blue", className = "", cid = "ask" }: { ask: AskState; tone?: "blue" | "gold"; className?: string; cid?: string }) {
+  const ring = tone === "gold" ? "oklch(0.77 0.155 66 / 55%)" : "oklch(0.85 0.11 205 / 55%)";
+  if (ask.sent) {
+    return (
+      <div className={`gfocus-tag flex justify-end ${className}`}>
+        <div className="max-w-[90%] rounded-2xl rounded-br-sm bg-gl-foreground/[0.09] px-3 py-2 text-[0.7rem] leading-snug text-gl-foreground">
+          <span className="mb-0.5 block font-gl-mono text-[0.48rem] uppercase tracking-[0.14em] text-gl-muted-foreground">Elena</span>
+          {ask.text}
+        </div>
+      </div>
+    );
+  }
+  const shown = ask.text.slice(0, ask.typed);
+  return (
+    <div
+      data-cursor={`${cid}-input`}
+      className={`flex items-center gap-2 rounded-xl border bg-gl-background/50 py-1.5 pl-3 pr-1.5 transition-[border-color,box-shadow] duration-300 ${className}`}
+      style={{ borderColor: ask.focused ? ring : "oklch(1 0 0 / 10%)", boxShadow: ask.focused ? `0 0 0 3px ${tone === "gold" ? "oklch(0.77 0.155 66 / 14%)" : "oklch(0.85 0.11 205 / 12%)"}` : "none" }}
+    >
+      <span className="min-h-[1.2em] flex-1 truncate text-[0.68rem] text-gl-foreground">
+        {shown ? shown : <span className="text-gl-muted-foreground/60">{ask.placeholder ?? "Ask Genius about this…"}</span>}
+        {ask.focused && ask.typed < ask.text.length ? <span className="gcaret" /> : null}
+      </span>
+      <span
+        data-cursor={`${cid}-send`}
+        className={`grid h-6 w-6 shrink-0 place-items-center rounded-lg text-[0.7rem] transition-all duration-200 ${shown ? (tone === "gold" ? "bg-gl-gold text-gl-background" : "bg-[var(--cyan)] text-gl-background") : "bg-gl-foreground/10 text-gl-muted-foreground"} ${ask.hoverSend ? "brightness-110" : ""} ${ask.pressSend ? "scale-90" : ""}`}
+      >
+        ↑
+      </span>
+    </div>
+  );
+}
+
+export function BriefingCard({ c, glass, approve, ask }: { c: Cyc; glass: boolean; approve?: ApproveState; ask?: AskState }) {
   return (
     <div className={card(glass, "overflow-hidden p-4 ring-1 ring-inset ring-gl-data/10")}>
       <div className="pointer-events-none absolute -left-16 -top-16 h-44 w-44 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.17_252/22%),transparent_70%)]" />
@@ -395,6 +432,7 @@ export function BriefingCard({ c, glass, approve }: { c: Cyc; glass: boolean; ap
       <p className="relative font-gl-mono text-[0.54rem] uppercase tracking-[0.16em] text-[var(--cyan)]">
         Insight {c.idx + 1} / {INSIGHTS.length} · {c.insight.tag}
       </p>
+      {ask ? <AskBox ask={ask} className="relative mt-2" /> : null}
       <div className="relative mt-1.5 min-h-[64px]">
         <InsightText insight={c.insight} typed={c.typed} stage={c.stage} className="text-[0.74rem] leading-[1.6] text-gl-foreground/90" />
       </div>
@@ -412,7 +450,7 @@ export function BriefingCard({ c, glass, approve }: { c: Cyc; glass: boolean; ap
   );
 }
 
-export function GeniusRail({ c, approve }: { c: Cyc; approve?: ApproveState }) {
+export function GeniusRail({ c, approve, ask }: { c: Cyc; approve?: ApproveState; ask?: AskState }) {
   const history = [1, 2, 3].map((k) => INSIGHTS[(c.idx - k + INSIGHTS.length * 2) % INSIGHTS.length]!);
   return (
     <aside className="relative flex w-[300px] shrink-0 flex-col overflow-hidden border-r border-gl-border/60 bg-[linear-gradient(180deg,oklch(0.19_0.045_258/90%),oklch(0.14_0.03_264/90%))] p-5">
@@ -427,7 +465,8 @@ export function GeniusRail({ c, approve }: { c: Cyc; approve?: ApproveState }) {
           <Dots idx={c.idx} />
         </span>
       </div>
-      <div className="relative mt-5 rounded-xl border border-[oklch(0.85_0.11_205/30%)] bg-[oklch(0.85_0.11_205/5%)] p-3.5">
+      {ask ? <AskBox ask={ask} className="relative mt-4" /> : null}
+      <div className={`relative rounded-xl border border-[oklch(0.85_0.11_205/30%)] bg-[oklch(0.85_0.11_205/5%)] p-3.5 ${ask ? "mt-3" : "mt-5"}`}>
         <p className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-[var(--cyan)]">Now · {c.insight.tag}</p>
         <div className="mt-1.5 min-h-[92px]">
           <InsightText insight={c.insight} typed={c.typed} stage={c.stage} className="text-[0.74rem] leading-[1.6] text-gl-foreground/90" />
@@ -530,7 +569,7 @@ function BriefingStrip({ c }: { c: Cyc }) {
   );
 }
 
-export function VoiceBriefing({ c, approve }: { c: Cyc; approve?: ApproveState }) {
+export function VoiceBriefing({ c, approve, ask }: { c: Cyc; approve?: ApproveState; ask?: AskState }) {
   const text = insightText(c.insight);
   const speaking = c.stage === "typing";
   return (
@@ -547,6 +586,7 @@ export function VoiceBriefing({ c, approve }: { c: Cyc; approve?: ApproveState }
         </div>
         <span className="rounded-full border border-gl-gold/40 px-2.5 py-1 font-gl-mono text-[0.54rem] uppercase tracking-[0.12em] text-gl-gold">Listen</span>
       </div>
+      {ask ? <AskBox ask={{ ...ask, placeholder: "Ask by voice or type…" }} tone="gold" className="relative mt-3" /> : null}
       <p className="relative mt-3 font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-gl-gold">Transcript · {c.insight.tag}</p>
       <p className="relative mt-1 min-h-[66px] text-[0.76rem] leading-[1.6]">
         {c.stage === "thinking" ? (

@@ -5,6 +5,7 @@ import { Cursor, useScene, type CursorTarget } from "@/components/hero-demo/engi
 import { Screen } from "@/components/hero-demo/frame";
 import { renderSegments, segText, type Segment } from "@/components/hero-demo/screens";
 import {
+  AskBox,
   BriefingCard,
   Chart,
   DASH_W,
@@ -15,6 +16,7 @@ import {
   Units,
   VoiceBriefing,
   type ApproveState,
+  type AskState,
   type Cyc,
   type Variant,
 } from "./Dashboard";
@@ -22,51 +24,67 @@ import type { Focus, Insight } from "./insights";
 import { GeniusShaderOrb, Waveform } from "./Orb";
 
 /*
- * Storyboard — "From one number to a board update"
- *  1. Ask       The CFO clicks May on the performance chart.
- *  2. Explain   Genius thinks, then writes why May moved and what to do about it.
+ * Storyboard — "Ask about one number, leave with a board update"
+ *  1. Ask       The CFO clicks May on the chart and types a question to the agent.
+ *  2. Answer    Genius thinks, then explains why May moved and what to do about it.
  *  3. Approve   The CFO approves the recommended actions.
- *  4. Agents    The cursor opens Agents: the orb takes centre stage and reports what every agent did.
- *  5. Board     Genius drafts the board update; the CFO approves and sends it. Seven emails go out.
+ *  4. Agents    On Agents, the CFO asks the orb what the agents did overnight.
+ *  5. Board     Genius reports each agent's results for approval and drafts the board
+ *               update; the CFO approves and sends it. Seven emails go out.
  */
 export const BRIEF_CUES = {
   start: 0,
   enter: 700,
   pressChart: 2000,
   selected: 2250,
-  think: 2700,
-  write: 3900,
-  proposal: 8700,
-  toApprove: 9400,
-  pressA: 10500,
-  approved: 10750,
-  toAgents: 11800,
-  pressNav: 12800,
-  agents: 13050,
-  aThink: 13400,
-  ins1: 14200,
-  ins2: 14800,
-  ins3: 15400,
-  ins4: 16000,
-  summary: 16500,
-  ready: 19800,
-  toSend: 20400,
-  pressSend: 21400,
-  sending: 21650,
-  e1: 22300,
-  e2: 22750,
-  e3: 23200,
-  e4: 23650,
-  e5: 24100,
-  e6: 24550,
-  e7: 25000,
-  open1: 25600,
-  open2: 26200,
-  toast: 26500,
-  exit: 29800,
+  toAsk: 2700,
+  pressAsk: 3600,
+  type1: 3850,
+  toSend1: 5900,
+  pressSend1: 6700,
+  asked: 6950,
+  think: 7100,
+  write: 8300,
+  proposal: 13800,
+  toApprove: 14500,
+  pressA: 15600,
+  approved: 15850,
+  toAgents: 16800,
+  pressNav: 17800,
+  agents: 18050,
+  toChat: 18500,
+  pressChat: 19300,
+  type2: 19550,
+  toSend2: 22400,
+  pressSend2: 23200,
+  asked2: 23450,
+  aThink: 23600,
+  ins1: 24400,
+  ins2: 25000,
+  ins3: 25600,
+  ins4: 26200,
+  summary: 26700,
+  ready: 30000,
+  toSend: 30600,
+  pressSend: 31600,
+  sending: 31850,
+  e1: 32500,
+  e2: 32950,
+  e3: 33400,
+  e4: 33850,
+  e5: 34300,
+  e6: 34750,
+  e7: 35200,
+  open1: 35800,
+  open2: 36400,
+  toast: 36700,
+  exit: 40000,
 } as const;
-export const BRIEF_LOOP = 31800;
-const H = 850;
+export const BRIEF_LOOP = 42000;
+
+const Q1 = "Why did gross margin slip in May?";
+const Q2 = "What did the agents do overnight — and what needs my approval?";
+const H = 900;
 
 const IDLE: Insight = {
   focus: "revenue",
@@ -141,7 +159,7 @@ function useTyped(text: string, play: boolean, done: boolean, cps: number, k: nu
 
 type Scene = ReturnType<typeof useScene<typeof BRIEF_CUES>>["scene"];
 
-function AgentsPage({ s, gold, width, summaryTyped }: { s: Scene; gold: boolean; width: number; summaryTyped: number }) {
+function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boolean; width: number; summaryTyped: number; ask: AskState }) {
   const cx = width / 2;
   const thinking = s.between("aThink", "ins1");
   const speaking = s.between("summary", "ready");
@@ -151,65 +169,51 @@ function AgentsPage({ s, gold, width, summaryTyped }: { s: Scene; gold: boolean;
   const sent = (["e1", "e2", "e3", "e4", "e5", "e6", "e7"] as const).filter((k) => s.past(k)).length;
   const opened = s.past("open2") ? 3 : s.past("open1") ? 1 : 0;
   const cards = [
-    { x: cx - 480, y: 120 },
-    { x: cx + 180, y: 120 },
-    { x: cx - 480, y: 250 },
-    { x: cx + 180, y: 250 },
+    { x: cx - 320, y: 302 },
+    { x: cx + 10, y: 302 },
+    { x: cx - 320, y: 392 },
+    { x: cx + 10, y: 392 },
   ];
-  const accent = gold ? "var(--gold)" : "var(--cyan)";
 
   return (
     <div className="relative h-full w-full">
       {/* stage glow */}
-      <div className="pointer-events-none absolute left-1/2 top-[90px] h-[420px] w-[620px] -translate-x-1/2 rounded-full blur-3xl" style={{ background: `radial-gradient(ellipse at center, color-mix(in oklab, ${gold ? "var(--gold)" : "var(--data)"} 22%, transparent), transparent 70%)` }} />
-      {/* links from the orb to each insight */}
-      <svg className="pointer-events-none absolute inset-0" width={width} height={H - 58} aria-hidden="true">
-        {cards.map((c, i) => {
-          const tx = i % 2 === 0 ? c.x + 300 : c.x;
-          const ty = c.y + 40;
-          return (
-            <path
-              key={i}
-              d={`M ${cx} 240 C ${(cx + tx) / 2} 240, ${(cx + tx) / 2} ${ty}, ${tx} ${ty}`}
-              fill="none"
-              stroke={accent}
-              strokeWidth="1.2"
-              strokeDasharray="1"
-              pathLength={1}
-              strokeDashoffset={i < shown ? 0 : 1}
-              style={{ transition: "stroke-dashoffset .7s cubic-bezier(.22,1,.36,1)", opacity: sending ? 0.15 : 0.6 }}
-            />
-          );
-        })}
-      </svg>
-
+      <div className="pointer-events-none absolute left-1/2 top-[0px] h-[380px] w-[620px] -translate-x-1/2 rounded-full blur-3xl" style={{ background: `radial-gradient(ellipse at center, color-mix(in oklab, ${gold ? "var(--gold)" : "var(--data)"} 22%, transparent), transparent 70%)` }} />
       {/* the orb, centre stage */}
-      <div className="absolute flex flex-col items-center" style={{ left: cx - 120, top: 120, width: 240 }}>
-        <GeniusShaderOrb state={orbState} size={176} tone={gold ? "gold" : "blue"} />
-        <p className="mt-4 font-gl-display text-[1rem] text-gl-foreground">Genius · Agents</p>
+      <div className="absolute flex flex-col items-center" style={{ left: cx - 120, top: 26, width: 240 }}>
+        <GeniusShaderOrb state={orbState} size={142} tone={gold ? "gold" : "blue"} />
+        <p className="mt-3 font-gl-display text-[1rem] text-gl-foreground">Genius · Agents</p>
         <p key={orbState} className="gfocus-tag text-[0.62rem] text-gl-muted-foreground">
-          {thinking ? "Reading what every agent did overnight…" : speaking ? "Briefing you…" : "4 agents · 41 tasks · all governed"}
+          {thinking ? "Reading what every agent did overnight…" : speaking ? "Briefing you…" : s.past("asked2") ? "4 agents · 41 tasks · all governed" : "Ask me anything about your agents"}
         </p>
         {gold ? <Waveform active={speaking} className="mt-2" /> : null}
       </div>
 
-      {/* insight cards */}
+      {/* chat under the orb */}
+      <div className="absolute" style={{ left: cx - 320, top: 236, width: 640 }}>
+        <AskBox ask={ask} cid="chat" tone={gold ? "gold" : "blue"} />
+      </div>
+
+      {/* insight cards, each awaiting approval */}
       {AGENT_INSIGHTS.map((a, i) => (
         <div
           key={a.agent}
-          className="absolute w-[300px] rounded-xl border border-gl-border/70 bg-[linear-gradient(160deg,oklch(0.22_0.04_262/85%),oklch(0.16_0.03_264/85%))] p-3.5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{ left: cards[i]!.x, top: cards[i]!.y, opacity: i < shown ? (sending ? 0.25 : 1) : 0, transform: i < shown ? "none" : `translateX(${i % 2 === 0 ? 16 : -16}px)` }}
+          className="absolute w-[310px] rounded-xl border border-gl-border/70 bg-[linear-gradient(160deg,oklch(0.22_0.04_262/85%),oklch(0.16_0.03_264/85%))] p-3.5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={{ left: cards[i]!.x, top: cards[i]!.y, opacity: i < shown ? (sending ? 0.25 : 1) : 0, transform: i < shown ? "none" : "translateY(10px)" }}
         >
           <p className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em]" style={{ color: a.tone === "gold" ? "var(--gold)" : a.tone === "success" ? "var(--success)" : "var(--data)" }}>
             {a.agent} agent
           </p>
           <p className="mt-1 text-[0.8rem] text-gl-foreground">{a.head}</p>
           <p className="font-gl-mono text-[0.56rem] text-gl-muted-foreground">{a.sub}</p>
+          <span className="absolute right-3 top-3 rounded-full border border-gl-gold/35 px-1.5 py-0.5 font-gl-mono text-[0.46rem] uppercase tracking-[0.12em] text-gl-gold">
+            {sending ? "✓ approved" : "for approval"}
+          </span>
         </div>
       ))}
 
       {/* summary */}
-      <div className="absolute rounded-xl border border-gl-border/60 bg-gl-background/40 px-5 py-3.5 transition-opacity duration-500" style={{ left: cx - 320, top: 410, width: 640, opacity: s.past("summary") ? (sending ? 0.3 : 1) : 0 }}>
+      <div className="absolute rounded-xl border border-gl-border/60 bg-gl-background/40 px-5 py-3.5 transition-opacity duration-500" style={{ left: cx - 320, top: 488, width: 640, opacity: s.past("summary") ? (sending ? 0.3 : 1) : 0 }}>
         <p className="min-h-[46px] text-[0.8rem] leading-[1.6] text-gl-foreground/90">
           {renderSegments(SUMMARY, summaryTyped)}
           {summaryTyped > 0 && summaryTyped < segText(SUMMARY).length ? <span className="gcaret" /> : null}
@@ -219,7 +223,7 @@ function AgentsPage({ s, gold, width, summaryTyped }: { s: Scene; gold: boolean;
       {/* board pack */}
       <div
         className="absolute flex items-center gap-4 rounded-xl border bg-[linear-gradient(160deg,oklch(0.24_0.05_70/30%),oklch(0.16_0.03_264/80%))] px-5 py-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{ left: cx - 320, top: 530, width: 640, borderColor: "oklch(0.77 0.155 66 / 40%)", opacity: s.past("ready") ? (sending ? 0.3 : 1) : 0, transform: s.past("ready") ? "none" : "translateY(12px)" }}
+        style={{ left: cx - 320, top: 584, width: 640, borderColor: "oklch(0.77 0.155 66 / 40%)", opacity: s.past("ready") ? (sending ? 0.3 : 1) : 0, transform: s.past("ready") ? "none" : "translateY(12px)" }}
       >
         <span className="grid h-14 w-11 shrink-0 place-items-center rounded-md border border-gl-foreground/15 bg-[oklch(0.97_0.004_250)] font-gl-mono text-[0.5rem] font-medium text-[oklch(0.45_0.15_25)]">PDF</span>
         <div className="min-w-0 flex-1">
@@ -237,7 +241,7 @@ function AgentsPage({ s, gold, width, summaryTyped }: { s: Scene; gold: boolean;
           data-cursor="send"
           className={`shrink-0 rounded-md px-3.5 py-2 text-[0.7rem] font-medium transition-all duration-200 ${sending ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${s.between("toSend", "sending") ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${s.between("pressSend", "sending") ? "scale-95" : ""}`}
         >
-          {sending ? "✓ Approved & sent" : "Approve & send to board"}
+          {sending ? "✓ Approved & sent" : "Approve all & send to board"}
         </span>
       </div>
 
@@ -246,7 +250,7 @@ function AgentsPage({ s, gold, width, summaryTyped }: { s: Scene; gold: boolean;
         <div className="absolute inset-0 bg-[oklch(0.1_0.03_264/55%)] backdrop-blur-[2px]" />
         <div
           className="absolute overflow-hidden rounded-2xl border border-gl-border bg-[oklch(0.17_0.032_262/97%)] shadow-[0_40px_100px_-30px_rgb(0_0_0/0.85)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{ left: cx - 340, top: 110, width: 680, transform: sending ? "none" : "translateY(24px) scale(0.97)" }}
+          style={{ left: cx - 340, top: 60, width: 680, transform: sending ? "none" : "translateY(24px) scale(0.97)" }}
         >
           <div className="flex items-center gap-3 border-b border-gl-border/70 px-5 py-3.5">
             <GeniusShaderOrb state={sent < 7 ? "typing" : "holding"} size={30} tone={gold ? "gold" : "blue"} />
@@ -306,7 +310,7 @@ function AgentsPage({ s, gold, width, summaryTyped }: { s: Scene; gold: boolean;
         className={`absolute bottom-6 left-6 w-[300px] rounded-xl border border-[oklch(0.78_0.13_168/35%)] bg-[oklch(0.17_0.03_262/97%)] p-3.5 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.7)] transition-all duration-700 ${s.between("toast", "exit") ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
       >
         <p className="text-[0.72rem] text-gl-foreground">✓ Board update delivered to 7 directors</p>
-        <p className="mt-0.5 text-[0.62rem] text-gl-muted-foreground">From one chart point to a board update in 26 seconds · every figure sourced</p>
+        <p className="mt-0.5 text-[0.62rem] text-gl-muted-foreground">Two questions to a sent board update · every figure sourced</p>
       </div>
     </div>
   );
@@ -323,14 +327,34 @@ export function ScriptedBrief({ variant }: { variant: Variant }) {
   const chartText = segText(CHART.segments);
   const typedChart = useTyped(chartText, s.between("write", "proposal"), s.past("proposal"), 44, s.loop);
   const summaryTyped = useTyped(segText(SUMMARY), s.between("summary", "ready"), s.past("ready"), 72, s.loop);
+  const q1Typed = useTyped(Q1, s.between("type1", "toSend1"), s.past("toSend1"), 22, s.loop);
+  const q2Typed = useTyped(Q2, s.between("type2", "toSend2"), s.past("toSend2"), 24, s.loop);
+  const ask1: AskState = {
+    text: Q1,
+    typed: q1Typed,
+    focused: s.between("pressAsk", "asked"),
+    sent: s.past("asked"),
+    hoverSend: s.between("toSend1", "asked"),
+    pressSend: s.between("pressSend1", "asked"),
+  };
+  const ask2: AskState = {
+    text: Q2,
+    typed: q2Typed,
+    focused: s.between("pressChat", "asked2"),
+    sent: s.past("asked2"),
+    hoverSend: s.between("toSend2", "asked2"),
+    pressSend: s.between("pressSend2", "asked2"),
+    placeholder: "Ask your agents…",
+  };
 
   const selected = s.past("selected");
-  const insight = selected ? CHART : IDLE;
-  const stage = !selected ? "holding" : !s.past("write") ? "thinking" : !s.past("proposal") ? "typing" : "holding";
+  const asked = s.past("asked");
+  const insight = asked ? CHART : IDLE;
+  const stage = !asked ? "holding" : !s.past("write") ? "thinking" : !s.past("proposal") ? "typing" : "holding";
   const c: Cyc = {
     idx: selected ? 1 : 0,
     stage,
-    typed: selected ? typedChart : segText(IDLE.segments).length,
+    typed: asked ? typedChart : segText(IDLE.segments).length,
     insight,
     focus: (selected ? "margin" : "none") as Focus,
   };
@@ -342,8 +366,14 @@ export function ScriptedBrief({ variant }: { variant: Variant }) {
   const contentW = DASH_W - contentX;
   let target: CursorTarget = off;
   let pointer = false;
-  if (s.between("enter", "think")) {
+  if (s.between("enter", "toAsk")) {
     target = "chart-point";
+    pointer = true;
+  } else if (s.between("toAsk", "toSend1")) {
+    target = "ask-input";
+    pointer = true;
+  } else if (s.between("toSend1", "think")) {
+    target = "ask-send";
     pointer = true;
   } else if (s.between("think", "toApprove")) target = { x: rail ? 300 : 620, y: rail ? 330 : 560 };
   else if (s.between("toApprove", "toAgents")) {
@@ -352,13 +382,19 @@ export function ScriptedBrief({ variant }: { variant: Variant }) {
   } else if (s.between("toAgents", "agents")) {
     target = "nav-agents";
     pointer = true;
-  } else if (s.between("agents", "toSend")) target = { x: contentX + contentW / 2 + 60, y: 480 };
+  } else if (s.between("toChat", "toSend2")) {
+    target = "chat-input";
+    pointer = true;
+  } else if (s.between("toSend2", "aThink")) {
+    target = "chat-send";
+    pointer = true;
+  } else if (s.between("agents", "toSend")) target = { x: contentX + contentW / 2 + 60, y: 540 };
   else if (s.between("toSend", "sending")) {
     target = "send";
     pointer = true;
   } else if (s.between("sending", "exit")) target = { x: contentX + contentW / 2 + 380, y: 640 };
   if (s.index < 0 || !s.past("enter") || s.past("exit")) target = off;
-  const pressed = s.between("pressChart", "selected") || s.between("pressA", "approved") || s.between("pressNav", "agents") || s.between("pressSend", "sending");
+  const pressed = s.between("pressChart", "selected") || s.between("pressAsk", "type1") || s.between("pressSend1", "asked") || s.between("pressChat", "type2") || s.between("pressSend2", "asked2") || s.between("pressA", "approved") || s.between("pressNav", "agents") || s.between("pressSend", "sending");
 
   const shell = gold
     ? "glass-panel relative overflow-hidden rounded-[1.15rem] p-0 shadow-[var(--shadow-elevated)] ring-1 ring-inset ring-gl-gold/15"
@@ -372,7 +408,7 @@ export function ScriptedBrief({ variant }: { variant: Variant }) {
           <div className="relative min-w-0 flex-1">
             <Screen show={page === "brief"} className="!p-0">
               <div className="flex h-full">
-                {rail ? <GeniusRail c={c} approve={approve} /> : null}
+                {rail ? <GeniusRail c={c} approve={approve} ask={ask1} /> : null}
                 <div className="min-w-0 flex-1">
                   <Topbar stage={c.stage} orb={gold} shader={gold} />
                   {rail ? (
@@ -386,7 +422,7 @@ export function ScriptedBrief({ variant }: { variant: Variant }) {
                       <Chart focus={c.focus} glass={false} selected={selected} />
                       <Kpis focus={c.focus} glass={false} />
                       <div className="grid grid-cols-[1.15fr_1fr] gap-3.5">
-                        {gold ? <VoiceBriefing c={c} approve={approve} /> : <BriefingCard c={c} glass={false} approve={approve} />}
+                        {gold ? <VoiceBriefing c={c} approve={approve} ask={ask1} /> : <BriefingCard c={c} glass={false} approve={approve} ask={ask1} />}
                         <Units focus={c.focus} glass={false} />
                       </div>
                     </div>
@@ -398,7 +434,7 @@ export function ScriptedBrief({ variant }: { variant: Variant }) {
               <div className="flex h-full flex-col">
                 <Topbar stage={c.stage} orb={gold} shader={gold} />
                 <div className="relative min-h-0 flex-1">
-                  <AgentsPage key={s.loop} s={s} gold={gold} width={contentW} summaryTyped={summaryTyped} />
+                  <AgentsPage key={s.loop} s={s} gold={gold} width={contentW} summaryTyped={summaryTyped} ask={ask2} />
                 </div>
               </div>
             </Screen>
