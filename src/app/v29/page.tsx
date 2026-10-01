@@ -2,27 +2,27 @@ import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Manrope, Sora } from "next/font/google";
 import "../v24/v24.css";
 import { Nav } from "@/components/v24/Hero";
-import { Hero } from "@/components/v28/Hero";
+import { Hero } from "@/components/v29/Hero";
 
 const display = Sora({ variable: "--font-v24-display", subsets: ["latin"], display: "swap" });
 const sans = Manrope({ variable: "--font-v24-sans", subsets: ["latin"], display: "swap" });
 const mono = JetBrains_Mono({ variable: "--font-v24-mono", subsets: ["latin"], weight: ["400", "500"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Genius Lab | One decision, end to end",
+  title: "Genius Lab | Integrate an acquisition in days",
   description:
-    "A fully managed intelligence and execution layer for your entire business. Watch one decision go from signal to executed, audited outcome.",
+    "Watch Genius connect a newly acquired company, map its chart of accounts and run the first group consolidation.",
   robots: { index: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070a18",
+  themeColor: "#0b1024",
 };
 
-export default function HomeV28() {
+export default function HomeV29() {
   return (
-    <div className={`v24 v28 ${display.variable} ${sans.variable} ${mono.variable}`}>
-      <style>{`html,body{background:oklch(0.12 0.028 266)}`}</style>
+    <div className={`v24 ${display.variable} ${sans.variable} ${mono.variable}`}>
+      <style>{`html,body{background:oklch(0.145 0.032 264)}`}</style>
       <Nav variant="light" />
       <main>
         <Hero />

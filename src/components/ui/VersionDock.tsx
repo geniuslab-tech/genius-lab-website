@@ -32,6 +32,9 @@ const VERSIONS = [
   { v: 26, name: "Margin recovery", tone: "Dark" },
   { v: 27, name: "Ask Genius", tone: "Dark" },
   { v: 28, name: "Premium film", tone: "Dark" },
+  { v: 29, name: "M&A integration", tone: "Dark" },
+  { v: 30, name: "Decision inbox", tone: "Dark" },
+  { v: 31, name: "Scenario premium", tone: "Dark" },
 ];
 
 const href = (v: number) => (v === 1 ? "/" : `/v${v}`);

@@ -358,6 +358,29 @@ export function Tween({
   return <>{format(shown)}</>;
 }
 
+/** Returns `value`, eased toward over `duration` ms whenever it changes. */
+export function useTweened(value: number, duration = 1100) {
+  const [shown, setShown] = useState(value);
+  const shownRef = useRef(value);
+  useEffect(() => {
+    const start = shownRef.current;
+    if (start === value) return;
+    let raf = 0;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / duration);
+      const e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      const v = start + (value - start) * e;
+      shownRef.current = v;
+      setShown(v);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value, duration]);
+  return shown;
+}
+
 /* ------------------------------------------------------------------ */
 /* Small helpers                                                       */
 /* ------------------------------------------------------------------ */

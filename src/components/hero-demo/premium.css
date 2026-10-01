@@ -1,4 +1,4 @@
-/* Version 28: premium stage for the scripted hero. Layers on top of .v24 tokens; every selector is scoped under .v28. */
+/* Premium stage for the scripted heroes (v28, v31). Layers on top of .v24 tokens; scoped under .v28 on the page root. */
 
 .v28 {
   --background: oklch(0.12 0.028 266);
