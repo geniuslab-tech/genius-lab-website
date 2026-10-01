@@ -108,16 +108,17 @@ export const TEAM: Exec[] = [
 ];
 /** where each agent sits around the Second Brain (x offset from centre, y) */
 const SEATS: Record<string, { dx: number; y: number }> = {
-  ceo: { dx: 0, y: 40 },
-  cfo: { dx: -345, y: 160 },
-  chro: { dx: -305, y: 300 },
-  coo: { dx: 345, y: 160 },
-  cco: { dx: 305, y: 300 },
+  ceo: { dx: 0, y: 96 },
+  cfo: { dx: -365, y: 262 },
+  coo: { dx: 365, y: 262 },
+  chro: { dx: -290, y: 610 },
+  cco: { dx: 290, y: 610 },
 };
-const BRAIN = { y: 250, size: 236 };
+const BRAIN = { y: 420, size: 400 };
 /** Second Brain hubs (Systems, Tables, Metrics, Dashboards, Processes, Customers, Operations, Finance) */
 const HUBS_IDLE = [0, 2, 4];
 const HUBS_CFO = [7, 6, 5];
+const TASKS: Record<string, number> = { ceo: 7, cfo: 12, coo: 9, chro: 5, cco: 8 };
 
 const REPLY: Segment[] = [
   { t: "I worked this through with the " },
@@ -148,44 +149,52 @@ function TeamPage({ s, width, ask, replyTyped }: { s: Scene; width: number; ask:
   const sending = s.past("sending");
   const sent = (["e1", "e2", "e3", "e4", "e5", "e6", "e7"] as const).filter((k) => s.past(k)).length;
   const opened = s.past("open2") ? 3 : s.past("open1") ? 1 : 0;
+  const cfo = TEAM.find((t) => t.id === "cfo")!;
+
   /** a spoke from an agent to the edge of the Second Brain */
   const spoke = (i: number) => {
-    const a = pos[i]!;
-    const dx = cx - a.x;
-    const dy = BRAIN.y - a.y;
+    const o = pos[i]!;
+    const dx = cx - o.x;
+    const dy = BRAIN.y - o.y;
     const len = Math.hypot(dx, dy);
-    const r = BRAIN.size * 0.42;
+    const r = BRAIN.size * 0.36;
     const ex = Math.round(cx - (dx / len) * r);
     const ey = Math.round(BRAIN.y - (dy / len) * r);
-    const sx = Math.round(a.x + (dx / len) * 52);
-    const sy = Math.round(a.y + (dy / len) * 52);
+    const sx = Math.round(o.x + (dx / len) * 64);
+    const sy = Math.round(o.y + (dy / len) * 64);
     return { inward: `M ${sx} ${sy} L ${ex} ${ey}`, outward: `M ${ex} ${ey} L ${sx} ${sy}` };
   };
 
   return (
     <div className="relative h-full w-full">
-      <div className="pointer-events-none absolute left-1/2 top-[40px] h-[360px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,oklch(0.6_0.17_270/16%),transparent_70%)] blur-2xl" />
-
-      {/* the Second Brain, with every agent reading from it */}
-      <div className="absolute" style={{ left: cx - BRAIN.size / 2, top: BRAIN.y - BRAIN.size / 2, width: BRAIN.size, height: BRAIN.size }}>
-        <BrainSphere tone="dark" state={{ visited: focused ? HUBS_CFO : HUBS_IDLE, step: 1 }} />
+      <div className="absolute left-6 top-5">
+        <p className="font-gl-display text-[0.95rem] text-gl-foreground">Executive agents</p>
+        <p className="text-[0.6rem] text-gl-muted-foreground">5 agents · reading one Second Brain · 41 tasks overnight</p>
       </div>
-      <p className="absolute -translate-x-1/2 font-gl-mono text-[0.5rem] uppercase tracking-[0.2em] text-gl-muted-foreground/80" style={{ left: cx, top: BRAIN.y + BRAIN.size / 2 - 4 }}>
-        Second Brain · 14 entities
-      </p>
+      <div className="pointer-events-none absolute rounded-full blur-3xl" style={{ left: cx - 340, top: BRAIN.y - 300, width: 680, height: 600, background: "radial-gradient(ellipse at center, oklch(0.6 0.17 262 / 16%), transparent 70%)" }} />
+
+      {/* the Second Brain at the centre of everything */}
+      <div className="absolute" style={{ left: cx - BRAIN.size / 2, top: BRAIN.y - BRAIN.size / 2, width: BRAIN.size, height: BRAIN.size }}>
+        <BrainSphere tone="dark" clean state={{ visited: focused ? HUBS_CFO : HUBS_IDLE, step: 1 }} />
+      </div>
+      <div className="absolute -translate-x-1/2 text-center" style={{ left: cx, top: BRAIN.y + BRAIN.size / 2 - 6 }}>
+        <p className="font-gl-display text-[0.86rem] text-gl-foreground">Second Brain</p>
+        <p className="font-gl-mono text-[0.5rem] uppercase tracking-[0.18em] text-gl-muted-foreground/80">14 entities · 2.4M records · governed</p>
+      </div>
+
+      {/* every agent reads from and writes back to it */}
       <svg className="pointer-events-none absolute inset-0" width={width} height={H - 58} aria-hidden="true">
         {TEAM.map((e, i) => {
           const sp = spoke(i);
           const isCfo = e.id === "cfo";
-          const lit = !focused || isCfo;
           return (
-            <g key={e.id} style={{ opacity: lit ? 1 : 0.2, transition: "opacity .6s" }}>
-              <path d={sp.inward} fill="none" stroke={e.color} strokeOpacity={focused && isCfo ? 0.55 : 0.22} strokeWidth={focused && isCfo ? 1.6 : 1} strokeDasharray="2 5" />
+            <g key={e.id} style={{ opacity: !focused || isCfo ? 1 : 0.2, transition: "opacity .6s" }}>
+              <path d={sp.inward} fill="none" stroke={e.color} strokeOpacity="0.28" strokeWidth="1" strokeDasharray="2 6" />
               <circle r="2.6" fill={e.color}>
-                <animateMotion dur={`${1.8 + (i % 3) * 0.4}s`} begin={`${i * 0.3}s`} repeatCount="indefinite" path={sp.inward} />
+                <animateMotion dur={`${2 + (i % 3) * 0.4}s`} begin={`${i * 0.3}s`} repeatCount="indefinite" path={sp.inward} />
               </circle>
-              <circle r="2" fill="var(--cyan)" opacity="0.8">
-                <animateMotion dur={`${2.2 + (i % 2) * 0.5}s`} begin={`${0.9 + i * 0.25}s`} repeatCount="indefinite" path={sp.outward} />
+              <circle r="2" fill="var(--cyan)" opacity="0.75">
+                <animateMotion dur={`${2.4 + (i % 2) * 0.5}s`} begin={`${1 + i * 0.25}s`} repeatCount="indefinite" path={sp.outward} />
               </circle>
             </g>
           );
@@ -194,81 +203,112 @@ function TeamPage({ s, width, ask, replyTyped }: { s: Scene; width: number; ask:
 
       {/* the five executive agents */}
       {TEAM.map((e, i) => {
-        const p = pos[i]!;
+        const o = pos[i]!;
         const isCfo = e.id === "cfo";
-        const dim = focused && !isCfo;
-        const hot = isCfo && (s.between("toCfo", "cfo") || focused);
-        const st = isCfo && thinking ? "thinking" : isCfo && writing ? "typing" : focused && !isCfo ? "holding" : "typing";
+        const hot = isCfo && s.between("toCfo", "cfo");
         return (
           <div
             key={e.id}
             data-cursor={`orb-${e.id}`}
-            className="absolute flex w-[150px] flex-col items-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-            style={{ left: p.x - 75, top: p.y - 44, opacity: dim ? 0.4 : 1, transform: `scale(${isCfo && focused ? 1.12 : dim ? 0.9 : 1})` }}
+            className="absolute flex w-[180px] flex-col items-center transition-all duration-300"
+            style={{ left: o.x - 90, top: o.y - 56, transform: hot ? "scale(1.05)" : "none" }}
           >
             <span className="relative">
-              {hot ? <span className="absolute -inset-3 rounded-full border border-[oklch(0.8_0.14_75/60%)] shadow-[0_0_30px_-4px_oklch(0.8_0.14_75/60%)]" /> : null}
-              <GeniusShaderOrb state={st} size={88} tint={e.tint} />
+              {hot ? <span className="absolute -inset-3 rounded-full border shadow-[0_0_30px_-4px_currentColor]" style={{ borderColor: e.color, color: e.color }} /> : null}
+              <GeniusShaderOrb state="typing" size={104} tint={e.tint} />
             </span>
-            <p className="mt-2 font-gl-display text-[0.9rem] tracking-tight" style={{ color: e.color }}>
+            <p className="mt-2.5 font-gl-display text-[0.98rem] tracking-tight" style={{ color: e.color }}>
               {e.role} agent
             </p>
-            <p className="text-[0.56rem] text-gl-muted-foreground">{e.scope}</p>
+            <p className="text-[0.6rem] text-gl-muted-foreground">{e.scope}</p>
+            <p className="mt-1 flex items-center gap-1.5 font-gl-mono text-[0.48rem] uppercase tracking-[0.12em] text-gl-muted-foreground/80">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--success)]" /> Online · {TASKS[e.id]} tasks
+            </p>
           </div>
         );
       })}
 
-      {/* conversation with the CFO agent */}
-      <div className="absolute transition-opacity duration-500" style={{ left: cx - 320, top: 398, width: 640, opacity: focused ? 1 : 0 }}>
-        <p className="mb-1.5 font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-gl-gold">Talking to · CFO agent</p>
-        <AskBox ask={ask} cid="chat" tone="gold" />
-      </div>
-      <div className="absolute flex items-start gap-2.5 transition-opacity duration-500" style={{ left: cx - 320, top: 476, width: 640, opacity: s.past("aThink") ? 1 : 0 }}>
-        <GeniusShaderOrb state={thinking ? "thinking" : writing ? "typing" : "holding"} size={26} tint={TEAM[4]!.tint} />
-        <p className="min-h-[36px] flex-1 text-[0.74rem] leading-[1.55] text-gl-foreground/90">
-          {thinking ? <span className="text-gl-muted-foreground">CFO agent is checking with the COO, CCO and CHRO…</span> : renderSegments(REPLY, replyTyped)}
-          {writing && replyTyped < segText(REPLY).length ? <span className="gcaret" /> : null}
-        </p>
-      </div>
-      {MOVES.map((m, i) => (
+      {/* a private chat with the chosen agent: every next interaction happens here */}
+      <div className={`absolute inset-0 transition-opacity duration-500 ${focused ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+        <div className="absolute inset-0 bg-[oklch(0.1_0.03_264/62%)] backdrop-blur-[3px]" />
         <div
-          key={m.title}
-          className="absolute rounded-xl border border-gl-border/70 bg-[linear-gradient(160deg,oklch(0.22_0.04_262/85%),oklch(0.16_0.03_264/85%))] px-3.5 py-3 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{ left: cx - 320 + (i % 2) * 330, top: 530 + Math.floor(i / 2) * 84, width: 310, opacity: i < shown ? (sending ? 0.3 : 1) : 0, transform: i < shown ? "none" : "translateY(10px)" }}
+          className="absolute overflow-hidden rounded-[22px] border bg-[linear-gradient(170deg,oklch(0.2_0.04_262/98%),oklch(0.14_0.03_264/98%))] shadow-[0_50px_120px_-30px_rgb(0_0_0/0.85)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={{ left: cx - 410, top: 28, width: 820, height: 786, borderColor: "oklch(0.8 0.14 75 / 35%)", transform: focused ? "none" : "translateY(20px) scale(0.97)" }}
         >
-          <div className="flex items-center justify-between">
-            <span className="font-gl-mono text-[0.5rem] uppercase tracking-[0.16em]" style={{ color: TEAM.find((t) => t.role === m.from)!.color }}>
-              From {m.from} agent
-            </span>
-            <span className="rounded-full border border-gl-gold/35 px-1.5 py-0.5 font-gl-mono text-[0.44rem] uppercase tracking-[0.12em] text-gl-gold">{sending ? "✓ approved" : "for approval"}</span>
+          <div className="flex items-center gap-3 border-b border-gl-border/60 px-6 py-3.5">
+            <GeniusShaderOrb state="holding" size={26} tint={cfo.tint} />
+            <div className="flex-1">
+              <p className="text-[0.8rem] text-gl-foreground">CFO agent</p>
+              <p className="text-[0.58rem] text-gl-muted-foreground">Private chat · {cfo.scope.toLowerCase()} · reads the Second Brain</p>
+            </div>
+            <span className="grid h-7 w-7 place-items-center rounded-md border border-gl-border text-[0.7rem] text-gl-muted-foreground">✕</span>
           </div>
-          <p className="mt-1 text-[0.72rem] text-gl-foreground">{m.title}</p>
-          <p className="font-gl-mono text-[0.54rem] text-gl-muted-foreground">{m.impact}</p>
-        </div>
-      ))}
+          <div className="pointer-events-none absolute left-1/2 top-[56px] h-[220px] w-[380px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,oklch(0.8_0.14_75/16%),transparent_70%)] blur-2xl" />
+          <div className="absolute flex flex-col items-center" style={{ left: 410 - 100, top: 70, width: 200 }}>
+            <GeniusShaderOrb state={thinking ? "thinking" : writing ? "typing" : "holding"} size={112} tint={cfo.tint} />
+            <p className="mt-2.5 font-gl-display text-[0.92rem]" style={{ color: cfo.color }}>
+              CFO agent
+            </p>
+            <p className="text-[0.56rem] text-gl-muted-foreground">{thinking ? "Checking with the COO, CCO and CHRO…" : writing ? "Answering…" : "Ready when you are"}</p>
+          </div>
 
-      {/* approve everything and send */}
-      <div
-        className="absolute flex items-center gap-3 rounded-xl border border-gl-gold/40 bg-[linear-gradient(160deg,oklch(0.24_0.05_70/30%),oklch(0.16_0.03_264/80%))] px-4 py-3 transition-all duration-700"
-        style={{ left: cx - 320, top: 708, width: 640, opacity: s.past("ready") ? (sending ? 0.3 : 1) : 0, transform: s.past("ready") ? "none" : "translateY(10px)" }}
-      >
-        <span className="grid h-11 w-9 shrink-0 place-items-center rounded-md bg-[oklch(0.97_0.004_250)] font-gl-mono text-[0.45rem] font-medium text-[oklch(0.45_0.15_25)]">PDF</span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[0.74rem] text-gl-foreground">Q3 cash plan — 4 moves, $3.4M recovered</p>
-          <div className="mt-1 flex -space-x-1.5">
-            {BOARD.map(([i]) => (
-              <span key={i} className="grid h-5 w-5 place-items-center rounded-full border-2 border-[oklch(0.17_0.03_262)] bg-gl-foreground/12 text-[0.4rem] font-semibold text-gl-foreground">
-                {i}
+          {/* conversation */}
+          <div className="absolute" style={{ left: 60, top: 248, width: 700 }}>
+            {ask.sent ? <AskBox ask={ask} /> : null}
+            <div className={`mt-2.5 flex items-start gap-2.5 transition-opacity duration-500 ${s.past("aThink") ? "opacity-100" : "opacity-0"}`}>
+              <GeniusShaderOrb state={thinking ? "thinking" : writing ? "typing" : "holding"} size={26} tint={cfo.tint} />
+              <p className="min-h-[34px] flex-1 text-[0.72rem] leading-[1.5] text-gl-foreground/90">
+                {thinking ? <span className="text-gl-muted-foreground">Checking with the COO, CCO and CHRO…</span> : renderSegments(REPLY, replyTyped)}
+                {writing && replyTyped < segText(REPLY).length ? <span className="gcaret" /> : null}
+              </p>
+            </div>
+            <div className="mt-2.5 grid grid-cols-2 gap-2.5">
+              {MOVES.map((m, i) => (
+                <div
+                  key={m.title}
+                  className="rounded-xl border border-gl-border/70 bg-[linear-gradient(160deg,oklch(0.22_0.04_262/85%),oklch(0.16_0.03_264/85%))] px-3.5 py-2.5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={{ opacity: i < shown ? (sending ? 0.5 : 1) : 0, transform: i < shown ? "none" : "translateY(8px)" }}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-gl-mono text-[0.5rem] uppercase tracking-[0.16em]" style={{ color: TEAM.find((t) => t.role === m.from)!.color }}>
+                      From {m.from} agent
+                    </span>
+                    <span className="rounded-full border border-gl-gold/35 px-1.5 py-0.5 font-gl-mono text-[0.44rem] uppercase tracking-[0.12em] text-gl-gold">{sending ? "✓ approved" : "for approval"}</span>
+                  </div>
+                  <p className="mt-1 text-[0.7rem] text-gl-foreground">{m.title}</p>
+                  <p className="font-gl-mono text-[0.52rem] text-gl-muted-foreground">{m.impact}</p>
+                </div>
+              ))}
+            </div>
+            <div
+              className="mt-2.5 flex items-center gap-3 rounded-xl border border-gl-gold/40 bg-[linear-gradient(160deg,oklch(0.24_0.05_70/30%),oklch(0.16_0.03_264/80%))] px-4 py-2.5 transition-all duration-700"
+              style={{ opacity: s.past("ready") ? 1 : 0, transform: s.past("ready") ? "none" : "translateY(8px)" }}
+            >
+              <span className="grid h-10 w-8 shrink-0 place-items-center rounded-md bg-[oklch(0.97_0.004_250)] font-gl-mono text-[0.42rem] font-medium text-[oklch(0.45_0.15_25)]">PDF</span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[0.72rem] text-gl-foreground">Q3 cash plan — 4 moves, $3.4M recovered</p>
+                <div className="mt-1 flex -space-x-1.5">
+                  {BOARD.map(([i]) => (
+                    <span key={i} className="grid h-5 w-5 place-items-center rounded-full border-2 border-[oklch(0.17_0.03_262)] bg-gl-foreground/12 text-[0.4rem] font-semibold text-gl-foreground">
+                      {i}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <span
+                data-cursor="send"
+                className={`shrink-0 rounded-md px-3 py-1.5 text-[0.66rem] font-medium transition-all duration-200 ${sending ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${s.between("toSend", "sending") ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${s.between("pressSend", "sending") ? "scale-95" : ""}`}
+              >
+                {sending ? "✓ Approved & sent" : "Approve all & send to board"}
               </span>
-            ))}
+            </div>
+          </div>
+
+          {/* chat input, pinned to the bottom like any chat */}
+          <div className="absolute" style={{ left: 60, bottom: 26, width: 700 }}>
+            <AskBox ask={ask.sent ? { ...ask, sent: false, typed: 0, focused: false } : ask} cid="chat" tone="gold" />
           </div>
         </div>
-        <span
-          data-cursor="send"
-          className={`shrink-0 rounded-md px-3 py-1.5 text-[0.66rem] font-medium transition-all duration-200 ${sending ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${s.between("toSend", "sending") ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${s.between("pressSend", "sending") ? "scale-95" : ""}`}
-        >
-          {sending ? "✓ Approved & sent" : "Approve all & send to board"}
-        </span>
       </div>
 
       <Outbox
@@ -278,9 +318,9 @@ function TeamPage({ s, width, ask, replyTyped }: { s: Scene; width: number; ask:
         toast={s.between("toast", "exit")}
         gold
         cx={cx}
-        top={130}
+        top={150}
         subject="Q3 cash plan — $3.4M recovered across 4 moves"
-        toastBody="Five agents, one plan · approved and sent to the board"
+        toastBody="One chat with the CFO agent · approved and sent to the board"
       />
     </div>
   );
@@ -335,7 +375,7 @@ export function ScriptedBriefTeam() {
   } else if (s.between("toAgents", "agents")) {
     target = "nav-agents";
     pointer = true;
-  } else if (s.between("agents", "toCfo")) target = { x: contentX + contentW / 2 + 40, y: 380 };
+  } else if (s.between("agents", "toCfo")) target = { x: contentX + contentW / 2 + 150, y: 520 };
   else if (s.between("toCfo", "toChat")) {
     target = "orb-cfo";
     pointer = true;
@@ -345,7 +385,7 @@ export function ScriptedBriefTeam() {
   } else if (s.between("toSend2", "aThink")) {
     target = "chat-send";
     pointer = true;
-  } else if (s.between("aThink", "toSend")) target = { x: contentX + contentW / 2 + 360, y: 640 };
+  } else if (s.between("aThink", "toSend")) target = { x: contentX + contentW / 2 + 300, y: 300 };
   else if (s.between("toSend", "sending")) {
     target = "send";
     pointer = true;

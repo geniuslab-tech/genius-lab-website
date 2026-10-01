@@ -75,10 +75,13 @@ export function BrainSphere({
   state,
   className = "",
   tone = "light",
+  clean = false,
 }: {
   state: SphereState;
   className?: string;
   tone?: keyof typeof TONES;
+  /** A quieter sphere for busy layouts: fewer, smaller notes, softer links, few synapses and no labels. */
+  clean?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const live = useRef(state);
@@ -97,7 +100,7 @@ export function BrainSphere({
     const mono = getComputedStyle(document.body).getPropertyValue("--font-geist-mono") || "monospace";
     const sans = getComputedStyle(document.body).getPropertyValue("--font-archivo") || "sans-serif";
     let w = 0, h = 0, dpr = 1;
-    let model = build(520);
+    let model = build(clean ? 170 : 520);
     let small = false;
 
     let yaw = 0.4;
@@ -117,7 +120,7 @@ export function BrainSphere({
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       const nextSmall = w < 480;
-      if (nextSmall !== small) model = build(nextSmall ? 340 : 520);
+      if (nextSmall !== small && !clean) model = build(nextSmall ? 340 : 520);
       small = nextSmall;
     };
 
@@ -175,7 +178,7 @@ export function BrainSphere({
           c.moveTo(P[a].x, P[a].y);
           c.lineTo(P[b].x, P[b].y);
         }
-        c.strokeStyle = pass ? `rgba(${ink},0.3)` : `rgba(${ink},0.12)`;
+        c.strokeStyle = clean ? (pass ? `rgba(${ink},0.16)` : `rgba(${ink},0.05)`) : pass ? `rgba(${ink},0.3)` : `rgba(${ink},0.12)`;
         c.stroke();
       }
       // Links inside a region the agent has read carry the signal.
@@ -193,7 +196,7 @@ export function BrainSphere({
       }
 
       // Synapses: pulses run along the links.
-      if (!reduce && pulses.length < (small ? 14 : 26) && rand() < dt * 14) {
+      if (!reduce && pulses.length < (clean ? 7 : small ? 14 : 26) && rand() < dt * (clean ? 6 : 14)) {
         pulses.push({ e: Math.floor(rand() * model.edges.length), t: 0, speed: 0.8 + rand() * 1.4 });
       }
       for (let i = pulses.length - 1; i >= 0; i--) {
@@ -227,22 +230,24 @@ export function BrainSphere({
         const pr = P[i];
         const depth = (pr.z + 1) / 2; // 0 back, 1 front
         const on = lit[n.hub];
-        const r = n.size * pr.s * (n.isHub ? 1.2 : 1) * (small ? 0.85 : 1);
+        const r = n.size * pr.s * (n.isHub ? (clean ? 0.75 : 1.2) : clean ? 0.62 : 1) * (small && !clean ? 0.85 : 1);
         if (n.isHub) {
           c.fillStyle = on > 0.5 ? `rgb(${sig})` : `rgba(${ink},${0.35 + depth * 0.65})`;
           c.beginPath();
           c.arc(pr.x, pr.y, r, 0, Math.PI * 2);
           c.fill();
-          c.strokeStyle = on > 0.5 ? `rgba(${sig},0.35)` : `rgba(${ink},0.15)`;
-          c.lineWidth = 1;
-          c.beginPath();
-          c.arc(pr.x, pr.y, r + 5 + (on > 0.5 ? Math.sin(t * 4) * 2 : 0), 0, Math.PI * 2);
-          c.stroke();
+          if (!clean || on > 0.5) {
+            c.strokeStyle = on > 0.5 ? `rgba(${sig},0.35)` : `rgba(${ink},0.15)`;
+            c.lineWidth = 1;
+            c.beginPath();
+            c.arc(pr.x, pr.y, r + 5 + (on > 0.5 ? Math.sin(t * 4) * 2 : 0), 0, Math.PI * 2);
+            c.stroke();
+          }
         } else {
           c.fillStyle =
             on > 0.1
               ? `rgba(${sig},${(0.3 + depth * 0.7) * (0.5 + on * 0.5)})`
-              : `rgba(${ink},${0.25 + depth * 0.7})`;
+              : `rgba(${ink},${clean ? 0.12 + depth * 0.5 : 0.25 + depth * 0.7})`;
           c.beginPath();
           c.arc(pr.x, pr.y, r, 0, Math.PI * 2);
           c.fill();
@@ -250,7 +255,7 @@ export function BrainSphere({
       }
 
       // Hub labels, readable only on the near side.
-      HUBS.forEach((name, k) => {
+      if (!clean) HUBS.forEach((name, k) => {
         const pr = P[k];
         const a = Math.max(0, Math.min(1, (pr.z + 0.25) / 0.6));
         if (a < 0.05) return;
@@ -328,7 +333,7 @@ export function BrainSphere({
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
     };
-  }, [tone]);
+  }, [tone, clean]);
 
   return <canvas ref={ref} aria-hidden="true" className={`block aspect-square w-full cursor-grab touch-pan-y active:cursor-grabbing ${className}`} />;
 }
