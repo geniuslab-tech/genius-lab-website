@@ -80,6 +80,33 @@
   --radius-none: 0;
 }
 
+/* Version 24: Genius Core hero. Colours resolve to variables that only .v24 defines. */
+@theme inline {
+  --color-gl-background: var(--background);
+  --color-gl-foreground: var(--foreground);
+  --color-gl-card: var(--card);
+  --color-gl-card-foreground: var(--card-foreground);
+  --color-gl-muted: var(--muted);
+  --color-gl-muted-foreground: var(--muted-foreground);
+  --color-gl-border: var(--border);
+  --color-gl-secondary: var(--secondary);
+  --color-gl-accent: var(--accent);
+  --color-gl-primary: var(--primary);
+  --color-gl-popover: var(--popover);
+  --color-gl-gold: var(--gold);
+  --color-gl-gold-soft: var(--gold-soft);
+  --color-gl-data: var(--data);
+  --color-gl-data-soft: var(--data-soft);
+  --color-gl-cyan: var(--cyan);
+  --color-gl-cyan-soft: var(--cyan-soft);
+  --color-gl-success: var(--success);
+  --color-gl-success-soft: var(--success-soft);
+  --color-gl-navy: var(--navy);
+  --color-gl-graphite: var(--graphite);
+  --font-gl-display: var(--font-v24-display), ui-sans-serif, system-ui, sans-serif;
+  --font-gl-mono: var(--font-v24-mono), ui-monospace, monospace;
+}
+
 :root {
   color-scheme: light;
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
