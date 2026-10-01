@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { Cursor, useScene, type CursorTarget } from "@/components/hero-demo/engine";
 import { Screen } from "@/components/hero-demo/frame";
 import { renderSegments, segText, type Segment } from "@/components/hero-demo/screens";
@@ -8,12 +8,16 @@ import { AskBox, BriefingCard, Chart, DASH_W, Kpis, Sidebar, Topbar, Units, type
 import type { Focus } from "./insights";
 import { GeniusShaderOrb } from "./Orb";
 import { IDLE, Outbox, useTyped } from "./ScriptedBrief";
-import { CASH, Q1, TEAM } from "./ScriptedBriefTeam";
+import { CASH as CASH_ANSWER, Q1, TEAM } from "./ScriptedBriefTeam";
+
+/** the cash answer, with View more instead of Approve: approval happens in the details pop-up */
+const CASH = { ...CASH_ANSWER, action: { ...CASH_ANSWER.action, cta: "View more" } };
 
 /*
  * Storyboard (v39.2) — "A marketplace of executive agents"
  *  1. Select    The CFO clicks the Revenue card, then the Free cash flow card.
- *  2. Ask       She asks why cash lags revenue; Genius answers; she approves.
+ *  2. Ask       She asks why cash lags revenue; Genius answers. View more opens the analysis
+ *               behind it — bridge, inventory, DSO, aging — where she approves.
  *  3. Agents    Five executive agents sit side by side, three over two, each with a note
  *               it left for her — some flagged.
  *  4. CFO chat  She opens the CFO agent: a private chat with its orb in the centre and
@@ -38,52 +42,60 @@ const CUES = {
   think: 9700,
   write: 10900,
   proposal: 16600,
-  toApprove: 17300,
-  pressA: 18400,
-  approved: 18650,
-  toAgents: 19600,
-  pressNav: 20600,
-  agents: 20850,
-  n1: 21200,
-  n2: 21450,
-  n3: 21700,
-  n4: 21950,
-  n5: 22200,
-  toCfo: 23300,
-  pressCfo: 24200,
-  modal: 24450,
-  i1: 24800,
-  i2: 25050,
-  i3: 25300,
-  i4: 25550,
-  toAlert: 26300,
-  pressAlert: 27200,
-  picked: 27450,
-  toChat: 27900,
-  pressChat: 28700,
-  type2: 28950,
-  toSend2: 31500,
-  pressSend2: 32300,
-  asked2: 32550,
-  aThink: 32700,
-  reply: 33500,
-  plan: 36900,
-  toSend: 37700,
-  pressSend: 38700,
-  sending: 38950,
-  e1: 39600,
-  e2: 40050,
-  e3: 40500,
-  e4: 40950,
-  e5: 41400,
-  e6: 41850,
-  e7: 42300,
-  open1: 42900,
-  open2: 43500,
-  toast: 43800,
-  exit: 47300,
+  toMore: 17300,
+  pressMore: 18400,
+  details: 18650,
+  d1: 19000,
+  d2: 19300,
+  d3: 19600,
+  d4: 19900,
+  toApprove: 20900,
+  pressA: 22000,
+  approved: 22250,
+  closeDetails: 22900,
+  toAgents: 23600,
+  pressNav: 24600,
+  agents: 24850,
+  n1: 25200,
+  n2: 25450,
+  n3: 25700,
+  n4: 25950,
+  n5: 26200,
+  toCfo: 27300,
+  pressCfo: 28200,
+  modal: 28450,
+  i1: 28800,
+  i2: 29050,
+  i3: 29300,
+  i4: 29550,
+  toAlert: 30300,
+  pressAlert: 31200,
+  picked: 31450,
+  toChat: 31900,
+  pressChat: 32700,
+  type2: 32950,
+  toSend2: 35500,
+  pressSend2: 36300,
+  asked2: 36550,
+  aThink: 36700,
+  reply: 37500,
+  plan: 40900,
+  toSend: 41700,
+  pressSend: 42700,
+  sending: 42950,
+  e1: 43600,
+  e2: 44050,
+  e3: 44500,
+  e4: 44950,
+  e5: 45400,
+  e6: 45850,
+  e7: 46300,
+  open1: 46900,
+  open2: 47500,
+  toast: 47800,
+  exit: 51300,
 } as const;
-const LOOP = 49300;
+const LOOP = 53300;
 const H = 900;
 
 const Q2 = "How do we close the $4.2M gap before the board meeting?";
@@ -316,6 +328,211 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* "View more": the analysis behind the cash answer                    */
+/* ------------------------------------------------------------------ */
+
+const BRIDGE = [
+  { k: "Budget", v: 100.6, kind: "total" },
+  { k: "Inventory", v: -3.1, kind: "neg" },
+  { k: "Receivables", v: -1.6, kind: "neg" },
+  { k: "Capex", v: 0.5, kind: "pos" },
+  { k: "Actual", v: 96.4, kind: "total" },
+] as const;
+const SITES = [
+  { k: "Atlanta DC", v: 4.1, d: "+22%" },
+  { k: "Charlotte", v: 2.8, d: "+17%" },
+  { k: "Jacksonville", v: 1.9, d: "+12%" },
+];
+const DSO = [41, 41, 42, 42, 43, 44, 45, 45, 46, 47];
+const AGING = [
+  { k: "Rhein Logistik GmbH", v: "$310k", d: "74 days" },
+  { k: "Nordhavn A/S", v: "$240k", d: "68 days" },
+  { k: "Iberia Supply SL", v: "$190k", d: "63 days" },
+];
+
+function Tile({ show, delay = 0, className = "", children }: { show: boolean; delay?: number; className?: string; children: ReactNode }) {
+  return (
+    <div
+      className={`rounded-xl border border-gl-border/70 bg-gl-background/40 p-3.5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${className}`}
+      style={{ opacity: show ? 1 : 0, transform: show ? "none" : "translateY(10px)", transitionDelay: show ? `${delay}ms` : "0ms" }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function BriefDetails({ s, width }: { s: Scene; width: number }) {
+  const open = s.between("details", "closeDetails");
+  const d = (k: "d1" | "d2" | "d3" | "d4") => s.past(k);
+  const approved = s.past("approved");
+  const cx = width / 2;
+  // waterfall geometry
+  const lo = 94.5;
+  const hi = 101.2;
+  const bh = 92;
+  const y = (v: number) => bh - ((v - lo) / (hi - lo)) * bh;
+  const spans: [number, number][] = [];
+  let run = 100.6;
+  for (const b of BRIDGE) {
+    if (b.kind === "total") spans.push([y(b.v), bh]);
+    else {
+      const next = run + b.v;
+      spans.push([y(Math.max(run, next)), y(Math.min(run, next))]);
+      run = next;
+    }
+  }
+  const dsoPts = DSO.map((v, i) => [(i / (DSO.length - 1)) * 300, 50 - ((v - 40) / 8) * 44] as const);
+  const dsoPath = dsoPts.map(([x, yy], i) => `${i ? "L" : "M"} ${Math.round(x)} ${Math.round(yy)}`).join(" ");
+
+  return (
+    <div className={`absolute inset-0 z-20 transition-opacity duration-500 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+      <div className="absolute inset-0 bg-[oklch(0.1_0.03_264/62%)] backdrop-blur-[3px]" />
+      <div
+        className="absolute overflow-hidden rounded-[22px] border border-gl-border bg-[linear-gradient(170deg,oklch(0.2_0.04_262/98%),oklch(0.14_0.03_264/98%))] shadow-[0_50px_120px_-30px_rgb(0_0_0/0.85)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{ left: cx - 440, top: 40, width: 880, transform: open ? "none" : "translateY(20px) scale(0.97)" }}
+      >
+        <div className="flex items-center gap-3 border-b border-gl-border/60 px-6 py-3.5">
+          <GeniusShaderOrb state={open && !s.past("d4") ? "typing" : "holding"} size={28} />
+          <div className="flex-1">
+            <p className="text-[0.84rem] text-gl-foreground">Why free cash flow lags revenue</p>
+            <p className="text-[0.58rem] text-gl-muted-foreground">Genius analysis · 14 entities · WMS, AR ledger, Budget FY26 v3</p>
+          </div>
+          <span className="grid h-7 w-7 place-items-center rounded-md border border-gl-border text-[0.7rem] text-gl-muted-foreground">✕</span>
+        </div>
+
+        <div className="space-y-3 p-5">
+          {/* headline numbers */}
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { k: "Revenue vs budget", v: "+6.4%", tone: "text-gl-data", sub: "$1.42B · ahead of plan" },
+              { k: "Free cash flow vs budget", v: "−$4.2M", tone: "text-gl-gold", sub: "$96.4M · attention" },
+              { k: "Cash conversion", v: "68%", tone: "text-gl-gold", sub: "−9pp vs last quarter" },
+            ].map((m, i) => (
+              <Tile key={m.k} show={d("d1")} delay={i * 90}>
+                <p className="text-[0.54rem] uppercase tracking-[0.12em] text-gl-muted-foreground">{m.k}</p>
+                <p className={`mt-1 font-gl-display text-[1.25rem] tracking-tight ${m.tone}`}>{m.v}</p>
+                <p className="text-[0.56rem] text-gl-muted-foreground">{m.sub}</p>
+              </Tile>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-[1.2fr_1fr] gap-3">
+            {/* FCF bridge */}
+            <Tile show={d("d2")}>
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-[0.68rem] text-gl-foreground">Free cash flow bridge · QTD</p>
+                <span className="font-gl-mono text-[0.52rem] text-gl-muted-foreground">$M</span>
+              </div>
+              <div className="flex items-end gap-3">
+                {BRIDGE.map((b, i) => {
+                  const [y0, y1] = spans[i]!;
+                  const color = b.kind === "total" ? "bg-gl-data/75" : b.kind === "neg" ? "bg-gl-gold" : "bg-[var(--success)]";
+                  return (
+                    <div key={b.k} className="flex flex-1 flex-col items-center gap-1">
+                      <span className={`font-gl-mono text-[0.52rem] ${b.kind === "neg" ? "text-gl-gold" : b.kind === "pos" ? "text-[var(--success)]" : "text-gl-foreground"}`}>
+                        {b.kind === "total" ? `${b.v}M` : `${b.v > 0 ? "+" : "−"}${Math.abs(b.v)}`}
+                      </span>
+                      <div className="relative w-full" style={{ height: bh }}>
+                        <div
+                          className={`absolute inset-x-0 origin-bottom rounded-[3px] transition-transform duration-700 ${color}`}
+                          style={{ top: y0, height: Math.max(3, y1 - y0), transform: d("d2") ? "scaleY(1)" : "scaleY(0)", transitionDelay: `${i * 110}ms` }}
+                        />
+                      </div>
+                      <span className="text-[0.52rem] text-gl-muted-foreground">{b.k}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </Tile>
+            {/* inventory by site */}
+            <Tile show={d("d2")} delay={120}>
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-[0.68rem] text-gl-foreground">Southeast inventory by site</p>
+                <span className="font-gl-mono text-[0.52rem] text-gl-gold">+18% vs plan</span>
+              </div>
+              <div className="space-y-2.5 pt-1">
+                {SITES.map((st, i) => (
+                  <div key={st.k}>
+                    <div className="flex justify-between text-[0.6rem]">
+                      <span className="text-gl-foreground/85">{st.k}</span>
+                      <span className="font-gl-mono text-gl-muted-foreground">
+                        ${st.v}M <span className="text-gl-gold">{st.d}</span>
+                      </span>
+                    </div>
+                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-gl-foreground/8">
+                      <div className="h-full origin-left rounded-full bg-gl-gold transition-transform duration-700" style={{ width: `${(st.v / 4.5) * 100}%`, transform: d("d2") ? "scaleX(1)" : "scaleX(0)", transitionDelay: `${200 + i * 120}ms` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Tile>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {/* DSO trend */}
+            <Tile show={d("d3")}>
+              <div className="mb-1 flex items-center justify-between">
+                <p className="text-[0.68rem] text-gl-foreground">EMEA days sales outstanding</p>
+                <span className="font-gl-mono text-[0.56rem] text-gl-gold">41 → 47 days</span>
+              </div>
+              <svg viewBox="0 0 300 56" className="block h-[56px] w-full" aria-hidden="true">
+                <line x1="0" x2="300" y1="45" y2="45" stroke="var(--border)" strokeDasharray="2 4" />
+                <path d={dsoPath} fill="none" stroke="var(--gold)" strokeWidth="2" pathLength={1} strokeDasharray="1" strokeDashoffset={d("d3") ? 0 : 1} style={{ transition: "stroke-dashoffset 1s cubic-bezier(.22,1,.36,1)" }} />
+                <circle cx="300" cy={Math.round(dsoPts[dsoPts.length - 1]![1])} r="3.5" fill="var(--gold)" />
+              </svg>
+              <p className="text-[0.56rem] text-gl-muted-foreground">Target 41 days · slipping since week 4</p>
+            </Tile>
+            {/* receivables aging */}
+            <Tile show={d("d3")} delay={120}>
+              <div className="mb-1.5 flex items-center justify-between">
+                <p className="text-[0.68rem] text-gl-foreground">Receivables over 60 days</p>
+                <span className="font-gl-mono text-[0.56rem] text-gl-gold">11 accounts · $1.1M</span>
+              </div>
+              {AGING.map((a) => (
+                <div key={a.k} className="flex items-center justify-between border-t border-gl-border/40 py-1.5 text-[0.6rem]">
+                  <span className="text-gl-foreground/85">{a.k}</span>
+                  <span className="font-gl-mono text-gl-muted-foreground">
+                    {a.v} · <span className="text-gl-gold">{a.d}</span>
+                  </span>
+                </div>
+              ))}
+            </Tile>
+          </div>
+
+          {/* actions + approve */}
+          <Tile show={d("d4")} className={approved ? "border-[oklch(0.78_0.13_168/40%)]" : "border-gl-gold/35"}>
+            <div className="mb-2 flex items-center justify-between">
+              <span className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-gl-gold">Recommended actions</span>
+              <span className="font-gl-mono text-[0.62rem] text-[var(--success)]">+$2.5M cash this quarter</span>
+            </div>
+            {[
+              { t: "Release $1.4M of slow Southeast inventory to EMEA distributors", v: "+$1.4M", o: "COO agent" },
+              { t: "Chase the 11 EMEA accounts over 60 days", v: "+$1.1M", o: "CCO agent" },
+            ].map((a) => (
+              <div key={a.t} className="flex items-center justify-between border-t border-gl-border/40 py-1.5 text-[0.64rem]">
+                <span className="text-gl-foreground">
+                  {a.t} <span className="font-gl-mono text-[0.5rem] text-gl-muted-foreground">· {a.o}</span>
+                </span>
+                <span className="font-gl-mono text-[var(--success)]">{a.v}</span>
+              </div>
+            ))}
+            <div className="mt-2.5 flex items-center justify-end gap-2">
+              <span className="rounded-md border border-gl-border px-3 py-1.5 text-[0.64rem] text-gl-foreground/85">Ask a follow-up</span>
+              <span
+                data-cursor="approve-modal"
+                className={`rounded-md px-3.5 py-1.5 text-[0.66rem] font-medium transition-all duration-200 ${approved ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${s.between("toApprove", "approved") && !approved ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${s.between("pressA", "approved") ? "scale-95" : ""}`}
+              >
+                {approved ? "✓ Approved" : "Approve"}
+              </span>
+            </div>
+          </Tile>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** v39.2 — v39.1 with the agents laid out as a marketplace and a private CFO chat. */
 export function ScriptedBriefMarket() {
   const { ref, scene: s } = useScene(CUES, LOOP, "proposal");
@@ -339,7 +556,7 @@ export function ScriptedBriefMarket() {
     focus: (asked ? "cash" : "none") as Focus,
   };
   const selected = [...(s.past("sel1") ? ["revenue"] : []), ...(s.past("sel2") ? ["cash"] : [])];
-  const approve: ApproveState = { hover: s.between("toApprove", "approved"), pressed: s.between("pressA", "approved"), done: s.past("approved") };
+  const approve: ApproveState = { hover: s.between("toMore", "details"), pressed: s.between("pressMore", "details"), done: s.past("approved") };
 
   const contentX = 208;
   const contentW = DASH_W - contentX;
@@ -358,11 +575,15 @@ export function ScriptedBriefMarket() {
   } else if (s.between("toSend1", "think")) {
     target = "ask-send";
     pointer = true;
-  } else if (s.between("think", "toApprove")) target = { x: 620, y: 560 };
-  else if (s.between("toApprove", "toAgents")) {
+  } else if (s.between("think", "toMore")) target = { x: 620, y: 560 };
+  else if (s.between("toMore", "details")) {
     target = "approve";
     pointer = true;
-  } else if (s.between("toAgents", "agents")) {
+  } else if (s.between("details", "toApprove")) target = { x: contentX + contentW / 2 + 120, y: 520 };
+  else if (s.between("toApprove", "closeDetails")) {
+    target = "approve-modal";
+    pointer = true;
+  } else if (s.between("closeDetails", "toAgents")) target = { x: 500, y: 600 }; else if (s.between("toAgents", "agents")) {
     target = "nav-agents";
     pointer = true;
   } else if (s.between("agents", "toCfo")) target = { x: contentX + contentW / 2 + 60, y: 520 };
@@ -390,6 +611,7 @@ export function ScriptedBriefMarket() {
     s.between("press2", "sel2") ||
     s.between("pressAsk", "type1") ||
     s.between("pressSend1", "asked") ||
+    s.between("pressMore", "details") ||
     s.between("pressA", "approved") ||
     s.between("pressNav", "agents") ||
     s.between("pressCfo", "modal") ||
@@ -414,6 +636,7 @@ export function ScriptedBriefMarket() {
                   <Units focus={c.focus} glass={false} />
                 </div>
               </div>
+              <BriefDetails s={s} width={contentW} />
             </Screen>
             <Screen show={page === "agents"} className="!p-0">
               <div className="flex h-full flex-col">
