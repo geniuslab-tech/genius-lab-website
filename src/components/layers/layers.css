@@ -1,0 +1,276 @@
+/* Layer-story variants (/how-it-works). Motion uses ease-out curves only. */
+
+.layers-fade {
+  animation: layers-fade 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes layers-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.layers-chip {
+  animation: layers-fade 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.layers-progress {
+  width: 0;
+  animation-name: layers-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes layers-progress {
+  to {
+    width: 100%;
+  }
+}
+
+/* V1: packets rising through the stack, signal along idle slabs */
+.layers-rise {
+  opacity: 0;
+  animation: layers-rise 5.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes layers-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-30rem);
+    opacity: 0;
+  }
+}
+.layers-signal {
+  animation: layers-signal 11s ease-in-out infinite;
+}
+@keyframes layers-signal {
+  0%,
+  100% {
+    transform: translateX(-110%);
+    opacity: 0;
+  }
+  18%,
+  82% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(310%);
+  }
+}
+
+/* V2: isometric plates */
+.iso-grid {
+  background-image:
+    linear-gradient(oklch(1 0 0 / 7%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(1 0 0 / 7%) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.iso-rise {
+  opacity: 0;
+  animation: iso-rise 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes iso-rise {
+  0% {
+    transform: translateZ(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateZ(var(--iso-top, 250px));
+    opacity: 0;
+  }
+}
+
+/* V3: specular sweep across glass */
+.glass-sheen {
+  background: linear-gradient(115deg, transparent 35%, oklch(1 0 0 / 10%) 48%, transparent 60%);
+  background-size: 250% 100%;
+  animation: glass-sheen 7s ease-in-out infinite;
+}
+@keyframes glass-sheen {
+  0%,
+  30% {
+    background-position: 120% 0;
+  }
+  70%,
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+/* V4: column of light */
+.col-dot {
+  opacity: 0;
+  animation: col-dot 3.3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes col-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--col-h, -200px));
+    opacity: 0;
+  }
+}
+.col-pulse {
+  animation: col-pulse 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes col-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+
+/* V5: blueprint */
+.blueprint {
+  background-color: oklch(0.15 0.035 262);
+  background-image:
+    linear-gradient(oklch(0.7 0.17 252 / 7%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.7 0.17 252 / 7%) 1px, transparent 1px),
+    linear-gradient(oklch(0.7 0.17 252 / 3.5%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.7 0.17 252 / 3.5%) 1px, transparent 1px);
+  background-size:
+    80px 80px,
+    80px 80px,
+    16px 16px,
+    16px 16px;
+}
+.bp-up {
+  animation: bp-up 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes bp-up {
+  from {
+    bottom: -1rem;
+  }
+  to {
+    bottom: 3rem;
+  }
+}
+.bp-in {
+  animation: bp-in 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes bp-in {
+  from {
+    left: 100%;
+  }
+  to {
+    left: -6rem;
+  }
+}
+
+/* V6: living bands */
+.band-in {
+  animation: layers-fade 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.band-draw {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: band-draw 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes band-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.band-toggle {
+  transform: translateX(2px);
+  animation: band-toggle 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes band-toggle {
+  to {
+    transform: translateX(15px);
+  }
+}
+.band-fill {
+  width: 0;
+  animation: band-fill 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes band-fill {
+  to {
+    width: 100%;
+  }
+}
+
+/* V7: monolith */
+.mono-up {
+  opacity: 0;
+  animation: mono-up 4.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes mono-up {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+}
+.mono-ticker {
+  animation: mono-ticker 22s linear infinite;
+}
+@keyframes mono-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layers-fade,
+  .layers-chip,
+  .band-in {
+    animation: none;
+  }
+  .layers-rise,
+  .layers-signal,
+  .iso-rise,
+  .glass-sheen,
+  .col-dot,
+  .col-pulse,
+  .bp-up,
+  .bp-in,
+  .mono-up,
+  .mono-ticker {
+    animation: none;
+  }
+  .band-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .band-toggle {
+    animation: none;
+    transform: translateX(15px);
+  }
+  .band-fill,
+  .layers-progress {
+    animation: none;
+    width: 100%;
+  }
+}
