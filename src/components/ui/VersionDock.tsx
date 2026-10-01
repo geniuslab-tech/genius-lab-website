@@ -36,6 +36,12 @@ const VERSIONS = [
   { v: 30, name: "Decision inbox", tone: "Dark" },
   { v: 31, name: "Scenario premium", tone: "Dark" },
   { v: 32, name: "How it works cinematic", tone: "Dark" },
+  { v: 33, name: "How · connected journey", tone: "Dark" },
+  { v: 34, name: "How · vertical spine", tone: "Dark" },
+  { v: 35, name: "How · orbital core", tone: "Dark" },
+  { v: 36, name: "How · bento assembly", tone: "Dark" },
+  { v: 37, name: "How · morph", tone: "Dark" },
+  { v: 38, name: "How · depth fly-through", tone: "Dark" },
 ];
 
 const href = (v: number) => (v === 1 ? "/" : `/v${v}`);
