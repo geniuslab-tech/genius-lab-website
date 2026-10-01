@@ -26,7 +26,7 @@ export default function HomeV40() {
       <style>{`html,body{background:oklch(0.145 0.032 264)}`}</style>
       <Nav variant="light" />
       <main>
-        <BriefHero variant="rail" tint="blue" />
+        <BriefHero variant="rail" tint="blue" scripted />
       </main>
     </div>
   );

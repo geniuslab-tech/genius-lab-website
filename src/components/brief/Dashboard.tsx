@@ -13,7 +13,7 @@ export type Variant = "refined" | "rail" | "glass" | "strip" | "voice";
 /* Data                                                                */
 /* ------------------------------------------------------------------ */
 
-const NAV = ["Executive Briefing", "Performance", "Revenue", "Margin & Cost", "Cash & Working Capital", "Entities", "Decisions", "Automations", "Agents", "Board Reports"];
+export const NAV = ["Executive Briefing", "Performance", "Revenue", "Margin & Cost", "Cash & Working Capital", "Entities", "Decisions", "Automations", "Agents", "Board Reports"];
 const BADGES: Record<string, string> = { Decisions: "3", Automations: "6", Agents: "4" };
 
 const KPIS: { key: Focus | "ebitda"; label: string; value: number; fmt: (n: number) => string; delta: string; tone: "data" | "gold"; status: string; spark: number[] }[] = [
@@ -62,24 +62,33 @@ function Cited({ on, label = "Cited by Genius" }: { on: boolean; label?: string 
   );
 }
 
-function card(glass: boolean, extra = "") {
+export function card(glass: boolean, extra = "") {
   return glass
     ? `relative rounded-[18px] border border-white/[0.09] bg-[linear-gradient(160deg,oklch(1_0_0/6%),oklch(1_0_0/2%))] backdrop-blur-xl ${extra}`
     : `relative rounded-xl border border-gl-border/70 bg-[linear-gradient(180deg,oklch(0.21_0.03_262/70%),oklch(0.17_0.03_262/60%))] ${extra}`;
 }
 
-function Sidebar({ narrow = false }: { narrow?: boolean }) {
+export function Sidebar({ narrow = false, active = "Executive Briefing", hover }: { narrow?: boolean; active?: string; hover?: string }) {
+  const slug = (n: string) => `nav-${n.toLowerCase().replace(/[^a-z]+/g, "-")}`;
   if (narrow) {
     return (
       <aside className="flex w-[64px] shrink-0 flex-col items-center gap-2 border-r border-gl-border/60 bg-gl-navy/70 py-5">
         <span className="mb-4 grid h-8 w-8 place-items-center rounded-lg bg-gl-data/15">
           <span className="h-2 w-2 rounded-full bg-gl-data" />
         </span>
-        {NAV.slice(0, 8).map((n, i) => (
-          <span key={n} className={`grid h-9 w-9 place-items-center rounded-lg ${i === 0 ? "bg-gl-data/15 ring-1 ring-inset ring-gl-data/30" : ""}`}>
-            <span className={`h-1.5 w-4 rounded-full ${i === 0 ? "bg-gl-data" : "bg-gl-foreground/20"}`} />
-          </span>
-        ))}
+        {NAV.slice(0, 9).map((n) => {
+          const on = n === active;
+          return (
+            <span
+              key={n}
+              data-cursor={slug(n)}
+              title={n}
+              className={`grid h-9 w-9 place-items-center rounded-lg transition-colors duration-300 ${on ? "bg-gl-data/15 ring-1 ring-inset ring-gl-data/30" : hover === n ? "bg-gl-foreground/10" : ""}`}
+            >
+              <span className={`h-1.5 w-4 rounded-full ${on ? "bg-gl-data" : n === "Agents" ? "bg-gl-gold/70" : "bg-gl-foreground/20"}`} />
+            </span>
+          );
+        })}
       </aside>
     );
   }
@@ -93,18 +102,22 @@ function Sidebar({ narrow = false }: { narrow?: boolean }) {
         <img src="/brand/genius-lab-logo-white.svg" alt="Genius Lab" className="h-[0.72rem] w-auto" />
       </div>
       <nav className="flex flex-1 flex-col gap-0.5">
-        {NAV.map((n, i) => (
+        {NAV.map((n) => {
+          const on = n === active;
+          return (
           <span
             key={n}
-            className={`flex items-center justify-between rounded-md px-2.5 py-[7px] text-[0.72rem] ${i === 0 ? "bg-gl-data/12 text-gl-foreground ring-1 ring-inset ring-gl-data/25" : "text-gl-muted-foreground/75"}`}
+            data-cursor={slug(n)}
+            className={`flex items-center justify-between rounded-md px-2.5 py-[7px] text-[0.72rem] transition-colors duration-300 ${on ? "bg-gl-data/12 text-gl-foreground ring-1 ring-inset ring-gl-data/25" : hover === n ? "bg-gl-foreground/[0.06] text-gl-foreground" : "text-gl-muted-foreground/75"}`}
           >
             <span className="flex items-center gap-2">
-              <span className={`h-1 w-1 rounded-full ${i === 0 ? "bg-gl-data shadow-[0_0_8px_var(--data)]" : "bg-gl-muted-foreground/35"}`} />
+              <span className={`h-1 w-1 rounded-full ${on ? "bg-gl-data shadow-[0_0_8px_var(--data)]" : "bg-gl-muted-foreground/35"}`} />
               {n}
             </span>
             {BADGES[n] ? <span className="rounded bg-gl-gold/15 px-1.5 text-[0.6rem] text-gl-gold">{BADGES[n]}</span> : null}
           </span>
-        ))}
+          );
+        })}
       </nav>
       <div className="mt-6 rounded-lg border border-gl-border/70 bg-gl-background/40 p-2.5">
         <p className="text-[0.68rem] text-gl-foreground">Meridian Holdings</p>
@@ -114,7 +127,7 @@ function Sidebar({ narrow = false }: { narrow?: boolean }) {
   );
 }
 
-function Topbar({ stage, orb, shader = false }: { stage: CycleStage; orb?: boolean; shader?: boolean }) {
+export function Topbar({ stage, orb, shader = false }: { stage: CycleStage; orb?: boolean; shader?: boolean }) {
   return (
     <div className="flex items-center justify-between border-b border-gl-border/60 px-5 py-3.5">
       <div>
@@ -135,7 +148,7 @@ function Topbar({ stage, orb, shader = false }: { stage: CycleStage; orb?: boole
   );
 }
 
-function Chart({ focus, glass, anomalies = false }: { focus: Focus; glass: boolean; anomalies?: boolean }) {
+export function Chart({ focus, glass, anomalies = false, selected = false }: { focus: Focus; glass: boolean; anomalies?: boolean; selected?: boolean }) {
   const rev = REV.map((v, i) => [px(i), ry(v)] as const);
   const gm = GM.map((v, i) => [px(i), gy(v)] as const);
   const revLine = smoothPath(rev);
@@ -160,6 +173,8 @@ function Chart({ focus, glass, anomalies = false }: { focus: Focus; glass: boole
           </span>
         </div>
       </div>
+      <div className="relative">
+      <span data-cursor="chart-point" className="absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2" style={{ left: `${(px(hi) / 720) * 100}%`, top: `${(ry(REV[hi]!) / 170) * 100}%` }} />
       <svg viewBox="0 0 720 170" className="block w-full" aria-hidden="true">
         <defs>
           <linearGradient id="bdRev" x1="0" y1="0" x2="0" y2="1">
@@ -198,6 +213,12 @@ function Chart({ focus, glass, anomalies = false }: { focus: Focus; glass: boole
         <circle cx={px(hi)} cy={ry(REV[hi]!)} r={onRev ? 13 : 8} fill="var(--data)" opacity="0.18" style={{ transition: "r .4s" }} />
         <circle cx={px(hi)} cy={gy(GM[hi]!)} r={onGm ? 5 : 3.5} fill="var(--gold)" style={{ transition: "r .4s" }} />
         <circle cx={px(hi)} cy={gy(GM[hi]!)} r={onGm ? 13 : 8} fill="var(--gold)" opacity="0.18" style={{ transition: "r .4s" }} />
+        {selected ? (
+          <g>
+            <circle cx={px(hi)} cy={ry(REV[hi]!)} r="18" fill="none" stroke="var(--cyan)" strokeWidth="1.5" className="demo-anomaly" />
+            <rect x={px(hi) - 22} y={PLOT.y0} width="44" height={PLOT.y1 - PLOT.y0} fill="var(--cyan)" opacity="0.07" rx="6" />
+          </g>
+        ) : null}
         {anomalies ? (
           <g>
             <circle cx={px(5)} cy={ry(REV[5]!)} r="4" fill="none" stroke="var(--gold)" strokeWidth="1.5" />
@@ -216,7 +237,8 @@ function Chart({ focus, glass, anomalies = false }: { focus: Focus; glass: boole
           </text>
         ))}
       </svg>
-      <div className={`pointer-events-none absolute left-[56%] top-12 rounded-lg border border-gl-border/80 bg-gl-navy/90 px-3 py-2 backdrop-blur ${glass ? "hidden" : ""}`}>
+      </div>
+      <div className={`pointer-events-none absolute left-[56%] top-12 rounded-lg border px-3 py-2 backdrop-blur transition-colors duration-300 ${selected ? "border-[oklch(0.85_0.11_205/55%)] bg-[oklch(0.17_0.04_250/95%)]" : "border-gl-border/80 bg-gl-navy/90"} ${glass ? "hidden" : ""}`}>
         <p className="text-[0.58rem] text-gl-muted-foreground/70">May · week 2</p>
         <p className="mt-1 flex justify-between gap-6 text-[0.64rem]">
           <span className="text-gl-muted-foreground">Revenue</span>
@@ -231,7 +253,7 @@ function Chart({ focus, glass, anomalies = false }: { focus: Focus; glass: boole
   );
 }
 
-function Kpis({ focus, glass, big = false }: { focus: Focus; glass: boolean; big?: boolean }) {
+export function Kpis({ focus, glass, big = false }: { focus: Focus; glass: boolean; big?: boolean }) {
   return (
     <div className="grid grid-cols-4 gap-3">
       {KPIS.map((k) => {
@@ -262,7 +284,7 @@ function Kpis({ focus, glass, big = false }: { focus: Focus; glass: boolean; big
   );
 }
 
-function Units({ focus, glass, className = "" }: { focus: Focus; glass: boolean; className?: string }) {
+export function Units({ focus, glass, className = "" }: { focus: Focus; glass: boolean; className?: string }) {
   const on = focus === "units";
   return (
     <div className={card(glass, `gfocus p-4 ${on ? "gfocus-on" : ""} ${className}`)}>
@@ -295,7 +317,7 @@ function Units({ focus, glass, className = "" }: { focus: Focus; glass: boolean;
 }
 
 /** The streamed insight text with caret. */
-function InsightText({ insight, typed, stage, className = "" }: { insight: Insight; typed: number; stage: CycleStage; className?: string }) {
+export function InsightText({ insight, typed, stage, className = "" }: { insight: Insight; typed: number; stage: CycleStage; className?: string }) {
   if (stage === "thinking") {
     return (
       <div className={`space-y-2 pt-1 ${className}`}>
@@ -314,19 +336,25 @@ function InsightText({ insight, typed, stage, className = "" }: { insight: Insig
   );
 }
 
-function ActionRow({ insight, show, compact = false }: { insight: Insight; show: boolean; compact?: boolean }) {
+export function ActionRow({ insight, show, compact = false, approve }: { insight: Insight; show: boolean; compact?: boolean; approve?: ApproveState }) {
+  const done = approve?.done;
   return (
     <div className={`flex items-center justify-between gap-3 rounded-lg border border-gl-gold/30 bg-gl-gold/[0.06] px-3 ${compact ? "py-1.5" : "py-2"} transition-all duration-500 ${show ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"}`}>
       <span className="min-w-0">
         <span className="block truncate text-[0.66rem] text-gl-foreground">{insight.action.title}</span>
         <span className="block truncate text-[0.58rem] text-gl-gold/85">{insight.action.impact}</span>
       </span>
-      <span className="shrink-0 rounded-md bg-gl-gold px-2.5 py-1 text-[0.6rem] font-medium text-gl-background">{insight.action.cta}</span>
+      <span
+        data-cursor="approve"
+        className={`shrink-0 rounded-md px-2.5 py-1 text-[0.6rem] font-medium transition-all duration-200 ${done ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${approve?.hover && !done ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${approve?.pressed ? "scale-95" : ""}`}
+      >
+        {done ? "✓ Approved" : insight.action.cta}
+      </span>
     </div>
   );
 }
 
-function Dots({ idx }: { idx: number }) {
+export function Dots({ idx }: { idx: number }) {
   return (
     <span className="flex gap-1">
       {INSIGHTS.map((_, i) => (
@@ -340,9 +368,12 @@ function Dots({ idx }: { idx: number }) {
 /* Briefing variants                                                   */
 /* ------------------------------------------------------------------ */
 
-type Cyc = Omit<ReturnType<typeof useInsightCycle>, "ref">;
+export type Cyc = Omit<ReturnType<typeof useInsightCycle>, "ref">;
 
-function BriefingCard({ c, glass }: { c: Cyc; glass: boolean }) {
+/** Approval button state, when a script drives the dashboard. */
+export type ApproveState = { hover?: boolean; pressed?: boolean; done?: boolean };
+
+export function BriefingCard({ c, glass, approve }: { c: Cyc; glass: boolean; approve?: ApproveState }) {
   return (
     <div className={card(glass, "overflow-hidden p-4 ring-1 ring-inset ring-gl-data/10")}>
       <div className="pointer-events-none absolute -left-16 -top-16 h-44 w-44 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.17_252/22%),transparent_70%)]" />
@@ -375,13 +406,13 @@ function BriefingCard({ c, glass }: { c: Cyc; glass: boolean }) {
         ))}
       </div>
       <div className="relative mt-3">
-        <ActionRow insight={c.insight} show={c.stage === "holding"} />
+        <ActionRow insight={c.insight} show={c.stage === "holding"} approve={approve} />
       </div>
     </div>
   );
 }
 
-function GeniusRail({ c }: { c: Cyc }) {
+export function GeniusRail({ c, approve }: { c: Cyc; approve?: ApproveState }) {
   const history = [1, 2, 3].map((k) => INSIGHTS[(c.idx - k + INSIGHTS.length * 2) % INSIGHTS.length]!);
   return (
     <aside className="relative flex w-[300px] shrink-0 flex-col overflow-hidden border-r border-gl-border/60 bg-[linear-gradient(180deg,oklch(0.19_0.045_258/90%),oklch(0.14_0.03_264/90%))] p-5">
@@ -401,7 +432,7 @@ function GeniusRail({ c }: { c: Cyc }) {
         <div className="mt-1.5 min-h-[92px]">
           <InsightText insight={c.insight} typed={c.typed} stage={c.stage} className="text-[0.74rem] leading-[1.6] text-gl-foreground/90" />
         </div>
-        <ActionRow insight={c.insight} show={c.stage === "holding"} compact />
+        <ActionRow insight={c.insight} show={c.stage === "holding"} compact approve={approve} />
       </div>
       <p className="relative mt-5 mb-2 font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-gl-muted-foreground/60">Earlier this morning</p>
       <div className="relative space-y-2">
@@ -499,7 +530,7 @@ function BriefingStrip({ c }: { c: Cyc }) {
   );
 }
 
-function VoiceBriefing({ c }: { c: Cyc }) {
+export function VoiceBriefing({ c, approve }: { c: Cyc; approve?: ApproveState }) {
   const text = insightText(c.insight);
   const speaking = c.stage === "typing";
   return (
@@ -528,7 +559,7 @@ function VoiceBriefing({ c }: { c: Cyc }) {
         )}
       </p>
       <div className="relative mt-2">
-        <ActionRow insight={c.insight} show={c.stage === "holding"} compact />
+        <ActionRow insight={c.insight} show={c.stage === "holding"} compact approve={approve} />
       </div>
     </div>
   );
