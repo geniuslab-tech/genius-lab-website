@@ -253,14 +253,19 @@ export function Chart({ focus, glass, anomalies = false, selected = false }: { f
   );
 }
 
-export function Kpis({ focus, glass, big = false }: { focus: Focus; glass: boolean; big?: boolean }) {
+export function Kpis({ focus, glass, big = false, selected = [], pressed }: { focus: Focus; glass: boolean; big?: boolean; selected?: string[]; pressed?: string }) {
   return (
     <div className="grid grid-cols-4 gap-3">
       {KPIS.map((k) => {
         const on = k.key === focus;
+        const picked = selected.includes(k.key);
         return (
-          <div key={k.label} className={card(glass, `gfocus ${big ? "p-4" : "p-3.5"} ${on ? "gfocus-on" : ""}`)}>
-            <Cited on={on} />
+          <div
+            key={k.label}
+            data-cursor={`kpi-${k.key}`}
+            className={card(glass, `gfocus ${big ? "p-4" : "p-3.5"} ${on || picked ? "gfocus-on" : ""} ${pressed === k.key ? "scale-[0.98]" : ""} transition-transform duration-150`)}
+          >
+            {picked && !on ? <Cited on label="Selected" /> : <Cited on={on} />}
             <p className="text-[0.6rem] uppercase tracking-[0.12em] text-gl-muted-foreground/70">{k.label}</p>
             <p className={`mt-1.5 font-gl-display ${big ? "text-[1.5rem]" : "text-[1.25rem]"} tabular-nums tracking-tight text-gl-foreground`}>
               <Tween value={k.value} format={k.fmt} from={0} duration={1500} />

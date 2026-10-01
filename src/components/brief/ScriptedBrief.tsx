@@ -86,7 +86,7 @@ const Q1 = "Why did gross margin slip in May?";
 const Q2 = "What did the agents do overnight — and what needs my approval?";
 const H = 900;
 
-const IDLE: Insight = {
+export const IDLE: Insight = {
   focus: "revenue",
   tag: "Ready",
   segments: [{ t: "Good morning, Elena. Click any number on the dashboard and I'll explain what moved, why, and what to do about it." }],
@@ -127,7 +127,7 @@ const SUMMARY: Segment[] = [
   { t: ". I've drafted the Q3 board update with these results and this morning's approvals." },
 ];
 
-const BOARD = [
+export const BOARD = [
   ["MH", "Margaret Hale", "Chair"],
   ["JR", "James Ruiz", "Audit Committee"],
   ["AL", "Aiko Lin", "Independent director"],
@@ -138,7 +138,7 @@ const BOARD = [
 ] as const;
 
 /** Characters revealed while `play` runs; full once `done`. Restarts with `k`. */
-function useTyped(text: string, play: boolean, done: boolean, cps: number, k: number) {
+export function useTyped(text: string, play: boolean, done: boolean, cps: number, k: number) {
   const [n, setN] = useState(0);
   useEffect(() => {
     if (!play || done) return;
@@ -245,12 +245,50 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
         </span>
       </div>
 
+      <Outbox
+        sending={sending}
+        sent={sent}
+        opened={opened}
+        toast={s.between("toast", "exit")}
+        gold={gold}
+        cx={cx}
+        top={132}
+        toastBody="Two questions to a sent board update · every figure sourced"
+      />
+    </div>
+  );
+}
+
+/** The board update going out: the PDF drops into the email and seven directors move from queued to opened. */
+export function Outbox({
+  sending,
+  sent,
+  opened,
+  toast,
+  gold,
+  cx,
+  top,
+  toastBody,
+  subject = "Q3 Board Update — $18.4M cash recovered, margin protected",
+}: {
+  sending: boolean;
+  sent: number;
+  opened: number;
+  toast: boolean;
+  gold: boolean;
+  cx: number;
+  top: number;
+  toastBody: string;
+  subject?: string;
+}) {
+  return (
+    <>
       {/* outbox: the report goes out to seven board members */}
       <div className={`absolute inset-0 transition-opacity duration-500 ${sending ? "opacity-100" : "pointer-events-none opacity-0"}`}>
         <div className="absolute inset-0 bg-[oklch(0.1_0.03_264/55%)] backdrop-blur-[2px]" />
         <div
           className="absolute overflow-hidden rounded-2xl border border-gl-border bg-[oklch(0.17_0.032_262/97%)] shadow-[0_40px_100px_-30px_rgb(0_0_0/0.85)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{ left: cx - 340, top: 132, width: 680, transform: sending ? "none" : "translateY(24px) scale(0.97)" }}
+          style={{ left: cx - 340, top, width: 680, transform: sending ? "none" : "translateY(24px) scale(0.97)" }}
         >
           <div className="flex items-center gap-3 border-b border-gl-border/70 px-5 py-3.5">
             <GeniusShaderOrb state={sent < 7 ? "typing" : "holding"} size={30} tone={gold ? "gold" : "blue"} />
@@ -267,7 +305,7 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
             </p>
             <p>
               <span className="text-gl-muted-foreground">Subject </span>
-              <span className="text-gl-foreground">Q3 Board Update — $18.4M cash recovered, margin protected</span>
+              <span className="text-gl-foreground">{subject}</span>
             </p>
             <div className="flex items-center gap-2 pt-1">
               <span key={String(sending)} className="brief-fly flex items-center gap-2 rounded-md border border-gl-border bg-gl-background/50 px-2 py-1">
@@ -307,12 +345,12 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
 
       {/* toast */}
       <div
-        className={`absolute bottom-6 left-6 w-[300px] rounded-xl border border-[oklch(0.78_0.13_168/35%)] bg-[oklch(0.17_0.03_262/97%)] p-3.5 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.7)] transition-all duration-700 ${s.between("toast", "exit") ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
+        className={`absolute bottom-6 left-6 w-[300px] rounded-xl border border-[oklch(0.78_0.13_168/35%)] bg-[oklch(0.17_0.03_262/97%)] p-3.5 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.7)] transition-all duration-700 ${toast ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
       >
         <p className="text-[0.72rem] text-gl-foreground">✓ Board update delivered to 7 directors</p>
-        <p className="mt-0.5 text-[0.62rem] text-gl-muted-foreground">Two questions to a sent board update · every figure sourced</p>
+        <p className="mt-0.5 text-[0.62rem] text-gl-muted-foreground">{toastBody}</p>
       </div>
-    </div>
+    </>
   );
 }
 

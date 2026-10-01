@@ -239,3 +239,31 @@
     animation: none;
   }
 }
+
+/* v39.1: what the executive agents say to each other, fading in and out along their links */
+.team-chatter {
+  opacity: 0;
+  animation: team-chatter 5.6s ease-in-out infinite;
+}
+@keyframes team-chatter {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  12%,
+  40% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  55% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-chatter {
+    animation: none;
+    opacity: 1;
+  }
+}

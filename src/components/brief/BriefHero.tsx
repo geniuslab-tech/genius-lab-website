@@ -5,9 +5,10 @@ import { HeroCopy, HeroGrid, LogoMarquee, SpotlightBackdrop } from "@/components
 import { Reveal } from "@/components/v24/Reveal";
 import { BriefDashboard, DASH_W, type Variant } from "./Dashboard";
 import { ScriptedBrief } from "./ScriptedBrief";
+import { ScriptedBriefTeam } from "./ScriptedBriefTeam";
 
 /** Renders the fixed-width dashboard scaled to its column, bleeding past the right edge like v24. */
-function ScaledDashboard({ variant, scripted }: { variant: Variant; scripted: boolean }) {
+function ScaledDashboard({ variant, scripted, team }: { variant: Variant; scripted: boolean; team: boolean }) {
   const outer = useRef<HTMLDivElement>(null);
   const inner = useRef<HTMLDivElement>(null);
   const [fit, setFit] = useState<{ s: number; h: number } | null>(null);
@@ -26,16 +27,16 @@ function ScaledDashboard({ variant, scripted }: { variant: Variant; scripted: bo
     return () => ro.disconnect();
   }, []);
   return (
-    <div ref={outer} className={`relative w-full ${scripted ? "" : "lg:w-[calc(100%+4rem)] xl:w-[calc(100%+6rem)]"}`} style={{ height: fit?.h }}>
+    <div ref={outer} className={`relative w-full ${scripted || team ? "" : "lg:w-[calc(100%+4rem)] xl:w-[calc(100%+6rem)]"}`} style={{ height: fit?.h }}>
       <div ref={inner} className="absolute left-0 top-0 origin-top-left" style={{ width: DASH_W, transform: fit ? `scale(${fit.s})` : undefined, opacity: fit ? 1 : 0 }}>
-        {scripted ? <ScriptedBrief variant={variant} /> : <BriefDashboard variant={variant} />}
+        {team ? <ScriptedBriefTeam /> : scripted ? <ScriptedBrief variant={variant} /> : <BriefDashboard variant={variant} />}
       </div>
     </div>
   );
 }
 
 /** The v24 hero: same copy and stage, with the redesigned briefing dashboard. */
-export function BriefHero({ variant, tint = "blue", scripted = false }: { variant: Variant; tint?: "blue" | "amber" | "violet"; scripted?: boolean }) {
+export function BriefHero({ variant, tint = "blue", scripted = false, team = false }: { variant: Variant; tint?: "blue" | "amber" | "violet"; scripted?: boolean; team?: boolean }) {
   return (
     <section id="top" className="relative overflow-hidden pt-16">
       <SpotlightBackdrop tint={tint} />
@@ -45,7 +46,7 @@ export function BriefHero({ variant, tint = "blue", scripted = false }: { varian
           <Reveal className="relative min-w-0" delay={150}>
             <div className="glow-breathe pointer-events-none absolute -inset-x-10 -inset-y-8 -z-10 blur-[90px] [background:radial-gradient(ellipse_at_center,oklch(0.7_0.17_252/26%),transparent_70%)]" />
             <div id="demo" className="relative rounded-[1.15rem] shadow-[var(--shadow-glow-blue)]">
-              <ScaledDashboard variant={variant} scripted={scripted} />
+              <ScaledDashboard variant={variant} scripted={scripted} team={team} />
             </div>
           </Reveal>
         }

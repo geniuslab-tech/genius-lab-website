@@ -43,6 +43,7 @@ const VERSIONS = [
   { v: 37, name: "How · morph", tone: "Dark" },
   { v: 38, name: "How · depth fly-through", tone: "Dark" },
   { v: 39, name: "Briefing refined", tone: "Dark" },
+  { v: 39.1, name: "Agent team · CFO", tone: "Dark" },
   { v: 40, name: "Genius rail", tone: "Dark" },
   { v: 41, name: "Glass guide", tone: "Dark" },
   { v: 42, name: "Briefing strip", tone: "Dark" },
@@ -54,7 +55,7 @@ const range = (a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i)
 const byNumber = new Map(VERSIONS.map((x) => [x.v, x]));
 const GROUPS = [
   { name: "HOMEPAGES", versions: range(1, 23) },
-  { name: "HERO ANIMATION", versions: [...range(24, 31), ...range(39, 43)] },
+  { name: "HERO ANIMATION", versions: [...range(24, 31), 39, 39.1, ...range(40, 43)] },
   { name: "FLOW", versions: range(32, 38) },
 ].map((g) => ({ ...g, items: g.versions.flatMap((v) => byNumber.get(v) ?? []) }));
 /** Versions in folder order, so previous / next stay inside the same group. */
@@ -67,7 +68,7 @@ export function VersionDock() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
-  const current = pathname === "/" ? 1 : Number(pathname.match(/^\/v(\d+)/)?.[1] ?? 0);
+  const current = pathname === "/" ? 1 : Number(pathname.match(/^\/v(\d+(?:\.\d+)?)/)?.[1] ?? 0);
 
   useEffect(() => {
     if (!open) return;

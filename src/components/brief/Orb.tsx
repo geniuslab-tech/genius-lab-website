@@ -12,7 +12,7 @@ const SHADER_STATE = { thinking: "thinking", typing: "speaking", holding: "idle"
  * on the dark disc it sits on there. Thinking, writing and waiting map to the
  * orb's thinking, speaking and idle states.
  */
-export function GeniusShaderOrb({ state, size = 56, tone = "blue" }: { state: OrbState; size?: number; tone?: "blue" | "gold" }) {
+export function GeniusShaderOrb({ state, size = 56, tone = "blue", tint }: { state: OrbState; size?: number; tone?: "blue" | "gold"; tint?: string }) {
   return (
     <span className="relative inline-grid shrink-0 place-items-center" style={{ width: size, height: size }}>
       <span
@@ -24,7 +24,7 @@ export function GeniusShaderOrb({ state, size = 56, tone = "blue" }: { state: Or
         size={size}
         className="relative"
         label="Genius"
-        {...(tone === "gold" ? { colors: { tint: "#ffd9a0" } } : {})}
+        {...(tint ? { colors: { tint } } : tone === "gold" ? { colors: { tint: "#ffd9a0" } } : {})}
       />
     </span>
   );
