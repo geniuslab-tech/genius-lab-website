@@ -5,6 +5,8 @@ import { LAYERS, Narrative, SplitStage, useLayerCycle } from "./shared";
 const CX = 270;
 const BASE_Y = 452;
 const STEP_Y = 88;
+/** Beam length when it reaches the top ring. */
+const BEAM_MAX = 4 * STEP_Y + 30;
 const ring = (i: number) => {
   const rx = 236 - i * 30;
   return { y: BASE_Y - i * STEP_Y, rx, ry: Math.round(rx * 0.2) };
@@ -61,9 +63,16 @@ export function V4Column() {
               ))}
 
               {/* beam */}
-              <g style={{ transform: `translateY(${top - 30}px)`, transition: "transform 1.1s cubic-bezier(0.22,1,0.36,1)" }}>
-                <rect x={CX - 14} y={0} width="28" height={beamH} fill="url(#col-beam)" filter="url(#col-glow)" opacity="0.7" style={{ transition: "height 1.1s cubic-bezier(0.22,1,0.36,1)" }} />
-                <rect x={CX - 2} y={0} width="4" height={beamH} rx="2" fill="url(#col-beam)" style={{ transition: "height 1.1s cubic-bezier(0.22,1,0.36,1)" }} />
+              {/* full-height beam scaled from its base, so the rise is a transform, not a layout change */}
+              <g
+                style={{
+                  transform: `scaleY(${beamH / BEAM_MAX})`,
+                  transformOrigin: `${CX}px ${BASE_Y}px`,
+                  transition: "transform 1.1s cubic-bezier(0.22,1,0.36,1)",
+                }}
+              >
+                <rect x={CX - 14} y={BASE_Y - BEAM_MAX} width="28" height={BEAM_MAX} fill="url(#col-beam)" filter="url(#col-glow)" opacity="0.7" />
+                <rect x={CX - 2} y={BASE_Y - BEAM_MAX} width="4" height={BEAM_MAX} rx="2" fill="url(#col-beam)" />
               </g>
               {[0, 1, 2, 3, 4, 5].map((i) => (
                 <circle
