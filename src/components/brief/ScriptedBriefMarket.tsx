@@ -290,15 +290,15 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
           })}
 
           {/* conversation */}
-          <div className="absolute" style={{ left: 110, top: 312, width: 680 }}>
-            <div className={`mb-2 flex items-center gap-2 transition-opacity duration-500 ${picked ? "opacity-100" : "opacity-0"}`}>
+          <div className="absolute" style={{ left: 110, top: 300, width: 680 }}>
+            <div className={`mb-1.5 flex items-center gap-2 transition-opacity duration-500 ${picked ? "opacity-100" : "opacity-0"}`}>
               <span className="font-gl-mono text-[0.5rem] uppercase tracking-[0.14em] text-gl-muted-foreground">About</span>
               <span className="flex items-center gap-1.5 rounded-full border border-[oklch(0.65_0.2_25/45%)] bg-[oklch(0.65_0.2_25/10%)] px-2 py-0.5 text-[0.58rem] text-gl-foreground">
                 <AlertIcon level="high" /> FCF $4.2M behind budget
               </span>
             </div>
-            <div className={`mb-3 rounded-xl border border-[oklch(0.65_0.2_25/40%)] bg-[oklch(0.65_0.2_25/6%)] px-4 py-3 transition-all duration-500 ${s.past("explain") ? "opacity-100" : "opacity-0"}`}>
-              <div className="mb-1.5 flex items-center justify-between">
+            <div className={`mb-2 rounded-xl border border-[oklch(0.65_0.2_25/40%)] bg-[oklch(0.65_0.2_25/6%)] px-4 py-2 transition-all duration-500 ${s.past("explain") ? "opacity-100" : "opacity-0"}`}>
+              <div className="mb-1 flex items-center justify-between">
                 <span className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-[oklch(0.72_0.18_25)]">What is happening</span>
                 <span className="flex items-center gap-2 font-gl-mono text-[0.52rem] uppercase tracking-[0.12em] text-gl-foreground/80">
                   Month-end close in 9 days
@@ -310,7 +310,7 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
               {EXPLAIN.map((e, i) => (
                 <div
                   key={e.t}
-                  className="flex items-center justify-between gap-3 py-[3px] text-[0.66rem] transition-all duration-500"
+                  className="flex items-center justify-between gap-3 py-px text-[0.62rem] transition-all duration-500"
                   style={{ opacity: s.past((["x1", "x2", "x3"] as const)[i]!) ? 1 : 0, transform: s.past((["x1", "x2", "x3"] as const)[i]!) ? "none" : "translateY(4px)" }}
                 >
                   <span className="flex items-center gap-2 text-gl-foreground/90">
@@ -322,20 +322,20 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
               ))}
             </div>
             <AskBox ask={ask} cid="chat" tone="gold" />
-            <div className={`mt-3 flex items-start gap-2.5 transition-opacity duration-500 ${s.past("aThink") ? "opacity-100" : "opacity-0"}`}>
+            <div className={`mt-2 flex items-start gap-2.5 transition-opacity duration-500 ${s.past("aThink") ? "opacity-100" : "opacity-0"}`}>
               <GeniusShaderOrb state={thinking ? "thinking" : writing ? "typing" : "holding"} size={26} tint={exec("cfo").tint} />
-              <p className="min-h-[40px] flex-1 text-[0.76rem] leading-[1.55] text-gl-foreground/90">
+              <p className="min-h-[34px] flex-1 text-[0.68rem] leading-[1.45] text-gl-foreground/90">
                 {thinking ? <span className="text-gl-muted-foreground">Checking with the COO, CCO and CHRO…</span> : renderSegments(REPLY, replyTyped)}
                 {writing && replyTyped < segText(REPLY).length ? <span className="gcaret" /> : null}
               </p>
             </div>
-            <div className={`mt-3 rounded-xl border border-gl-gold/35 bg-gl-gold/[0.05] p-3.5 transition-all duration-700 ${s.past("plan") ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
-              <div className="mb-2 flex items-center justify-between">
+            <div className={`mt-2 rounded-xl border border-gl-gold/35 bg-gl-gold/[0.05] px-3.5 py-2.5 transition-all duration-700 ${s.past("plan") ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
+              <div className="mb-1 flex items-center justify-between">
                 <span className="font-gl-mono text-[0.52rem] uppercase tracking-[0.16em] text-gl-gold">Month-end cash plan · needs your approval</span>
                 <span className="font-gl-mono text-[0.6rem] text-[var(--success)]">+$3.4M cash</span>
               </div>
               {PLAN.map((m) => (
-                <div key={m.t} className="flex items-center justify-between border-t border-gl-border/40 py-1.5 text-[0.66rem]">
+                <div key={m.t} className="flex items-center justify-between border-t border-gl-border/40 py-1 text-[0.62rem]">
                   <span className="flex items-center gap-2 text-gl-foreground">
                     <span className="w-10 font-gl-mono text-[0.5rem]" style={{ color: TEAM.find((t) => t.role === m.from)!.color }}>
                       {m.from}
@@ -346,25 +346,25 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
                   <span className="font-gl-mono text-[var(--success)]">{m.v}</span>
                 </div>
               ))}
-              <p className="mb-1.5 mt-2.5 font-gl-mono text-[0.5rem] uppercase tracking-[0.16em] text-gl-muted-foreground">Sending to the executive team</p>
-              <div className="grid grid-cols-4 gap-x-2 gap-y-1.5">
+              <p className="mb-1 mt-1.5 font-gl-mono text-[0.48rem] uppercase tracking-[0.16em] text-gl-muted-foreground">Sending to the executive team</p>
+              <div className="grid grid-cols-4 gap-x-2 gap-y-1">
                 {EXECS.map(([i, n, r]) => (
                   <div key={i} className="flex min-w-0 items-center gap-2">
-                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[oklch(0.45_0.08_260)] to-[oklch(0.3_0.05_262)] text-[0.46rem] font-semibold text-gl-foreground ring-1 ring-white/10">
+                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[oklch(0.45_0.08_260)] to-[oklch(0.3_0.05_262)] text-[0.42rem] font-semibold text-gl-foreground ring-1 ring-white/10">
                       {i}
                     </span>
                     <span className="min-w-0">
-                      <span className="block truncate text-[0.6rem] leading-tight text-gl-foreground">{n}</span>
-                      <span className="block truncate text-[0.5rem] leading-tight text-gl-muted-foreground">{r}</span>
+                      <span className="block truncate text-[0.56rem] leading-tight text-gl-foreground">{n}</span>
+                      <span className="block truncate text-[0.46rem] leading-tight text-gl-muted-foreground">{r}</span>
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="mt-2.5 flex items-center justify-between">
-                <span className="text-[0.58rem] text-gl-muted-foreground">Owners and deadlines attached · every figure sourced</span>
+              <div className="mt-2 flex items-center justify-between">
+                <span className="text-[0.56rem] text-gl-muted-foreground">Owners and deadlines attached · every figure sourced</span>
                 <span
                   data-cursor="send"
-                  className={`rounded-md px-3 py-1.5 text-[0.66rem] font-medium transition-all duration-200 ${sending ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${s.between("toSend", "sending") ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${s.between("pressSend", "sending") ? "scale-95" : ""}`}
+                  className={`rounded-md px-3 py-1 text-[0.64rem] font-medium transition-all duration-200 ${sending ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${s.between("toSend", "sending") ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${s.between("pressSend", "sending") ? "scale-95" : ""}`}
                 >
                   {sending ? "✓ Approved & sent" : "Approve plan & send to executives"}
                 </span>
