@@ -454,8 +454,8 @@ export function GeniusRail({ c, approve, ask }: { c: Cyc; approve?: ApproveState
   const history = [1, 2, 3].map((k) => INSIGHTS[(c.idx - k + INSIGHTS.length * 2) % INSIGHTS.length]!);
   return (
     <aside className="relative flex w-[300px] shrink-0 flex-col overflow-hidden border-r border-gl-border/60 bg-[linear-gradient(180deg,oklch(0.19_0.045_258/90%),oklch(0.14_0.03_264/90%))] p-5">
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.17_252/30%),transparent_70%)]" />
-      <div className="relative flex flex-col items-center text-center">
+      <div className="pointer-events-none absolute -top-12 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.17_252/30%),transparent_70%)]" />
+      <div className="relative mt-10 flex flex-col items-center text-center">
         <GeniusShaderOrb state={c.stage} size={128} />
         <p className="mt-4 font-gl-display text-[0.95rem] text-gl-foreground">Genius</p>
         <p key={c.stage} className="gfocus-tag text-[0.6rem] text-gl-muted-foreground">

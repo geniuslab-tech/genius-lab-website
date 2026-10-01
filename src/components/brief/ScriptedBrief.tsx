@@ -169,18 +169,18 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
   const sent = (["e1", "e2", "e3", "e4", "e5", "e6", "e7"] as const).filter((k) => s.past(k)).length;
   const opened = s.past("open2") ? 3 : s.past("open1") ? 1 : 0;
   const cards = [
-    { x: cx - 320, y: 302 },
-    { x: cx + 10, y: 302 },
-    { x: cx - 320, y: 392 },
-    { x: cx + 10, y: 392 },
+    { x: cx - 320, y: 374 },
+    { x: cx + 10, y: 374 },
+    { x: cx - 320, y: 464 },
+    { x: cx + 10, y: 464 },
   ];
 
   return (
     <div className="relative h-full w-full">
       {/* stage glow */}
-      <div className="pointer-events-none absolute left-1/2 top-[0px] h-[380px] w-[620px] -translate-x-1/2 rounded-full blur-3xl" style={{ background: `radial-gradient(ellipse at center, color-mix(in oklab, ${gold ? "var(--gold)" : "var(--data)"} 22%, transparent), transparent 70%)` }} />
+      <div className="pointer-events-none absolute left-1/2 top-[72px] h-[380px] w-[620px] -translate-x-1/2 rounded-full blur-3xl" style={{ background: `radial-gradient(ellipse at center, color-mix(in oklab, ${gold ? "var(--gold)" : "var(--data)"} 22%, transparent), transparent 70%)` }} />
       {/* the orb, centre stage */}
-      <div className="absolute flex flex-col items-center" style={{ left: cx - 120, top: 26, width: 240 }}>
+      <div className="absolute flex flex-col items-center" style={{ left: cx - 120, top: 98, width: 240 }}>
         <GeniusShaderOrb state={orbState} size={142} tone={gold ? "gold" : "blue"} />
         <p className="mt-3 font-gl-display text-[1rem] text-gl-foreground">Genius · Agents</p>
         <p key={orbState} className="gfocus-tag text-[0.62rem] text-gl-muted-foreground">
@@ -190,7 +190,7 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
       </div>
 
       {/* chat under the orb */}
-      <div className="absolute" style={{ left: cx - 320, top: 236, width: 640 }}>
+      <div className="absolute" style={{ left: cx - 320, top: 308, width: 640 }}>
         <AskBox ask={ask} cid="chat" tone={gold ? "gold" : "blue"} />
       </div>
 
@@ -213,7 +213,7 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
       ))}
 
       {/* summary */}
-      <div className="absolute rounded-xl border border-gl-border/60 bg-gl-background/40 px-5 py-3.5 transition-opacity duration-500" style={{ left: cx - 320, top: 488, width: 640, opacity: s.past("summary") ? (sending ? 0.3 : 1) : 0 }}>
+      <div className="absolute rounded-xl border border-gl-border/60 bg-gl-background/40 px-5 py-3.5 transition-opacity duration-500" style={{ left: cx - 320, top: 560, width: 640, opacity: s.past("summary") ? (sending ? 0.3 : 1) : 0 }}>
         <p className="min-h-[46px] text-[0.8rem] leading-[1.6] text-gl-foreground/90">
           {renderSegments(SUMMARY, summaryTyped)}
           {summaryTyped > 0 && summaryTyped < segText(SUMMARY).length ? <span className="gcaret" /> : null}
@@ -223,7 +223,7 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
       {/* board pack */}
       <div
         className="absolute flex items-center gap-4 rounded-xl border bg-[linear-gradient(160deg,oklch(0.24_0.05_70/30%),oklch(0.16_0.03_264/80%))] px-5 py-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{ left: cx - 320, top: 584, width: 640, borderColor: "oklch(0.77 0.155 66 / 40%)", opacity: s.past("ready") ? (sending ? 0.3 : 1) : 0, transform: s.past("ready") ? "none" : "translateY(12px)" }}
+        style={{ left: cx - 320, top: 656, width: 640, borderColor: "oklch(0.77 0.155 66 / 40%)", opacity: s.past("ready") ? (sending ? 0.3 : 1) : 0, transform: s.past("ready") ? "none" : "translateY(12px)" }}
       >
         <span className="grid h-14 w-11 shrink-0 place-items-center rounded-md border border-gl-foreground/15 bg-[oklch(0.97_0.004_250)] font-gl-mono text-[0.5rem] font-medium text-[oklch(0.45_0.15_25)]">PDF</span>
         <div className="min-w-0 flex-1">
@@ -250,7 +250,7 @@ function AgentsPage({ s, gold, width, summaryTyped, ask }: { s: Scene; gold: boo
         <div className="absolute inset-0 bg-[oklch(0.1_0.03_264/55%)] backdrop-blur-[2px]" />
         <div
           className="absolute overflow-hidden rounded-2xl border border-gl-border bg-[oklch(0.17_0.032_262/97%)] shadow-[0_40px_100px_-30px_rgb(0_0_0/0.85)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{ left: cx - 340, top: 60, width: 680, transform: sending ? "none" : "translateY(24px) scale(0.97)" }}
+          style={{ left: cx - 340, top: 132, width: 680, transform: sending ? "none" : "translateY(24px) scale(0.97)" }}
         >
           <div className="flex items-center gap-3 border-b border-gl-border/70 px-5 py-3.5">
             <GeniusShaderOrb state={sent < 7 ? "typing" : "holding"} size={30} tone={gold ? "gold" : "blue"} />
@@ -388,11 +388,11 @@ export function ScriptedBrief({ variant }: { variant: Variant }) {
   } else if (s.between("toSend2", "aThink")) {
     target = "chat-send";
     pointer = true;
-  } else if (s.between("agents", "toSend")) target = { x: contentX + contentW / 2 + 60, y: 540 };
+  } else if (s.between("agents", "toSend")) target = { x: contentX + contentW / 2 + 60, y: 612 };
   else if (s.between("toSend", "sending")) {
     target = "send";
     pointer = true;
-  } else if (s.between("sending", "exit")) target = { x: contentX + contentW / 2 + 380, y: 640 };
+  } else if (s.between("sending", "exit")) target = { x: contentX + contentW / 2 + 380, y: 712 };
   if (s.index < 0 || !s.past("enter") || s.past("exit")) target = off;
   const pressed = s.between("pressChart", "selected") || s.between("pressAsk", "type1") || s.between("pressSend1", "asked") || s.between("pressChat", "type2") || s.between("pressSend2", "asked2") || s.between("pressA", "approved") || s.between("pressNav", "agents") || s.between("pressSend", "sending");
 
