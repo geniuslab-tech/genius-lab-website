@@ -3,8 +3,8 @@
 import type { ReactNode } from "react";
 import { Reveal } from "@/components/v24/Reveal";
 import { ParticleField } from "@/components/v24/motion";
+import { ClientLogoMarquee } from "./ClientLogos";
 
-const LOGOS = ["NORTHWIND", "AXIOM", "MERIDIAN", "VANTA GROUP", "HELIOS", "CALDERA", "ORBIS", "STRATUM"];
 
 /** The approved hero copy, shared by every version. */
 export function HeroCopy({ after, headlineClass = "" }: { after?: ReactNode; headlineClass?: string }) {
@@ -50,15 +50,7 @@ export function LogoMarquee({ className = "mt-14 lg:mt-16" }: { className?: stri
       <p className="text-[0.62rem] uppercase tracking-[0.3em] text-gl-muted-foreground/65">
         Trusted by operators, manufacturers and value creation teams
       </p>
-      <div className="relative mt-5 flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-        <div className="marquee-track flex shrink-0 items-center gap-10 pr-10">
-          {[...LOGOS, ...LOGOS].map((name, i) => (
-            <span key={`${name}-${i}`} className="whitespace-nowrap font-gl-display text-[0.72rem] tracking-[0.24em] text-gl-muted-foreground/55">
-              {name}
-            </span>
-          ))}
-        </div>
-      </div>
+      <ClientLogoMarquee className="mt-5" />
     </div>
   );
 }

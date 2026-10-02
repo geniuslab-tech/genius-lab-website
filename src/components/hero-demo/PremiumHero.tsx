@@ -2,9 +2,9 @@
 
 import { useCallback, useState, type ReactNode } from "react";
 import { Reveal } from "@/components/v24/Reveal";
+import { CLIENTS, ClientLogo } from "./ClientLogos";
 import "./premium.css";
 
-const LOGOS = ["NORTHWIND", "AXIOM", "MERIDIAN", "VANTA GROUP", "HELIOS", "CALDERA", "ORBIS", "STRATUM"];
 
 export type PremiumChapter<K extends string> = { key: K; title: string; body: string };
 
@@ -156,11 +156,9 @@ export function PremiumHero<K extends string>({
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-between gap-x-10 gap-y-4">
           <p className="text-[0.62rem] uppercase tracking-[0.3em] text-gl-muted-foreground/60">Trusted by operators, manufacturers and value creation teams</p>
-          <div className="flex flex-wrap items-center gap-x-9 gap-y-3">
-            {LOGOS.map((l) => (
-              <span key={l} className="font-gl-display text-[0.72rem] tracking-[0.24em] text-gl-muted-foreground/45">
-                {l}
-              </span>
+          <div className="flex flex-wrap items-center gap-x-10 gap-y-4">
+            {CLIENTS.map((c) => (
+              <ClientLogo key={c.name} c={c} className="opacity-50" />
             ))}
           </div>
         </div>

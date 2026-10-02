@@ -5,6 +5,7 @@ import { CaretDown as ChevronDown, List as Menu, X } from "@phosphor-icons/react
 import { Reveal } from "./Reveal";
 import { FlowField, ParticleField } from "./motion";
 import { AppDashboard } from "./AppDashboard";
+import { ClientLogoMarquee } from "@/components/hero-demo/ClientLogos";
 
 const brandLogo = "/brand/genius-lab-logo-white.svg";
 const brandLogoBlue = { url: "/brand/logo_dark_blue.png" };
@@ -426,18 +427,7 @@ export function Hero({
             <p className={`text-[0.62rem] uppercase tracking-[0.3em] ${v13Refinements ? "text-gl-muted-foreground/65" : "text-gl-muted-foreground/55"}`}>
               Trusted by operators, manufacturers and value creation teams
             </p>
-            <div className="relative mt-5 flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-              <div className="marquee-track flex shrink-0 items-center gap-10 pr-10">
-                {[...logos, ...logos].map((name, i) => (
-                  <span
-                    key={`${name}-${i}`}
-                    className={`whitespace-nowrap font-gl-display text-[0.72rem] tracking-[0.24em] ${v13Refinements ? "text-gl-muted-foreground/55" : "text-gl-muted-foreground/45"}`}
-                  >
-                    {name}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <ClientLogoMarquee className="mt-5" dim={v13Refinements ? "opacity-55" : "opacity-45"} />
           </Reveal>
         </Reveal>
 
@@ -498,14 +488,4 @@ function HeroDashboard({ budgetComparison = false }: { budgetComparison?: boolea
 }
 
 
-const logos = [
-  "NORTHWIND",
-  "AXIOM",
-  "MERIDIAN",
-  "VANTA GROUP",
-  "HELIOS",
-  "CALDERA",
-  "ORBIS",
-  "STRATUM",
-];
 
