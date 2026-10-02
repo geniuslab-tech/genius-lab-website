@@ -6,10 +6,11 @@ import { Reveal } from "@/components/v24/Reveal";
 import { BriefDashboard, DASH_W, type Variant } from "./Dashboard";
 import { ScriptedBrief } from "./ScriptedBrief";
 import { ScriptedBriefMarket } from "./ScriptedBriefMarket";
+import { ScriptedBriefMarketV393 } from "./ScriptedBriefMarketV393";
 import { ScriptedBriefTeam } from "./ScriptedBriefTeam";
 
 /** Renders the fixed-width dashboard scaled to its column, bleeding past the right edge like v24. */
-function ScaledDashboard({ variant, scripted, team }: { variant: Variant; scripted: boolean; team: false | "circle" | "market" }) {
+function ScaledDashboard({ variant, scripted, team }: { variant: Variant; scripted: boolean; team: false | "circle" | "market" | "market-act" }) {
   const outer = useRef<HTMLDivElement>(null);
   const inner = useRef<HTMLDivElement>(null);
   const [fit, setFit] = useState<{ s: number; h: number } | null>(null);
@@ -30,7 +31,7 @@ function ScaledDashboard({ variant, scripted, team }: { variant: Variant; script
   return (
     <div ref={outer} className={`relative w-full ${scripted || team ? "" : "lg:w-[calc(100%+4rem)] xl:w-[calc(100%+6rem)]"}`} style={{ height: fit?.h }}>
       <div ref={inner} className="absolute left-0 top-0 origin-top-left" style={{ width: DASH_W, transform: fit ? `scale(${fit.s})` : undefined, opacity: fit ? 1 : 0 }}>
-        {team === "market" ? <ScriptedBriefMarket /> : team ? <ScriptedBriefTeam /> : scripted ? <ScriptedBrief variant={variant} /> : <BriefDashboard variant={variant} />}
+        {team === "market-act" ? <ScriptedBriefMarketV393 /> : team === "market" ? <ScriptedBriefMarket /> : team ? <ScriptedBriefTeam /> : scripted ? <ScriptedBrief variant={variant} /> : <BriefDashboard variant={variant} />}
       </div>
     </div>
   );
@@ -46,8 +47,8 @@ export function BriefHero({
   variant: Variant;
   tint?: "blue" | "amber" | "violet";
   scripted?: boolean;
-  /** v39.1 shows the agents in a circle, v39.2 as a marketplace. */
-  team?: false | "circle" | "market";
+  /** v39.1 shows the agents in a circle, v39.2 as a marketplace, v39.3 adds ways to act on the analysis. */
+  team?: false | "circle" | "market" | "market-act";
 }) {
   return (
     <section id="top" className="relative overflow-hidden pt-16">

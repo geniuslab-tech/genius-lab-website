@@ -353,7 +353,7 @@ export function ActionRow({ insight, show, compact = false, approve }: { insight
         data-cursor="approve"
         className={`shrink-0 rounded-md px-2.5 py-1 text-[0.6rem] font-medium transition-all duration-200 ${done ? "bg-[var(--success)] text-gl-background" : "bg-gl-gold text-gl-background"} ${approve?.hover && !done ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${approve?.pressed ? "scale-95" : ""}`}
       >
-        {done ? "✓ Approved" : insight.action.cta}
+        {done ? (approve?.doneLabel ?? "✓ Approved") : insight.action.cta}
       </span>
     </div>
   );
@@ -376,7 +376,7 @@ export function Dots({ idx }: { idx: number }) {
 export type Cyc = Omit<ReturnType<typeof useInsightCycle>, "ref">;
 
 /** Approval button state, when a script drives the dashboard. */
-export type ApproveState = { hover?: boolean; pressed?: boolean; done?: boolean };
+export type ApproveState = { hover?: boolean; pressed?: boolean; done?: boolean; doneLabel?: string };
 
 /** The user's question to the agent, when a script types one. */
 export type AskState = { text: string; typed: number; focused: boolean; sent: boolean; hoverSend?: boolean; pressSend?: boolean; placeholder?: string };
