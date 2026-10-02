@@ -22,8 +22,10 @@ const CASH = { ...CASH_ANSWER, action: { ...CASH_ANSWER.action, cta: "View more"
  *               it left for her — some flagged.
  *  4. CFO chat  She opens the CFO agent: a private chat with its orb in the centre and
  *               its insights on either side. She picks a flagged insight and asks about it.
- *  5. Board     The CFO agent answers with a plan and asks for approval; she approves and
- *               the board update goes out.
+ *  5. Execs     The CFO agent answers with a month-end plan; she approves and it goes to the
+ *               executive team.
+ *  6. Follow up  An org chart shows who owns each move. She opens the blocked plant manager,
+ *               sees why, and asks the agent to email her — the email is drafted and sent.
  */
 const CUES = {
   start: 0,
@@ -97,9 +99,36 @@ const CUES = {
   open1: 53500,
   open2: 54100,
   toast: 54400,
-  exit: 57900,
+  followShow: 54700,
+  toFollow: 55500,
+  pressFollow: 56400,
+  org: 56650,
+  o1: 56900,
+  o2: 57050,
+  o3: 57200,
+  o4: 57350,
+  o5: 57500,
+  o6: 57650,
+  o7: 57800,
+  toLena: 59000,
+  pressLena: 59900,
+  lena: 60150,
+  l1: 60500,
+  l2: 60850,
+  l3: 61200,
+  toAsk3: 63000,
+  pressAsk3: 63800,
+  type3: 64050,
+  toSend3: 67200,
+  pressSend3: 68000,
+  asked3: 68250,
+  mThink: 68400,
+  mail: 69400,
+  mailSent: 71400,
+  toast2: 71700,
+  exit: 75500,
 } as const;
-const LOOP = 59900;
+const LOOP = 77500;
 const H = 900;
 
 const Q2 = "What measures can I put in place to hit the cash target before month-end close?";
@@ -153,6 +182,26 @@ const PLAN = [
 ] as const;
 
 type Scene = ReturnType<typeof useScene<typeof CUES>>["scene"];
+
+const Q3 = "Email Lena the release instructions and ask for a status update by tomorrow.";
+
+/** the follow-up org chart: who owns the month-end plan, and who is stuck */
+type Person = { id: string; i: string; n: string; r: string; status: "ok" | "progress" | "blocked"; note: string; x: number; y: number; parent?: string };
+const ORG: Person[] = [
+  { id: "ceo", i: "SL", n: "Sarah Lin", r: "Chief Executive Officer", status: "ok", note: "Plan acknowledged", x: 300, y: 74 },
+  { id: "coo", i: "MH", n: "Marcus Hale", r: "Chief Operating Officer", status: "progress", note: "Owns the stock release", x: 170, y: 196, parent: "ceo" },
+  { id: "cco", i: "PR", n: "Priya Rao", r: "Chief Commercial Officer", status: "progress", note: "Owns collections", x: 440, y: 196, parent: "ceo" },
+  { id: "gm", i: "RM", n: "Ray Mendez", r: "GM, Industrial Southeast", status: "progress", note: "Instructions received", x: 84, y: 318, parent: "coo" },
+  { id: "vp", i: "TB", n: "Tom Becker", r: "VP Supply Chain", status: "ok", note: "Carriers booked", x: 256, y: 318, parent: "coo" },
+  { id: "ar", i: "ID", n: "Ines Duarte", r: "EMEA Collections Lead", status: "progress", note: "6 of 11 called", x: 440, y: 318, parent: "cco" },
+  { id: "lena", i: "LO", n: "Lena Ortiz", r: "Plant Manager, Atlanta DC", status: "blocked", note: "Release not started", x: 84, y: 440, parent: "gm" },
+];
+const LENA_FACTS = [
+  { t: "Release of $1.4M Southeast stock has not started", v: "0%" },
+  { t: "Pick-wave approval has been pending since Tuesday", v: "3 days" },
+  { t: "Plan deadline is day 5 of close", v: "in 2 days" },
+] as const;
+const MAIL_BODY = "Lena — please release the 1,920 slow-moving pallets at Atlanta DC to the EMEA distributors this week. Pick waves are approved as of now. Could you send me a status update by tomorrow?";
 const exec = (id: string) => TEAM.find((t) => t.id === id)!;
 
 function AlertIcon({ level }: { level: "high" | "med" }) {
@@ -163,7 +212,173 @@ function AlertIcon({ level }: { level: "high" | "med" }) {
   );
 }
 
-function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; ask: AskState; replyTyped: number }) {
+const STATUS: Record<Person["status"], { label: string; cls: string }> = {
+  ok: { label: "On track", cls: "bg-[oklch(0.78_0.13_168/14%)] text-[var(--success)]" },
+  progress: { label: "In progress", cls: "bg-gl-data/12 text-gl-data" },
+  blocked: { label: "Blocked", cls: "bg-[oklch(0.65_0.2_25/16%)] text-[oklch(0.75_0.17_25)]" },
+};
+
+function OrgChart({ s, width, ask, mailTyped }: { s: Scene; width: number; ask: AskState; mailTyped: number }) {
+  const open = s.past("org");
+  const shownN = (["o1", "o2", "o3", "o4", "o5", "o6", "o7"] as const).filter((k) => s.past(k)).length;
+  const picked = s.past("lena");
+  const thinking = s.between("mThink", "mail");
+  const sentMail = s.past("mailSent");
+  const cx = width / 2;
+  const W = 164;
+  const Hn = 82;
+  const byId = (id: string) => ORG.find((o) => o.id === id)!;
+
+  return (
+    <div className={`absolute inset-0 z-30 transition-opacity duration-500 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+      <div className="absolute inset-0 bg-[oklch(0.1_0.03_264/62%)] backdrop-blur-[3px]" />
+      <div
+        className="absolute overflow-hidden rounded-[22px] border border-gl-border bg-[linear-gradient(170deg,oklch(0.2_0.04_262/98%),oklch(0.14_0.03_264/98%))] shadow-[0_50px_120px_-30px_rgb(0_0_0/0.85)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{ left: cx - 460, top: 24, width: 920, height: 790, transform: open ? "none" : "translateY(20px) scale(0.97)" }}
+      >
+        <div className="flex items-center gap-3 border-b border-gl-border/60 px-6 py-3.5">
+          <GeniusShaderOrb state={thinking ? "thinking" : "holding"} size={26} tint={exec("coo").tint} />
+          <div className="flex-1">
+            <p className="text-[0.82rem] text-gl-foreground">Follow-up · month-end cash plan</p>
+            <p className="text-[0.58rem] text-gl-muted-foreground">Who owns each move · live status from the COO agent · 9 days to close</p>
+          </div>
+          <span className="flex items-center gap-3 font-gl-mono text-[0.5rem] uppercase tracking-[0.12em] text-gl-muted-foreground">
+            <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--success)]" /> On track</span>
+            <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-gl-data" /> In progress</span>
+            <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.65_0.2_25)]" /> Blocked</span>
+          </span>
+        </div>
+
+        {/* the chart */}
+        <div className="absolute" style={{ left: 24, top: 62, width: 560, height: 560 }}>
+          <svg className="pointer-events-none absolute inset-0" width={560} height={560} aria-hidden="true">
+            {ORG.filter((o) => o.parent).map((o, k) => {
+              const pa = byId(o.parent!);
+              const x1 = pa.x;
+              const y1 = pa.y + Hn / 2;
+              const x2 = o.x;
+              const y2 = o.y - Hn / 2;
+              const my = Math.round((y1 + y2) / 2);
+              const lit = picked && (o.id === "lena" || o.id === "gm" || o.id === "coo");
+              return (
+                <path
+                  key={o.id}
+                  d={`M ${x1} ${y1} L ${x1} ${my} L ${x2} ${my} L ${x2} ${y2}`}
+                  fill="none"
+                  stroke={lit ? "oklch(0.75 0.17 25)" : "oklch(1 0 0 / 16%)"}
+                  strokeWidth={lit ? 1.6 : 1}
+                  style={{ opacity: k + 1 < shownN ? 1 : 0, transition: "opacity .4s, stroke .4s" }}
+                />
+              );
+            })}
+          </svg>
+          {ORG.map((o, k) => {
+            const isLena = o.id === "lena";
+            const sel = isLena && picked;
+            const hover = isLena && s.between("toLena", "lena");
+            const st = STATUS[o.status];
+            return (
+              <div
+                key={o.id}
+                data-cursor={`person-${o.id}`}
+                className="absolute rounded-xl border px-2.5 py-2 transition-all duration-500"
+                style={{
+                  left: o.x - W / 2,
+                  top: o.y - Hn / 2,
+                  width: W,
+                  height: Hn,
+                  opacity: k < shownN ? (picked && !sel && !["gm", "coo"].includes(o.id) ? 0.5 : 1) : 0,
+                  transform: k < shownN ? (isLena && s.between("pressLena", "lena") ? "scale(0.97)" : "none") : "translateY(8px)",
+                  borderColor: sel ? "oklch(0.65 0.2 25 / 70%)" : o.status === "blocked" ? "oklch(0.65 0.2 25 / 40%)" : hover ? "oklch(1 0 0 / 30%)" : "oklch(1 0 0 / 10%)",
+                  background: sel ? "oklch(0.65 0.2 25 / 10%)" : "oklch(1 0 0 / 3%)",
+                  boxShadow: sel ? "0 0 0 3px oklch(0.65 0.2 25 / 15%)" : "none",
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.48rem] font-semibold text-gl-foreground ring-1 ring-white/10 ${o.status === "blocked" ? "bg-[oklch(0.45_0.12_25)]" : "bg-gradient-to-br from-[oklch(0.45_0.08_260)] to-[oklch(0.3_0.05_262)]"}`}>{o.i}</span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-[0.64rem] leading-tight text-gl-foreground">{o.n}</span>
+                    <span className="block truncate text-[0.5rem] leading-tight text-gl-muted-foreground">{o.r}</span>
+                  </span>
+                </div>
+                <div className="mt-1.5 flex items-center justify-between gap-1">
+                  <span className={`shrink-0 whitespace-nowrap rounded-full px-1.5 py-0.5 font-gl-mono text-[0.42rem] uppercase tracking-[0.08em] ${st.cls}`}>{o.status === "blocked" ? "⚠ " : ""}{st.label}</span>
+                  <span className="min-w-0 truncate text-[0.46rem] text-gl-muted-foreground">{o.note}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* the selected person: what is happening, and the request to the agent */}
+        <div
+          className="absolute rounded-2xl border border-gl-border/70 bg-gl-background/40 p-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={{ left: 600, top: 70, width: 296, height: 700, opacity: picked ? 1 : 0, transform: picked ? "none" : "translateX(14px)" }}
+        >
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-[oklch(0.45_0.12_25)] text-[0.6rem] font-semibold text-gl-foreground ring-1 ring-white/10">LO</span>
+            <div>
+              <p className="text-[0.8rem] text-gl-foreground">Lena Ortiz</p>
+              <p className="text-[0.56rem] text-gl-muted-foreground">Plant Manager, Atlanta DC · reports to Ray Mendez</p>
+            </div>
+          </div>
+          <p className="mt-3 font-gl-mono text-[0.5rem] uppercase tracking-[0.16em] text-[oklch(0.72_0.18_25)]">⚠ What is happening</p>
+          <div className="mt-1.5 space-y-1.5">
+            {LENA_FACTS.map((f, i) => (
+              <div
+                key={f.t}
+                className="flex items-start justify-between gap-2 rounded-lg bg-gl-foreground/[0.03] px-2.5 py-1.5 text-[0.6rem] leading-snug transition-all duration-500"
+                style={{ opacity: s.past((["l1", "l2", "l3"] as const)[i]!) ? 1 : 0, transform: s.past((["l1", "l2", "l3"] as const)[i]!) ? "none" : "translateY(4px)" }}
+              >
+                <span className="text-gl-foreground/90">{f.t}</span>
+                <span className="shrink-0 font-gl-mono text-[oklch(0.75_0.17_25)]">{f.v}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-2.5 rounded-lg border border-gl-border/60 px-2.5 py-2 transition-opacity duration-500" style={{ opacity: s.past("l3") ? 1 : 0 }}>
+            <p className="font-gl-mono text-[0.48rem] uppercase tracking-[0.14em] text-gl-muted-foreground">Stock release progress</p>
+            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-gl-foreground/10">
+              <div className="h-full w-[4%] rounded-full bg-[oklch(0.65_0.2_25)]" />
+            </div>
+            <p className="mt-1 text-[0.52rem] text-gl-muted-foreground">COO agent suggests: send Lena the release instructions and unblock the pick waves.</p>
+          </div>
+
+          <div className="mt-3">{ask.sent ? <AskBox ask={ask} /> : <AskBox ask={ask} cid="mail" tone="gold" />}</div>
+
+          <div className={`mt-2.5 flex items-center gap-2 text-[0.6rem] text-gl-muted-foreground transition-opacity duration-500 ${s.past("mThink") ? "opacity-100" : "opacity-0"}`}>
+            <GeniusShaderOrb state={thinking ? "thinking" : sentMail ? "holding" : "typing"} size={20} tint={exec("coo").tint} />
+            {thinking ? "Drafting the email…" : sentMail ? "Sent. I'll chase Lena tomorrow at 09:00 if there's no reply." : "Here is the draft — sending now."}
+          </div>
+
+          {/* the email */}
+          <div className={`mt-2 rounded-xl border bg-[oklch(0.17_0.03_262/90%)] p-3 transition-all duration-700 ${s.past("mail") ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"} ${sentMail ? "border-[oklch(0.78_0.13_168/45%)]" : "border-gl-border"}`}>
+            <div className="flex items-center justify-between">
+              <span className="font-gl-mono text-[0.48rem] uppercase tracking-[0.14em] text-gl-muted-foreground">Email</span>
+              <span className={`rounded-full px-1.5 py-0.5 font-gl-mono text-[0.44rem] uppercase tracking-[0.1em] ${sentMail ? "bg-[oklch(0.78_0.13_168/16%)] text-[var(--success)]" : "bg-gl-gold/12 text-gl-gold"}`}>{sentMail ? "Sent ✓" : "Sending…"}</span>
+            </div>
+            <p className="mt-1.5 text-[0.56rem]"><span className="text-gl-muted-foreground">To </span><span className="text-gl-foreground">lena.ortiz@meridian.com</span></p>
+            <p className="text-[0.56rem]"><span className="text-gl-muted-foreground">Cc </span><span className="text-gl-foreground">Ray Mendez</span></p>
+            <p className="text-[0.56rem]"><span className="text-gl-muted-foreground">Subject </span><span className="text-gl-foreground">Atlanta DC stock release — needed this week</span></p>
+            <p className="mt-1.5 min-h-[56px] text-[0.58rem] leading-snug text-gl-foreground/85">
+              {MAIL_BODY.slice(0, mailTyped)}
+              {mailTyped > 0 && mailTyped < MAIL_BODY.length ? <span className="gcaret" /> : null}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* toast */}
+      <div
+        className={`absolute bottom-6 left-6 w-[300px] rounded-xl border border-[oklch(0.78_0.13_168/35%)] bg-[oklch(0.17_0.03_262/97%)] p-3.5 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.7)] transition-all duration-700 ${s.between("toast2", "exit") ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
+      >
+        <p className="text-[0.72rem] text-gl-foreground">✓ Email sent to Lena Ortiz</p>
+        <p className="mt-0.5 text-[0.62rem] text-gl-muted-foreground">COO agent will follow up tomorrow at 09:00 · Ray Mendez copied</p>
+      </div>
+    </div>
+  );
+}
+
+function MarketPage({ s, width, ask, replyTyped, ask3, mailTyped }: { s: Scene; width: number; ask: AskState; replyTyped: number; ask3: AskState; mailTyped: number }) {
   const cx = width / 2;
   const notes = (["n1", "n2", "n3", "n4", "n5"] as const).filter((k) => s.past(k)).length;
   const open = s.past("modal");
@@ -375,10 +590,11 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
       </div>
 
       <Outbox
-        sending={sending}
+        sending={sending && !s.past("org")}
         sent={sent}
         opened={opened}
-        toast={s.between("toast", "exit")}
+        toast={s.between("toast", "org")}
+        followUp={{ show: s.past("followShow"), hover: s.between("toFollow", "org"), pressed: s.between("pressFollow", "org") }}
         gold
         cx={cx}
         top={150}
@@ -387,8 +603,10 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
         toLabel="Executive team"
         attachment="Month-end-cash-plan.pdf · 1.1 MB"
         recipients={EXECS}
+        toastTitle="✓ Month-end plan delivered to 7 executives"
         toastBody="Plan sent to 7 executives · 9 days before month-end close"
       />
+      <OrgChart s={s} width={width} ask={ask3} mailTyped={mailTyped} />
     </div>
   );
 }
@@ -633,6 +851,9 @@ export function ScriptedBriefMarketV393() {
 
   const typedCash = useTyped(segText(CASH.segments), s.between("write", "proposal"), s.past("proposal"), 52, s.loop);
   const replyTyped = useTyped(segText(REPLY), s.between("reply", "plan"), s.past("plan"), 60, s.loop);
+  const q3 = useTyped(Q3, s.between("type3", "toSend3"), s.past("toSend3"), 30, s.loop);
+  const mailTyped = useTyped(MAIL_BODY, s.between("mail", "mailSent"), s.past("mailSent"), 110, s.loop);
+  const ask3: AskState = { text: Q3, typed: q3, focused: s.between("pressAsk3", "asked3"), sent: s.past("asked3"), hoverSend: s.between("toSend3", "asked3"), pressSend: s.between("pressSend3", "asked3"), placeholder: "Ask the COO agent…" };
   const q1 = useTyped(Q1, s.between("type1", "toSend1"), s.past("toSend1"), 26, s.loop);
   const q2 = useTyped(Q2, s.between("type2", "toSend2"), s.past("toSend2"), 30, s.loop);
   const ask1: AskState = { text: Q1, typed: q1, focused: s.between("pressAsk", "asked"), sent: s.past("asked"), hoverSend: s.between("toSend1", "asked"), pressSend: s.between("pressSend1", "asked") };
@@ -697,7 +918,22 @@ export function ScriptedBriefMarketV393() {
   else if (s.between("toSend", "sending")) {
     target = "send";
     pointer = true;
-  } else if (s.between("sending", "exit")) target = { x: contentX + contentW / 2 + 400, y: 720 };
+  } else if (s.between("sending", "toFollow")) target = { x: contentX + contentW / 2 + 400, y: 720 };
+  else if (s.between("toFollow", "org")) {
+    target = "follow-up";
+    pointer = true;
+  } else if (s.between("org", "toLena")) target = { x: contentX + contentW / 2 - 120, y: 560 };
+  else if (s.between("toLena", "lena")) {
+    target = "person-lena";
+    pointer = true;
+  } else if (s.between("lena", "toAsk3")) target = { x: contentX + contentW / 2 - 60, y: 560 };
+  else if (s.between("toAsk3", "toSend3")) {
+    target = "mail-input";
+    pointer = true;
+  } else if (s.between("toSend3", "mThink")) {
+    target = "mail-send";
+    pointer = true;
+  } else if (s.between("mThink", "exit")) target = { x: contentX + contentW / 2 + 120, y: 640 };
   if (s.index < 0 || !s.past("enter") || s.past("exit")) target = off;
   const pressed =
     s.between("press1", "sel1") ||
@@ -711,13 +947,17 @@ export function ScriptedBriefMarketV393() {
     s.between("pressAlert", "picked") ||
     s.between("pressChat", "type2") ||
     s.between("pressSend2", "asked2") ||
-    s.between("pressSend", "sending");
+    s.between("pressSend", "sending") ||
+    s.between("pressFollow", "org") ||
+    s.between("pressLena", "lena") ||
+    s.between("pressAsk3", "type3") ||
+    s.between("pressSend3", "asked3");
 
   return (
     <div ref={ref} style={{ width: DASH_W }}>
       <div ref={stageRef} className="glass-panel relative overflow-hidden rounded-[1.15rem] p-0 shadow-[var(--shadow-elevated)]" style={{ width: DASH_W, height: H }}>
         <div className="flex h-full">
-          <Sidebar active={page === "agents" ? "Agents" : "Executive Briefing"} hover={s.between("toAgents", "agents") ? "Agents" : undefined} />
+          <Sidebar atom active={page === "agents" ? "Agents" : "Executive Briefing"} hover={s.between("toAgents", "agents") ? "Agents" : undefined} />
           <div className="relative min-w-0 flex-1">
             <Screen show={page === "brief"} className="!p-0">
               <Topbar stage={c.stage} />
@@ -735,7 +975,7 @@ export function ScriptedBriefMarketV393() {
               <div className="flex h-full flex-col">
                 <Topbar stage={c.stage} />
                 <div className="relative min-h-0 flex-1">
-                  <MarketPage key={s.loop} s={s} width={contentW} ask={ask2} replyTyped={replyTyped} />
+                  <MarketPage key={s.loop} s={s} width={contentW} ask={ask2} replyTyped={replyTyped} ask3={ask3} mailTyped={mailTyped} />
                 </div>
               </div>
             </Screen>

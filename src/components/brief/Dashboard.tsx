@@ -68,7 +68,18 @@ export function card(glass: boolean, extra = "") {
     : `relative rounded-xl border border-gl-border/70 bg-[linear-gradient(180deg,oklch(0.21_0.03_262/70%),oklch(0.17_0.03_262/60%))] ${extra}`;
 }
 
-export function Sidebar({ narrow = false, active = "Executive Briefing", hover }: { narrow?: boolean; active?: string; hover?: string }) {
+export function Sidebar({
+  narrow = false,
+  active = "Executive Briefing",
+  hover,
+  atom = false,
+}: {
+  narrow?: boolean;
+  active?: string;
+  hover?: string;
+  /** show the atom mark beside the logo instead of the blue dot tile */
+  atom?: boolean;
+}) {
   const slug = (n: string) => `nav-${n.toLowerCase().replace(/[^a-z]+/g, "-")}`;
   if (narrow) {
     return (
@@ -95,9 +106,14 @@ export function Sidebar({ narrow = false, active = "Executive Briefing", hover }
   return (
     <aside className="flex w-[208px] shrink-0 flex-col border-r border-gl-border/60 bg-gl-navy/70 p-4">
       <div className="mb-7 flex items-center gap-2.5 px-1.5 pt-1.5">
-        <span className="grid h-6 w-6 place-items-center rounded-[7px] bg-gl-data/15">
-          <span className="h-1.5 w-1.5 rounded-full bg-gl-data" />
-        </span>
+        {atom ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src="/brand/atomo.png" alt="" aria-hidden="true" className="h-7 w-7 shrink-0 object-contain drop-shadow-[0_0_8px_oklch(0.7_0.17_252/45%)]" />
+        ) : (
+          <span className="grid h-6 w-6 place-items-center rounded-[7px] bg-gl-data/15">
+            <span className="h-1.5 w-1.5 rounded-full bg-gl-data" />
+          </span>
+        )}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/brand/genius-lab-logo-white.svg" alt="Genius Lab" className="h-[0.72rem] w-auto" />
       </div>

@@ -387,6 +387,7 @@ function MarketPage({ s, width, ask, replyTyped }: { s: Scene; width: number; as
         toLabel="Executive team"
         attachment="Month-end-cash-plan.pdf · 1.1 MB"
         recipients={EXECS}
+        toastTitle="✓ Month-end plan delivered to 7 executives"
         toastBody="Plan sent to 7 executives · 9 days before month-end close"
       />
     </div>

@@ -269,11 +269,13 @@ export function Outbox({
   cx,
   top,
   toastBody,
+  toastTitle = "✓ Board update delivered to 7 directors",
   subject = "Q3 Board Update — $18.4M cash recovered, margin protected",
   heading = "Sending the Q3 board update",
   toLabel = "Board of Directors",
   attachment = "Q3-Board-Update.pdf · 2.4 MB",
   recipients = BOARD,
+  followUp,
 }: {
   sending: boolean;
   sent: number;
@@ -283,11 +285,14 @@ export function Outbox({
   cx: number;
   top: number;
   toastBody: string;
+  toastTitle?: string;
   subject?: string;
   heading?: string;
   toLabel?: string;
   attachment?: string;
   recipients?: readonly (readonly [string, string, string])[];
+  /** a Follow up button under the list, for flows that continue after sending */
+  followUp?: { show: boolean; hover: boolean; pressed: boolean };
 }) {
   const total = recipients.length;
   return (
@@ -351,6 +356,17 @@ export function Outbox({
               );
             })}
           </div>
+          {followUp ? (
+            <div className={`flex items-center justify-between border-t border-gl-border/60 px-5 py-3 transition-opacity duration-500 ${followUp.show ? "opacity-100" : "opacity-0"}`}>
+              <span className="text-[0.6rem] text-gl-muted-foreground">Track who acts on it and unblock anyone who is stuck</span>
+              <span
+                data-cursor="follow-up"
+                className={`rounded-md px-3 py-1.5 text-[0.66rem] font-medium transition-all duration-200 ${gold ? "bg-gl-gold text-gl-background" : "bg-gl-data text-gl-background"} ${followUp.hover ? "brightness-110 shadow-[0_0_0_4px_oklch(0.77_0.155_66/22%)]" : ""} ${followUp.pressed ? "scale-95" : ""}`}
+              >
+                Follow up →
+              </span>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -358,7 +374,7 @@ export function Outbox({
       <div
         className={`absolute bottom-6 left-6 w-[300px] rounded-xl border border-[oklch(0.78_0.13_168/35%)] bg-[oklch(0.17_0.03_262/97%)] p-3.5 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.7)] transition-all duration-700 ${toast ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
       >
-        <p className="text-[0.72rem] text-gl-foreground">✓ Board update delivered to 7 directors</p>
+        <p className="text-[0.72rem] text-gl-foreground">{toastTitle}</p>
         <p className="mt-0.5 text-[0.62rem] text-gl-muted-foreground">{toastBody}</p>
       </div>
     </>
