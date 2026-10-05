@@ -5,6 +5,7 @@ import { Nav } from "@/components/v24/Hero";
 import { FlowUnified } from "@/components/v32/FlowUnified";
 import { GeniusFlowAuto } from "@/components/v32/auto/GeniusFlowAuto";
 import { FlowConnected } from "@/components/v32/flow2/FlowConnected";
+import { FlowContext } from "@/components/v32/flow3/FlowContext";
 
 const display = Sora({ variable: "--font-v24-display", subsets: ["latin"], display: "swap" });
 const sans = Manrope({ variable: "--font-v24-sans", subsets: ["latin"], display: "swap" });
@@ -21,7 +22,7 @@ export const viewport: Viewport = {
   themeColor: "#0b1024",
 };
 
-/** The "How it works" cinematic from genius-core-platform, the same six beats on autoplay, and a connected horizontal rework of the first. */
+/** The "How it works" cinematic from genius-core-platform, the same six beats on autoplay, a connected horizontal rework of the first, and that rework extended with the org chart and the Second Brain. */
 export default function HomeV32() {
   return (
     <div className={`v24 ${display.variable} ${sans.variable} ${mono.variable}`}>
@@ -31,6 +32,7 @@ export default function HomeV32() {
         <FlowUnified />
         <GeniusFlowAuto />
         <FlowConnected />
+        <FlowContext />
       </main>
     </div>
   );
