@@ -3,6 +3,8 @@ import { JetBrains_Mono, Manrope, Sora } from "next/font/google";
 import "@/app/(hero-animation)/v24/v24.css";
 import { Nav } from "@/components/v24/Hero";
 import { FlowUnified } from "@/components/v32/FlowUnified";
+import { GeniusFlowAuto } from "@/components/v32/auto/GeniusFlowAuto";
+import { FlowConnected } from "@/components/v32/flow2/FlowConnected";
 
 const display = Sora({ variable: "--font-v24-display", subsets: ["latin"], display: "swap" });
 const sans = Manrope({ variable: "--font-v24-sans", subsets: ["latin"], display: "swap" });
@@ -19,7 +21,7 @@ export const viewport: Viewport = {
   themeColor: "#0b1024",
 };
 
-/** Only the "How it works" cinematic from genius-core-platform, ported as-is. */
+/** The "How it works" cinematic from genius-core-platform, the same six beats on autoplay, and a connected horizontal rework of the first. */
 export default function HomeV32() {
   return (
     <div className={`v24 ${display.variable} ${sans.variable} ${mono.variable}`}>
@@ -27,6 +29,8 @@ export default function HomeV32() {
       <Nav variant="light" />
       <main className="pt-16">
         <FlowUnified />
+        <GeniusFlowAuto />
+        <FlowConnected />
       </main>
     </div>
   );
