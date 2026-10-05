@@ -1,0 +1,162 @@
+/* v32 · autoplaying How it works — motion that runs on its own between cues */
+
+.fa-world {
+  animation: fa-world-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes fa-world-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+/* system tiles drift a little while they are still fragmented */
+.fa-float {
+  animation: fa-float 5.2s ease-in-out infinite alternate;
+}
+@keyframes fa-float {
+  from {
+    transform: translateY(-3px);
+  }
+  to {
+    transform: translateY(3px);
+  }
+}
+
+/* conflict chips: pop, then breathe */
+.fa-clash {
+  animation:
+    fa-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) both,
+    fa-breathe 2.6s ease-in-out 600ms infinite;
+}
+@keyframes fa-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes fa-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--fa-ring);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+/* raw records keep landing */
+.fa-marquee {
+  animation: fa-marquee 14s linear infinite;
+}
+@keyframes fa-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* a record travelling down between medallion layers */
+.fa-drop {
+  animation: fa-drop 1.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes fa-drop {
+  from {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+}
+
+/* the step rail fills while its beat plays */
+.fa-bar {
+  transform-origin: left center;
+  animation-name: fa-bar;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@keyframes fa-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* agent execution progress once approved */
+.fa-run {
+  transform-origin: left center;
+  animation: fa-bar 3.2s cubic-bezier(0.3, 0, 0.2, 1) both;
+}
+
+.fa-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.fa-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, oklch(1 0 0 / 14%) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: fa-sheen 1.6s cubic-bezier(0.4, 0, 0.2, 1) 200ms both;
+}
+@keyframes fa-sheen {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+.fa-up {
+  animation: fa-up 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes fa-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fa-paused .fa-bar,
+.fa-paused .fa-marquee,
+.fa-paused .fa-float {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-world,
+  .fa-float,
+  .fa-clash,
+  .fa-marquee,
+  .fa-drop,
+  .fa-bar,
+  .fa-run,
+  .fa-sheen::after,
+  .fa-up {
+    animation: none !important;
+  }
+  .fa-clash {
+    transform: translate(-50%, -50%);
+  }
+}
